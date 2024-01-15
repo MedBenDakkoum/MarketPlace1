@@ -1,14 +1,13 @@
-const TABLE_NAME = 'all-for-you';
+const TABLE_NAME = 'novina';
 const config = {
     PORT: process.env.PORT || 5000,
-    //DB_CONNECTION: `mongodb://localhost/${TABLE_NAME}`,
-    DB_CONNECTION: `mongodb+srv://iva2:iveto1234@cubicle.qzem5.mongodb.net/allForYou?retryWrites=true&w=majority`,
+    DB_CONNECTION: `mongodb://localhost/${TABLE_NAME}`,
     SECRET: 'badumts',
     SALT: 10,
     COOKIE_NAME: 'USER_SESSION',
-    CLOUDINARY_NAME: 'silenceiv',
-    CLOUDINARY_API_KEY: 626847416757451,
-    CLOUDINARY_API_SECRET: '3NzQ5GbrcSjW0EERTJd5XZvfcT8',
+    CLOUDINARY_NAME: 'deux8ft6s',
+    CLOUDINARY_API_KEY: 712152923343979,
+    CLOUDINARY_API_SECRET: 'k7eBPRzkzeJxoeLYCuwSo3iA5NA',
     CLOUDINARY_STORAGE: 'pza5zln6'
 }
 

@@ -1,4 +1,5 @@
 const User = require('../models/User');
+const Admin = require('../models/Admin');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/config');
@@ -21,18 +22,34 @@ async function registerUser(userData) {
 }
 
 async function loginUser({ email, password }) {
+    
     let user = await User.findOne({ email });
-    if (!user) throw { message: 'Invalid email or password' };
+    let admin = await Admin.findOne({ email });
 
-    let hasValidPass = await bcrypt.compare(password, user.password);
-    if (!hasValidPass) throw { message: "Invalid email or password" }
-
-    let token = jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar }, SECRET);
+    if (!user && !admin) throw { message: 'Invalid email or password' };
+    let hasValidPass,isValidAdmin;
+    if(user){
+        hasValidPass = await bcrypt.compare(password, user.password);
+    }else{
+        isValidAdmin = await bcrypt.compare(password, admin.password);
+    }
+    if (!hasValidPass && ! isValidAdmin) throw { message: "Invalid email or password" }
+    let token;
+    if(hasValidPass){
+        token = jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar }, SECRET);
+    }else{
+        token = jwt.sign({_id: admin._id, email : admin.email, isAdmin: admin.isAdmin}, SECRET);
+    }
+    console.log("token: "+token);
     return token;
 }
 
 async function getUser(id) {
-    return await User.findById(id).lean()
+    try{
+        return await User.findById(id).lean();
+    }catch{
+        throw { statusCode: 404, message: 'No user with this id found'}
+    }
 }
 
 module.exports = {

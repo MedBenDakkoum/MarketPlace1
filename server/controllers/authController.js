@@ -41,10 +41,11 @@ router.get('/logout', (req, res) => {
 router.get('/getUser', async (req, res) => {
     if (req.user) {
         let user = await authService.getUser(req.user._id);
+        console.log(user);
         res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, 
             phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar}})
     } else {
-        res.status(200).json({message: "Not loged in"})
+        res.status(200).json({message: "Not loged in"});
     }
 })
 

@@ -26,8 +26,12 @@ function Login({ history }) {
         loginUser(user)
             .then(res => {
                 if (!res.error) {
-                    setUserData(res.user)
-                    history.push('/')
+                    setUserData(res.user);
+                    if(res.user.isAdmin){
+                        history.push('/admin');
+                    }else{
+                        history.push('/');
+                    }
                 } else {
                     setLoading(false);
                     setError(res.error.message);
