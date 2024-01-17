@@ -25,7 +25,9 @@ export async function loginUser(userData) {
 export async function getUser() {
     return await (await fetch(baseUrl + '/auth/getUser', {credentials: 'include'})).json()
 }
-
+export async function getInfo() {
+    return await (await fetch(baseUrl + '/admin/getInfo', {credentials: 'include'})).json()
+}
 export async function getUserActiveSells(id) {
     return (await fetch(`${baseUrl}/products/sells/active/${id}`, {credentials: 'include'})).json();
 }

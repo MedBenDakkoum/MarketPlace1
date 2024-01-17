@@ -3,7 +3,8 @@ const authController = require('./controllers/authController');
 const productController = require('./controllers/productController');
 const userController = require('./controllers/userController');
 const messageController = require('./controllers/messageController');
-const adminController = require('./controllers/adminController')
+const adminController = require('./controllers/adminController');
+const storeController = require('./controllers/storeController');
 const isAuth = require('./middlewares/isAuth');
 
 router.get('/', (req, res) => {
@@ -15,5 +16,6 @@ router.use('/products', productController);
 router.use('/user', userController);
 router.use('/messages', messageController);
 router.use('/admin', adminController);
+router.use('/s/', storeController);
 
 module.exports = router;

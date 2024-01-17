@@ -26,8 +26,7 @@ const userSchema = new mongoose.Schema({
     phoneNumber: {
         type: String,
         trim: true,
-        required: ['Phone number is required'],
-        match: [/(\+)?(359|0)8[789]\d{1}(|-| )\d{3}(|-| )\d{3}/, 'Please fill a valid phone number']
+        required: ['Phone number is required']
     },
     gender: {
         type: String,
@@ -37,6 +36,12 @@ const userSchema = new mongoose.Schema({
     avatar: {
         type: String,
         default: 'https://res.cloudinary.com/silenceiv/image/upload/q_auto:eco/v1617358367/defaultAvatar_wnoogh.png'
+    },
+    store: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Store',
+        required:true,
+        unique:true
     },
     createdSells: [
         {
@@ -61,7 +66,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function (next) {
     let salt = await bcrypt.genSalt(SALT);
     let hash = await bcrypt.hash(this.password, salt);
-    this.password = hash;
+    this.password = hash; 
     next();
 })
 

@@ -87,12 +87,12 @@ function Messages({ match }) {
                         <>
                             <div className="chat-selected-header col-lg-12">
                                 {selected.isBuyer ?
-                                    <Link to={`/profile/${selected.chats.seller._id}`}>
+                                    <Link to={`/seller/${selected.chats.seller._id}`}>
                                         <img src={selected.chats.seller.avatar} alt="user-avatar" />
                                         <span>{selected.chats.seller.name}</span>
                                     </Link>
                                     :
-                                    <Link to={`/profile/${selected.chats.buyer._id}`}>
+                                    <Link to={`/seller/${selected.chats.buyer._id}`}>
                                         <img src={selected.chats.buyer.avatar} alt="user-avatar" />
                                         <span>{selected.chats.buyer.name}</span>
                                     </Link>

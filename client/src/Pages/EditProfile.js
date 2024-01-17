@@ -20,7 +20,7 @@ function EditProfile({ history }) {
             .catch(err => console.log(err))
     }, [setUser])
 
-    const handleDiscard = () => { history.push(`/profile/${user._id}`) }
+    const handleDiscard = () => { history.push(`/seller/${user._id}`) }
     const handleChanges = (e) => {
         e.preventDefault();
         setUser({ ...user, [e.target.name]: e.target.value });
@@ -42,7 +42,7 @@ function EditProfile({ history }) {
                     editUserProfile(_id, obj)
                         .then(res => {
                             if (!res.error) {
-                                history.push(`/profile/${_id}`);
+                                history.push(`/seller/${_id}`);
                             } else {
                                 setLoading(false);
                                 setError(res.error);
@@ -56,7 +56,7 @@ function EditProfile({ history }) {
             editUserProfile(_id, obj)
                 .then(res => {
                     if (!res.error) {
-                        history.push(`/profile/${_id}`);
+                        history.push(`/seller/${_id}`);
                     } else {
                         setLoading(false);
                         setError(res.error);

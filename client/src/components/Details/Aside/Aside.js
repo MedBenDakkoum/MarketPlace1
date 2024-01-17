@@ -27,7 +27,7 @@ function Aside({ params, history }) {
         archiveSell(params._id)
             .then(res => {
                 setShowArchive(false);
-                history.push(`/profile/${params.seller}`);
+                history.push(`/seller/${params.seller}`);
             })
             .catch(err => console.log(err))
     }
@@ -73,7 +73,7 @@ function Aside({ params, history }) {
                             <RiMessage3Fill />Contact Seller
                         </Button>
                     }
-                    <Link to={`/profile/${params.sellerId}`}>
+                    <Link to={`/seller/${params.sellerId}`}>
                         <Col lg={12}>
                             <img id="avatar" src={params.avatar} alt="user-avatar" />
                         </Col>

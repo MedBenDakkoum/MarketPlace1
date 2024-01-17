@@ -83,6 +83,15 @@ function Register({ history }) {
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
+                        <Form.Group className="col-lg-12">
+                            <Form.Label>Store name *</Form.Label>
+                            <Form.Control type="text" name="storeName" placeholder="Adidas" onChange={handleChanges} required />
+                            <Form.Text muted>
+                                Store name must be unique.
+                            </Form.Text>
+                        </Form.Group>
+                    </Form.Row>
+                    <Form.Row>
                         <Form.Group controlId="formBasicEmail" className="col-lg-12">
                             <Form.Label>Email address *</Form.Label>
                             <Form.Control type="email" name="email" placeholder="ivan@abv.bg" onChange={handleChanges} required />

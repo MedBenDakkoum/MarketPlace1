@@ -36,7 +36,7 @@ function Header() {
                             </NavLink>
 
                             <NavDropdown title={<img id="navImg" src={userData.avatar} alt="user-avatar"/>} drop="left" id="collasible-nav-dropdown">
-                                <NavLink className="dropdown-item" to={`/profile/${userData._id}`}>
+                                <NavLink className="dropdown-item" to={`/seller/${userData._id}`}>
                                     <BsFillPersonFill />Profile
                                 </NavLink>
 

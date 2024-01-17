@@ -24,8 +24,6 @@ router.get('/getUserConversations', async (req, res) => {
 router.post('/sendMessage', async (req, res) => {
     const { chatId, message } = req.body;
     let chat = await ChatRoom.updateOne({ _id: chatId }, { $push: { conversation: { senderId: req.user._id, message } } })
-
-    console.log(chat)
     res.status(200).json({ sender: req.user._id })
 })
 

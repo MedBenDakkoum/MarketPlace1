@@ -2,7 +2,7 @@ const router = require('express').Router();
 const authService = require('../services/authService');
 // const isAuth = require('../middlewares/isAuth');
 // const isGuest = require('../middlewares/isGuest');
-const { SECRET, COOKIE_NAME } = require('../config/config');
+const { SECRET, COOKIE_NAME, ADMIN_COOKIE_NAME } = require('../config/config');
 const jwt = require('jsonwebtoken');
 
 router.post('/register', async (req, res) => {
@@ -23,8 +23,7 @@ router.post('/login', (req, res) => {
                     res.clearCookie(COOKIE_NAME);
                     res.clearCookie(ADMIN_COOKIE_NAME);
                 } else {
-                    
-                    if(decoded.idAdmin){
+                    if(decoded.isAdmin){
                         req.adminUser = decoded;
                         res
                         .status(200)
@@ -52,7 +51,6 @@ router.get('/getUser', async (req, res) => {
     try{
         if (req.user) {
                 let user = await authService.getUser(req.user._id);
-                console.log(user);
                 if(user.isAdmin){
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
                 }else{

@@ -52,8 +52,16 @@ router.get('/getUserById/:id', async (req, res) => {
 })
 
 router.get('/isSeller', async (req,res)=>{
-    try{
-        
+    try {
+        let user = await userService.getUserById(req.user._id);
+        if(user.createdSells){
+            res.status(200).json({isSeller: true});
+        }else{
+            res.status(200).json({isSeller: false});
+        }
+    } catch (error) {
+        res.status(500).json({ error });
     }
 });
+
 module.exports = router;
