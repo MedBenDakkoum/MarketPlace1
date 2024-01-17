@@ -4,6 +4,7 @@ const config = {
     DB_CONNECTION: `mongodb://localhost/${TABLE_NAME}`,
     SECRET: 'badumts',
     SALT: 10,
+    ADMIN_COOKIE_NAME: 'ADMIN_SESSION',
     COOKIE_NAME: 'USER_SESSION',
     CLOUDINARY_NAME: 'deux8ft6s',
     CLOUDINARY_API_KEY: 712152923343979,

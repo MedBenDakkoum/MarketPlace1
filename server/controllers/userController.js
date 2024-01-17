@@ -51,4 +51,9 @@ router.get('/getUserById/:id', async (req, res) => {
     }
 })
 
+router.get('/isSeller', async (req,res)=>{
+    try{
+        
+    }
+});
 module.exports = router;

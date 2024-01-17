@@ -46,11 +46,16 @@ async function loginUser({ email, password }) {
 
 async function getUser(id) {
     try{
-        return await User.findById(id).lean();
+        let u = await User.findById(id).lean();
+        if(u){
+            return u;
+        }else{
+            return await Admin.findById(id).lean();
+        }
     }catch{
         throw { statusCode: 404, message: 'No user with this id found'}
     }
-}
+} 
 
 module.exports = {
     registerUser,

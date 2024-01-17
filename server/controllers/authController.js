@@ -21,12 +21,22 @@ router.post('/login', (req, res) => {
             jwt.verify(token, SECRET, (err, decoded) => {
                 if (err) {
                     res.clearCookie(COOKIE_NAME);
+                    res.clearCookie(ADMIN_COOKIE_NAME);
                 } else {
-                    req.user = decoded;
-                    res
+                    
+                    if(decoded.idAdmin){
+                        req.adminUser = decoded;
+                        res
                         .status(200)
-                        .cookie(COOKIE_NAME, token, { sameSite: 'none', secure: true, httpOnly: true })
+                        .cookie(ADMIN_COOKIE_NAME, token, { sameSite: 'none', secure: true, httpOnly: true })
                         .json({ user: decoded })
+                    }else{
+                        req.user = decoded;
+                        res
+                            .status(200)
+                            .cookie(COOKIE_NAME, token, { sameSite: 'none', secure: true, httpOnly: true })
+                            .json({ user: decoded })
+                    }
                 }
             })
         })
@@ -39,13 +49,21 @@ router.get('/logout', (req, res) => {
 });
 
 router.get('/getUser', async (req, res) => {
-    if (req.user) {
-        let user = await authService.getUser(req.user._id);
-        console.log(user);
-        res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, 
-            phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar}})
-    } else {
-        res.status(200).json({message: "Not loged in"});
+    try{
+        if (req.user) {
+                let user = await authService.getUser(req.user._id);
+                console.log(user);
+                if(user.isAdmin){
+                    res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
+                }else{
+                    res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, 
+                        phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar}})
+                }
+        } else {
+            res.status(200).json({message: "Not loged in"});
+        }
+    }catch(err){
+        console.error(err);
     }
 })
 
