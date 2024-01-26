@@ -3,22 +3,19 @@ const mongoosePaginate = require('mongoose-paginate-v2');
 
 const productSchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
-    title: {
+    reference: {
         type: String,
-        required: ['Title is required'],
+        required: true
+    },
+    name: {
+        type: String,
+        required: ['Name is required'],
         trim: true,
-        minlength: [3, 'Title should be at least 3 characters long'],
-        maxLenght: [50, "Title can't be more than 50 cahracters long"]
+        minlength: [3, 'Name should be at least 3 characters long'],
+        maxLenght: [50, "Name can't be more than 50 cahracters long"]
     },
     category: {
-        type: String,
-        required: ['Category is required'],
-        validate: {
-            validator: function (v) {
-                return (v != 'Choose...');
-            },
-            message: 'Pleese choose a category'
-        }
+        type: String
     },
     description: {
         type: String,

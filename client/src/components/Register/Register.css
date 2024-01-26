@@ -24,3 +24,8 @@ form {
 .form-text {
     margin-left: 4px;
 }
+.CheckboxMenu .dropdown-item:hover,
+.CheckboxMenu .dropdown-item:active {
+  background-color: transparent;
+  color: black;
+}

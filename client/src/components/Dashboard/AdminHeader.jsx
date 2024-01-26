@@ -3,7 +3,7 @@ import
  {BsFillBellFill, BsFillEnvelopeFill, BsPersonCircle, BsSearch, BsJustify}
  from 'react-icons/bs'
 
-function Header({OpenSidebar}) {
+function AdminHeader({OpenSidebar}) {
   return (
     <header className='header'>
         <div className='menu-icon'>
@@ -21,4 +21,4 @@ function Header({OpenSidebar}) {
   )
 }
 
-export default Header
+export default AdminHeader

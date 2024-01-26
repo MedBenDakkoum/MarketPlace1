@@ -1,10 +1,22 @@
 import React from 'react'
+import { useRef } from 'react';
 import 
 {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, 
   BsListCheck, BsMenuButtonWideFill, BsFillGearFill}
  from 'react-icons/bs'
 
-function Sidebar({openSidebarToggle, OpenSidebar}) {
+let oc = 0;
+const ToggleMp = () => {
+    if(oc){
+        document.getElementsByClassName('marketplace-dropdown')[0].style = "height:0"
+        oc=0;    
+    }else{
+        document.getElementsByClassName('marketplace-dropdown')[0].style = "height:160px"
+        oc=1;
+    }
+}
+
+function AdminSidebar({openSidebarToggle, OpenSidebar}) {
   return (
     <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive": ""}>
         <div className='sidebar-title'>
@@ -16,7 +28,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
 
         <ul className='sidebar-list'>
             <li className='sidebar-list-item'>
-                <a href="">
+                <a href="/admin">
                     <BsGrid1X2Fill className='icon'/> Dashboard
                 </a>
             </li>
@@ -36,10 +48,16 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                 </a>
             </li>
             <li className='sidebar-list-item'>
-                <a href="">
-                    <BsListCheck className='icon'/> Inventory
+                <a onClick={ToggleMp}>
+                    <BsListCheck className='icon'/> Marketplace
                 </a>
             </li>
+            <div className='marketplace-dropdown'>
+                    <a href='/admin/mp/sellers'>Sellers</a>
+                    <a href='/admin/mp/products'>Products</a>
+                    <a href='/admin/mp/orders'>Orders</a>
+                    <a href='/admin/mp/transactions'>Transactions</a>
+            </div>
             <li className='sidebar-list-item'>
                 <a href="">
                     <BsMenuButtonWideFill className='icon'/> Reports
@@ -55,4 +73,4 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
   )
 }
 
-export default Sidebar
+export default AdminSidebar

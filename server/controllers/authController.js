@@ -39,10 +39,13 @@ router.post('/login', (req, res) => {
                 }
             })
         })
-        .catch(error => res.status(500).json({ error: error }))
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({ error: error })
+        })
 });
 
-router.get('/logout', (req, res) => {
+router.post('/logout', (req, res) => {
     res.clearCookie(COOKIE_NAME);
     res.status(200).json({ message: 'Successfully logged out' })
 });
@@ -55,7 +58,7 @@ router.get('/getUser', async (req, res) => {
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
                 }else{
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, 
-                        phoneNumber: user.phoneNumber, createdSells: user.createdSells.length, avatar: user.avatar}})
+                        phoneNumber: user.phoneNumber, isSeller:user.isSeller, avatar: user.avatar}})
                 }
         } else {
             res.status(200).json({message: "Not loged in"});

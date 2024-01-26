@@ -21,7 +21,7 @@ function Header() {
                         {/* <Nav.Link href="#features">Features</Nav.Link>
                         <Nav.Link href="#pricing">Pricing</Nav.Link> */}
                     </Nav>
-                    {userData ?
+                    {userData?
                         (<Nav>
                             <NavLink className="nav-item" id="addButton" to="/add-product">
                                 <OverlayTrigger key="bottom" placement="bottom"

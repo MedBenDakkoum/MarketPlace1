@@ -1,9 +1,11 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
-const { SALT } = require('../config/config')
+const { SALT } = require('../config/config');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const userSchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
+    // userId: { type: Number, unique: true },
     name: {
         type: String,
         trim: true,
@@ -37,31 +39,43 @@ const userSchema = new mongoose.Schema({
         type: String,
         default: 'https://res.cloudinary.com/silenceiv/image/upload/q_auto:eco/v1617358367/defaultAvatar_wnoogh.png'
     },
-    store: {
-        type:mongoose.Schema.Types.ObjectId,
-        ref:'Store',
-        required:true,
-        unique:true
+    isSeller: {
+        type:Boolean,
+        default: false
     },
-    createdSells: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product'
-        }
+    idStore: {
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Store'
+    },
+    address: {
+        line1: {type:String, required:true},
+        line2: {type:String, default: ""},
+        zipCode: {type:String, required:true},
+        city: {type:String,required:true},
+        country: {type:String, default: "Tunisia"},
+        state: {type:String, default: "",required:true}
+    },
+    balance: {
+        type: Number,
+        default:0
+    },
+    paymentMethods: [
+        {type:String}
     ],
-    wishedProducts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product'
-        }
-    ],
-    chatRooms: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'ChatRoom'
-        }
-    ]
-});
+    subscription: {
+        //change is Active to false
+        isSubscribed:{type:Boolean,default:true},
+        fee:{type:Number},
+        startDate:{type:Date},
+        endDate:{type:Date},
+    },
+    isActive:{
+        type:Boolean,
+        default:true
+    }
+},{timestamps:true});
+
+userSchema.plugin(AutoIncrement, { inc_field: 'userId' });
 
 userSchema.pre('save', async function (next) {
     let salt = await bcrypt.genSalt(SALT);

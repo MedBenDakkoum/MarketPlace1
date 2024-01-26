@@ -1,8 +1,8 @@
-function LogOut({ history }) {
-    fetch('/auth/logout')
+function LogOut({ navigate }) {
+    fetch('/auth/logout' ,{ method:"POST"})
         .then(res => res.json())
         .then(res => {
-            history.push('/')
+            navigate('/')
         })
         .catch(err => console.log(err))
 }

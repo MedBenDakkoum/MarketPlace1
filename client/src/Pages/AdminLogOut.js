@@ -1,8 +1,8 @@
-function AdminLogOut({ history }) {
-    fetch('/admin/logout')
+function AdminLogOut({ navigate }) {
+    fetch('/api/admin/logout',{method:"POST"})
         .then(res => res.json())
         .then(res => {
-            history.push('/')
+            navigate('/')
         })
         .catch(err => console.log(err))
 }

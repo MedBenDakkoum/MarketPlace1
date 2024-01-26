@@ -225,3 +225,26 @@ body {
     display: none;
   }
 }
+.marketplace-dropdown{
+  display: flex;
+  flex-direction: column;
+  /* padding: 0 0 30px 0; */
+  padding-top: 0px;
+  height: 0;
+  overflow: hidden;
+  background-color: #1e2635;
+  transition: all .5s ease-in-out;
+
+}
+.marketplace-dropdown a{
+  text-decoration: none;
+  color: #9e9ea4;
+  padding: 8px 60px;
+}
+.marketplace-dropdown a:hover{
+  background-color: #373797;
+  
+}
+.seller-edit-container{
+  background-color: #2e394b;
+}

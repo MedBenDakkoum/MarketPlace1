@@ -2,10 +2,10 @@ import { useState, useContext } from 'react';
 import { Context } from '../ContextStore';
 import { loginUser } from '../services/userData'
 import { Form, Button, Spinner, Alert } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import SimpleSider from '../components/Siders/SimpleSider';
 
-function Login({ history }) {
+function Login({navigate}) {
     const [loading, setLoading] = useState(false);
     const [alertShow, setAlertShow] = useState(false);
     const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ function Login({ history }) {
         email: "",
         password: ""
     });
-    const { setUserData } = useContext(Context)
+    const { userData,setUserData } = useContext(Context)
 
     const handleChanges = (e) => {
         e.preventDefault();
@@ -28,9 +28,9 @@ function Login({ history }) {
                 if (!res.error) {
                     setUserData(res.user);
                     if(res.user.isAdmin){
-                        history.push('/admin');
+                        navigate('/admin');
                     }else{
-                        history.push('/');
+                        navigate('/');
                     }
                 } else {
                     setLoading(false);
@@ -41,7 +41,9 @@ function Login({ history }) {
     }
 
     return (
+        
         <>
+            {!userData? <>
             <SimpleSider />
             <div className="container auth-form">
                 <h1 className="auth-heading">Sign In</h1>
@@ -71,6 +73,7 @@ function Login({ history }) {
                     <p className="bottom-msg-paragraph">Don't have an account? <Link to="/auth/register">Sign Up</Link>!</p>
                 </Form>
             </div>
+            </> : <h1>Already Logged In</h1>}
         </>
     )
 }

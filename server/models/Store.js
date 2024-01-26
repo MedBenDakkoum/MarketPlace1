@@ -11,15 +11,13 @@ const storeSchema = new mongoose.Schema({
     },
     link: {
         type: String,
-        // validate: {
-        //     validator: function (v) {
-        //         return (v != 'Choose...');
-        //     }
-        // }
+    },
+    description: {
+        type:String,
+        default:""
     },
     categories: [{
-        type: mongoose.Types.ObjectId,
-        ref:'Categorie'
+        type:String
     }],
     products: [{
         type: mongoose.Types.ObjectId,
@@ -36,6 +34,6 @@ const storeSchema = new mongoose.Schema({
 },{timestamps:true});
 storeSchema.pre('save', function(next) {
     this.link = this.title.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
-    next()
+    next();
 })
 module.exports = mongoose.model('Store', storeSchema);
