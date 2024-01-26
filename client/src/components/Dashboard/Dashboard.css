@@ -247,4 +247,26 @@ body {
 }
 .seller-edit-container{
   background-color: #2e394b;
+  border: 1px solid #2e394b;
+}
+.seller-edit-navbar{
+  display: flex;
+  justify-content: space-around;
+  background-color: #1d2634;
+  height: 40px;
+  /* padding: 10px 0; */
+}
+.seller-edit-navbar .single-section{
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.seller-edit-navbar .single-section.active{
+  background-color: #2e394b;
+}
+.seller-edit-img{
+  width: 100%;
 }
