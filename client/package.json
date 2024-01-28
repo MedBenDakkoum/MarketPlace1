@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
+    "@canvasjs/react-charts": "^1.0.0",
     "@coreui/react": "^4.11.1",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
@@ -11,6 +12,7 @@
     "@mantine/core": "^7.4.2",
     "@mui/icons-material": "^5.15.6",
     "@mui/styled-engine": "^5.15.6",
+    "@mui/x-charts": "^6.19.1",
     "@syncfusion/ej2": "^24.1.45",
     "@syncfusion/ej2-react-calendars": "^24.1.44",
     "@syncfusion/ej2-react-charts": "^24.1.45",

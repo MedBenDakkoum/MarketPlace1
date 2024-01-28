@@ -1,14 +1,14 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {getSellerById} from '../../services/sellerData';
+import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
+import {getSellerById} from '../../../services/sellerData';
 import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller} from '../../services/adminService'
+import {updateSeller} from '../../../services/adminService'
 import Switch from "react-switch";
 import { Spinner, Alert } from 'react-bootstrap';
 
 
-function MpSellerEditSocial() {
+function MpSellerEditAddress() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         isActive:false,
@@ -141,19 +141,26 @@ function MpSellerEditSocial() {
     }
     return (
             <CForm className="row g-3" onSubmit={handleSubmit}>
-                <CCol md={12}>
-                    <CCol md={6}>
-                            <CFormInput name="facebookId" type="text" id="inputFacebookId" label="Facebook id" />
+                <CCol md={8}>
+                    <CCol xs={12}>
+                        <CFormTextarea name="line1" onChange={handleChangeAddress} id="inputAddress" value={address.line1} label="Address" placeholder="1234 Main St"/>
                     </CCol>
-                    <CCol md={6}>
-                            <CFormInput name="twitterId" type="text" id="inputTwitterId" label="Twitter id" />
+                    <CCol xs={12}>
+                        <CFormInput name="line2" onChange={handleChangeAddress} id="inputAddress2" value={address.line2} label="Address 2" placeholder="Apartment, studio, or floor"/>
                     </CCol>
-                    <CCol md={6}>
-                            <CFormInput name="youtubeId" type="text" id="inputYoutubeId" label="Youtube id" />
+                    <CCol md={12}>
+                        <CFormInput name="country" onChange={handleChangeAddress} id="inputCountry" value={address.country} label="Country"/>
                     </CCol>
-                    <CCol md={6}>
-                            <CFormInput name="InstagramId" type="text" id="inputInstagramId" label="Instagram id" />
+                    <CCol md={12}>
+                        <CFormInput name="state" onChange={handleChangeAddress} id="inputState" value={address.state} label="State"/>
                     </CCol>
+                    <CCol md={12}>
+                        <CFormInput name="city" onChange={handleChangeAddress} id="inputCity" value={address.city} label="City"/>
+                    </CCol>
+                    <CCol md={12}>
+                        <CFormInput name="zipCode" onChange={handleChangeAddress} id="inputZip" value={address.zipCode} label="Zip" />
+                    </CCol>
+
                     <CCol xs={12}>
                         <CButton type="submit">Save</CButton>
                     </CCol>
@@ -162,4 +169,4 @@ function MpSellerEditSocial() {
   )
 }
 
-export {MpSellerEditSocial};
+export {MpSellerEditAddress};

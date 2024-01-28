@@ -240,23 +240,24 @@ body {
   text-decoration: none;
   color: #9e9ea4;
   padding: 8px 60px;
+  cursor: pointer;
 }
 .marketplace-dropdown a:hover{
   background-color: #373797;
   
 }
-.seller-edit-container{
+.multi-choice-container{
   background-color: #2e394b;
   border: 1px solid #2e394b;
 }
-.seller-edit-navbar{
+.multi-choice-navbar{
   display: flex;
   justify-content: space-around;
   background-color: #1d2634;
   height: 40px;
   /* padding: 10px 0; */
 }
-.seller-edit-navbar .single-section{
+.multi-choice-navbar .single-section{
   width: 100%;
   text-align: center;
   cursor: pointer;
@@ -264,9 +265,18 @@ body {
   align-items: center;
   justify-content: center;
 }
-.seller-edit-navbar .single-section.active{
+.multi-choice-navbar .single-section.active{
   background-color: #2e394b;
 }
-.seller-edit-img{
+.multi-choice-img{
   width: 100%;
+}
+.product-mp-img{
+  width: 40px;
+}
+.single-product-mp-img{
+  width: 120px;
+}
+.clickable{
+  cursor: pointer;
 }

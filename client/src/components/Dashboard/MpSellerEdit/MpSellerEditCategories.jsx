@@ -1,8 +1,8 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {getSellerById} from '../../services/sellerData';
-import {updateSeller} from '../../services/adminService'
+import {getSellerById} from '../../../services/sellerData';
+import {updateSeller} from '../../../services/adminService'
 import CheckboxTree from 'react-checkbox-tree';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';

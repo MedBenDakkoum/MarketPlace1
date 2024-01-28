@@ -1,14 +1,14 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import {getSellerById} from '../../services/sellerData';
+import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
+import {getSellerById} from '../../../services/sellerData';
 import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller} from '../../services/adminService'
+import {updateSeller} from '../../../services/adminService'
 import Switch from "react-switch";
 import { Spinner, Alert } from 'react-bootstrap';
 
 
-function MpSellerEditInfo() {
+function MpSellerEditImages() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         isActive:false,
@@ -141,46 +141,46 @@ function MpSellerEditInfo() {
     }
     return (
             <CForm className="row g-3" onSubmit={handleSubmit}>
-
-                <CCol md={8}>
-                    <CCol md={12}>
-                        <Switch onChange={handleChangeOfIsActive} checked={data.isActive} />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormInput name="title" onChange={handleChangeStore} type="text" value={store.title} id="inputStoreName" label="Store Name" />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormInput name="link" onChange={handleChangeStore} type="text" value={store.link} id="inputStoreLink" label="Store Link" />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormInput name="name" onChange={handleChangeData} type="text" value={data.name} id="inputName" label="Name" />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormInput name="email" onChange={handleChangeData} type="email" value={data.email} id="inputEmail4" label="Email" />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormInput name="phoneNumber" onChange={handleChangeData} type="text" value={data.phoneNumber} id="inputPhoneNumber" label="Phone Number" />
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormSelect onChange={handleChangeData} name="gender" size="lg" label="Gender" value={data.gender}>
-                            <option value="male">male</option>
-                            <option value="female">female</option>
-                        </CFormSelect>
-                    </CCol>
-                    <CCol md={12}>
-                        <CFormTextarea
-                        id="exampleFormControlTextarea1"
-                        label="Example textarea"
-                        rows={3}
-                        text="Must be 8-20 words long."
-                        ></CFormTextarea>
-                    </CCol>
-                    <CCol xs={12}>
-                        <CButton type="submit">Save</CButton>
-                    </CCol>
+                <CCol md={12}>
+                    <CRow>
+                        <CCol>
+                            <CCol md={12}>
+                                <CFormInput name="profilePicture" type="file" label="Profile picture"/>
+                            </CCol>
+                            <CCol md={12}>
+                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                            </CCol>
+                        </CCol>
+                        <CCol>
+                            <CCol md={12}>
+                                <CFormInput name="storeLogo" type="file" label="Store Logo"/>
+                            </CCol>
+                            <CCol md={12}>
+                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                            </CCol>
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol>
+                            <CCol md={12}>
+                                <CFormInput name="profileBanner" type="file" label="Profile Banner"/>
+                            </CCol>
+                            <CCol md={12}>
+                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                            </CCol>
+                        </CCol>
+                        <CCol>
+                            <CCol md={12}>
+                                <CFormInput name="storeBanner" type="file" label="Store Banner"/>
+                            </CCol>
+                            <CCol md={12}>
+                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                            </CCol>
+                        </CCol>
+                    </CRow>
                 </CCol>
             </CForm>
   )
 }
 
-export {MpSellerEditInfo};
+export {MpSellerEditImages};

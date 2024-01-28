@@ -2,10 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 import {getSellers} from '../../services/sellerData';
 import moment from 'moment';
-
+import { useNavigate } from 'react-router-dom';
 
 
 function MpSellers() {
+    const navigate = useNavigate();
     const [rows, setRows] = useState([]);
     useEffect(()=> {
         async function sellersGet(){
@@ -21,7 +22,7 @@ function MpSellers() {
                     <CTableDataCell>{element.status}</CTableDataCell>
                     <CTableDataCell>{moment(element.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
                     <CTableDataCell><a href={'/seller/'+element._id}>See Profile</a></CTableDataCell>
-                    <CTableDataCell><a href={'/admin/mp/sellers/'+element._id}>Edit Profile</a></CTableDataCell>
+                    <CTableDataCell><a onClick={()=>{navigate('/admin/mp/sellers/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a></CTableDataCell>
                 </CTableRow>
             ));
             setRows(rows1);

@@ -4,7 +4,7 @@ import
 {BsCart3, BsGrid1X2Fill, BsFillArchiveFill, BsFillGrid3X3GapFill, BsPeopleFill, 
   BsListCheck, BsMenuButtonWideFill, BsFillGearFill}
  from 'react-icons/bs'
-
+import { useNavigate } from 'react-router-dom';
 let oc = 0;
 const ToggleMp = () => {
     if(oc){
@@ -17,6 +17,7 @@ const ToggleMp = () => {
 }
 
 function AdminSidebar({openSidebarToggle, OpenSidebar}) {
+    const navigate= useNavigate();
   return (
     <aside id="sidebar" className={openSidebarToggle ? "sidebar-responsive": ""}>
         <div className='sidebar-title'>
@@ -53,10 +54,11 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
                 </a>
             </li>
             <div className='marketplace-dropdown'>
-                    <a href='/admin/mp/sellers'>Sellers</a>
-                    <a href='/admin/mp/products'>Products</a>
-                    <a href='/admin/mp/orders'>Orders</a>
-                    <a href='/admin/mp/transactions'>Transactions</a>
+                    <a onClick={(e)=>{navigate("/admin/mp/config")}}>Configuration</a>
+                    <a onClick={(e)=>{navigate("/admin/mp/sellers")}}>Sellers</a>
+                    <a onClick={(e)=>{navigate("/admin/mp/products")}}>Products</a>
+                    <a onClick={(e)=>{navigate("/admin/mp/orders")}}>Orders</a>
+                    <a onClick={(e)=>{navigate("/admin/mp/transactions")}}>Transactions</a>
             </div>
             <li className='sidebar-list-item'>
                 <a href="">

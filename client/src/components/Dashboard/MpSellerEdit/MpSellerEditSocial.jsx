@@ -1,14 +1,14 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {getSellerById} from '../../services/sellerData';
+import {getSellerById} from '../../../services/sellerData';
 import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller} from '../../services/adminService'
+import {updateSeller} from '../../../services/adminService'
 import Switch from "react-switch";
 import { Spinner, Alert } from 'react-bootstrap';
 
 
-function MpSellerEditImages() {
+function MpSellerEditSocial() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         isActive:false,
@@ -142,45 +142,24 @@ function MpSellerEditImages() {
     return (
             <CForm className="row g-3" onSubmit={handleSubmit}>
                 <CCol md={12}>
-                    <CRow>
-                        <CCol>
-                            <CCol md={12}>
-                                <CFormInput name="profilePicture" type="file" label="Profile picture"/>
-                            </CCol>
-                            <CCol md={12}>
-                                <img className='seller-edit-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
-                            </CCol>
-                        </CCol>
-                        <CCol>
-                            <CCol md={12}>
-                                <CFormInput name="storeLogo" type="file" label="Store Logo"/>
-                            </CCol>
-                            <CCol md={12}>
-                                <img className='seller-edit-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
-                            </CCol>
-                        </CCol>
-                    </CRow>
-                    <CRow>
-                        <CCol>
-                            <CCol md={12}>
-                                <CFormInput name="profileBanner" type="file" label="Profile Banner"/>
-                            </CCol>
-                            <CCol md={12}>
-                                <img className='seller-edit-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
-                            </CCol>
-                        </CCol>
-                        <CCol>
-                            <CCol md={12}>
-                                <CFormInput name="storeBanner" type="file" label="Store Banner"/>
-                            </CCol>
-                            <CCol md={12}>
-                                <img className='seller-edit-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
-                            </CCol>
-                        </CCol>
-                    </CRow>
+                    <CCol md={6}>
+                            <CFormInput name="facebookId" type="text" id="inputFacebookId" label="Facebook id" />
+                    </CCol>
+                    <CCol md={6}>
+                            <CFormInput name="twitterId" type="text" id="inputTwitterId" label="Twitter id" />
+                    </CCol>
+                    <CCol md={6}>
+                            <CFormInput name="youtubeId" type="text" id="inputYoutubeId" label="Youtube id" />
+                    </CCol>
+                    <CCol md={6}>
+                            <CFormInput name="InstagramId" type="text" id="inputInstagramId" label="Instagram id" />
+                    </CCol>
+                    <CCol xs={12}>
+                        <CButton type="submit">Save</CButton>
+                    </CCol>
                 </CCol>
             </CForm>
   )
 }
 
-export {MpSellerEditImages};
+export {MpSellerEditSocial};
