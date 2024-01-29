@@ -29,6 +29,9 @@ import {MpConfig} from './components/Dashboard/MpConfig';
 import MpProductComboEdit from './components/Dashboard/MpProductCombo/MpProductComboEdit'
 import MpOrdersView from './components/Dashboard/MpOrders/MpOrdersView';
 import MpSingleOrderView from './components/Dashboard/MpOrders/MpSingleOrderView'
+import AdminOrders from './components/Dashboard/AdminOrders'
+import SingleOrder from './components/Dashboard/SingleOrder'
+
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -58,6 +61,8 @@ export default function App() {
           <Route path="mp/sellers/:id/orders" element={<MpOrdersView/>}/>
           <Route path="mp/orders/:id" element={<MpSingleOrderView/>}/>
           <Route path="mp/orders" element={<MpOrders />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<SingleOrder />} />
           <Route path="register" element={<Register />} />
           <Route path="logout" exact element={LogOut} />
         </Route>

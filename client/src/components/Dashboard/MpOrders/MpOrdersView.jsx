@@ -63,7 +63,7 @@ function MpOrdersView() {
                 <CTableDataCell>{element.sellerAmount}</CTableDataCell>
                 <CTableDataCell>{element.status}</CTableDataCell>
                 <CTableDataCell>{element.orderdOn}</CTableDataCell>
-                <CTableDataCell><a style={{color:"blue",cursor:'pointer'}} onClick={(e)=>{navigate("/admin/mp/orders/"+element.id)}}>View Orders</a></CTableDataCell>
+                <CTableDataCell><a style={{color:"blue",cursor:'pointer'}} onClick={(e)=>{navigate("/admin/mp/orders/"+element.id)}}>View Order</a></CTableDataCell>
             </CTableRow>
         ));
         setRows(rows1);
@@ -85,7 +85,7 @@ function MpOrdersView() {
                 <CTableHeaderCell scope="col">Seller amount</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Status</CTableHeaderCell>
                 <CTableHeaderCell scope="col">Order Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">View Orders</CTableHeaderCell>
+                <CTableHeaderCell scope="col">View Order</CTableHeaderCell>
             </CTableRow>
         </CTableHead>
         <CTableBody>
