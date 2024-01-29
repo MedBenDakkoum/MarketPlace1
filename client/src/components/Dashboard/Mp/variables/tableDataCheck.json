@@ -1,0 +1,32 @@
+[
+  {
+    "name": ["NameBoutique1", true],
+    "quantity": 2458,
+    "date": "12 Jan 3000",
+    "progress": 17.5
+  },
+  {
+    "name": ["NameBoutique2", false],
+    "quantity": 1485,
+    "date": "21 Feb 2021",
+    "progress": 10.8
+  },
+  {
+    "name": ["NameBoutique3", true],
+    "quantity": 1024,
+    "date": "13 Mar 2021",
+    "progress": 21.3
+  },
+  {
+    "name": ["NameBoutique4", true],
+    "quantity": 858,
+    "date": "24 Jan 2021",
+    "progress": 31.5
+  },
+  {
+    "name": ["NameBoutique5", false],
+    "quantity": 258,
+    "date": "24 Oct 2022",
+    "progress": 12.2
+  }
+]
