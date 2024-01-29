@@ -7,29 +7,31 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
-import Mp from "./components/Dashboard/Mp";
-import Categories from "./Pages/Categories";
-import Home from "./Pages/Home";
-import Error404 from "./Pages/Error404";
-import RootLayout from "./Pages/RootLayout";
-import { ContextStore } from "./ContextStore";
-import AdminRootLayout from "./Pages/AdminRootLayout";
-import AdminLogOut from "./Pages/AdminLogOut";
-import Login from "./Pages/Login";
-import Register from "./Pages/Register";
-import LogOut from "./Pages/LogOut";
-import Store from "./Pages/Store";
-import AdminHome from "./components/Dashboard/AdminHome";
-import MpProducts from "./components/Dashboard/MpProducts";
-import MpProductEdit from "./components/Dashboard/MpProductEdit";
-import MpOrders from "./components/Dashboard/MpOrders";
-import MpTransactions from "./components/Dashboard/MpTransactions";
-import MpSellers from "./components/Dashboard/MpSellers";
-import MpSellerEdit from "./components/Dashboard/MpSellerEdit";
-import { MpConfig } from "./components/Dashboard/MpConfig";
-import MpProductComboEdit from "./components/Dashboard/MpProductCombo/MpProductComboEdit";
-import MpOrdersView from "./components/Dashboard/MpOrders/MpOrdersView";
-import MpSingleOrderView from "./components/Dashboard/MpOrders/MpSingleOrderView";
+import Categories from './Pages/Categories';
+import Home from './Pages/Home';
+import Error404 from './Pages/Error404';
+import RootLayout from './Pages/RootLayout';
+import { ContextStore } from './ContextStore';
+import AdminRootLayout from './Pages/AdminRootLayout';
+import AdminLogOut from './Pages/AdminLogOut';
+import Login from './Pages/Login';
+import Register from './Pages/Register';
+import LogOut from './Pages/LogOut';
+import Store from './Pages/Store';
+import AdminHome from './components/Dashboard/AdminHome';
+import MpProducts from './components/Dashboard/MpProducts';
+import MpProductEdit from './components/Dashboard/MpProductEdit';
+import MpOrders from './components/Dashboard/MpOrders';
+import MpTransactions from './components/Dashboard/MpTransactions';
+import MpSellers from './components/Dashboard/MpSellers';
+import MpSellerEdit from './components/Dashboard/MpSellerEdit';
+import {MpConfig} from './components/Dashboard/MpConfig';
+import MpProductComboEdit from './components/Dashboard/MpProductCombo/MpProductComboEdit'
+import MpOrdersView from './components/Dashboard/MpOrders/MpOrdersView';
+import MpSingleOrderView from './components/Dashboard/MpOrders/MpSingleOrderView'
+import AdminOrders from './components/Dashboard/AdminOrders'
+import SingleOrder from './components/Dashboard/SingleOrder'
+
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -60,10 +62,12 @@ export default function App() {
         <Route path="mp/orders/:id" element={<MpSingleOrderView />} />
         <Route path="mp/orders" element={<MpOrders />} />
         <Route path="mp" element={<Mp />} />
-        <Route path="register" element={<Register />} />
-        <Route path="logout" exact element={LogOut} />
-      </Route>
-      <Route path="*" element={<Error404 />} />
-    </Routes>
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="orders/:id" element={<SingleOrder />} />
+          <Route path="register" element={<Register />} />
+          <Route path="logout" exact element={LogOut} />
+        </Route>
+        <Route path="*" element={<Error404 />} />
+      </Routes>
   );
 }

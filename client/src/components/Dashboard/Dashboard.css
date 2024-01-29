@@ -227,7 +227,11 @@ body {
     display: none;
   }
 }
+<<<<<<< HEAD
 .marketplace-dropdown {
+=======
+.sidebar-list-dropdown{
+>>>>>>> zied
   display: flex;
   flex-direction: column;
   /* padding: 0 0 30px 0; */
@@ -237,13 +241,21 @@ body {
   background-color: #1e2635;
   transition: all 0.5s ease-in-out;
 }
+<<<<<<< HEAD
 .mpa {
+=======
+.sidebar-list-dropdown a{
+>>>>>>> zied
   text-decoration: none;
   color: #9e9ea4;
   padding: 8px 60px;
   cursor: pointer;
 }
+<<<<<<< HEAD
 .marketplace-dropdown a:hover {
+=======
+.sidebar-list-dropdown a:hover{
+>>>>>>> zied
   background-color: #373797;
 }
 .multi-choice-container {
