@@ -2,180 +2,123 @@ import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
 import {getSellerById} from '../../../services/sellerData';
-import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller} from '../../../services/adminService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
-
+import {updateSeller,uploadImage} from '../../../services/adminService'
 
 function MpSellerEditImages() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
-        isActive:false,
-        gender:"",
-        avatar:"",
-        balance: 0,
-        paymentMethods: [],
-        _id: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
-        idStore: "",
-        createdAt: "",
-        updatedAt: "",
-        userId: 0,
-});
-    const [address, setAddress] = useState({
-        line1:"",
-        line2:"",
-        country:"",
-        state:"",
-        zipCode:"",
-        city:""
+        profileLogo:"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83",
+        storeLogo:"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83",
+        profileBanner:"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83",
+        storeBanner: "https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83",
     });
-    const [store, setStore] = useState({
-        categories: [],
-        products: [],
-        orders: [],
-        isPublic: false,
-        _id: "",
-        title: "",
-        createdAt: "",
-        updatedAt: "",
-        link: "",
-        __v: 0
-    });
+    
     // const [subscription, setSubscription] = useState({isActive:false});
     const params = useParams();
-    const [categoriesList,setCategories]= useState([
-        { key: "Shoes", cat: "Group 1" },
-        { key: "Electronics", cat: "Group 1" },
-        { key: "Shirts", cat: "Group 1" },
-      ]);
-    const [selectedCategories,setSelectedCategories]= useState([
-      ]);
-    const addCategorie = (selectedList, selectedItem)=> {
-        setSelectedCategories([...selectedCategories,selectedItem]);
-    }
-    const removeCategorie = (selectedList, selectedItem)=> {
-        setSelectedCategories(selectedCategories.filter(function(item) {
-            return item !== selectedItem
-        }))
-        let arr=selectedCategories;
-        for (let i = 0; i < arr.length; i++) { 
-            if ((arr[i].key === selectedItem.key) && (arr[i].cat === selectedItem.cat)) { 
-                arr.splice(i, 1); 
-            } 
-        }
-        setSelectedCategories(arr);
-
-
-    }
     useEffect(()=>{
         async function initialise(){
             let seller = await getSellerById(params.id);
-            setSelectedCategories(seller.store.categories.map((e)=> (
-                {key:e,cat:"Group 1"}
-            )));
             setData({
-                isActive:seller.isActive,
-                gender:seller.gender,
-                avatar:seller.avatar,
-                balance: seller.balance,
-                paymentMethods: seller.paymentMethods,
-                _id: seller._id,
-                name: seller.name,
-                email: seller.email,
-                phoneNumber: seller.phoneNumber,
-                idStore: seller.idStore,
-                createdAt: seller.createdAt,
-                updatedAt: seller.updatedAt,
-                userId: seller.userId,
+                profileLogo:seller.avatar || "",
+                storeLogo:seller.store.logo || "",
+                profileBanner:seller.banner || "",
+                storeBanner: seller.store.banner || "",
             });
-            setAddress(seller.address);
-            setStore(seller.store);
-            // setSubscription(seller.subscription);
         }
         initialise();
         setLoading(false);
     },[]);
-    const handleChangeData = (e) => {
-        const { name, value } = e.target;
-        setData({ ...data, [name]: value });
-    }
-    const handleChangeStore = (e) => {
-        const { name, value } = e.target;
-        setStore({ ...store, [name]: value });
-    }
-    const handleChangeAddress = (e) => {
-        const { name, value } = e.target;
-        setAddress({ ...address, [name]: value });
-    }
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-        store.categories = getCats();
-        let newData = {...data,store:store,address:address}
-        updateSeller(params.id,newData)
+        let newData = {...data}
+        for (const [key, value] of Object.entries(newData)) {
+            console.log(value);
+            if(value!==undefined && value!=="" && value.startsWith("data:image")){
+                await uploadImage(value).then((r,err)=>{
+                    if(err){
+                        console.log(err);
+                    }else{
+                        newData = {...newData,[`${key}`]:r.url}
+                    }
+                })
+            }else{
+                newData = {...newData,[`${key}`]:"https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83"}
+            }
+        }
+        let dataToSend ={
+            seller:{
+                avatar:newData.profileLogo,
+                banner:newData.profileBanner
+            },
+            store:{
+                logo:newData.storeLogo,
+                banner:newData.storeBanner
+            }
+        }
+        updateSeller(params.id,dataToSend)
         .then(res => {
             if (!res.error) {
                 setLoading(false);
             } else {
                 console.log(res.error);
             }
-        }).catch(err => console.error('error from register: ', err))
-        console.log(newData);
+        }).catch(err => console.error('error from updating: ', err))
+        
     }
-    const handleChangeOfIsActive = (e) => {
-        setData({ ...data, isActive: !data.isActive })
-    }
-    const handleChangeOfStoreIsPublic = (e) => {
-        setStore({ ...store, isPublic: !store.isPublic })
-    }
-    const getCats = ()=> {
-        let c=[];
-        selectedCategories.forEach(function(e){
-            c.push(e.key);
-        })
-        return c;
-    }
+    const handleChangeUpload = (e)=>{
+        const reader = new FileReader()
+
+        reader.readAsDataURL(e.target.files[0])
+    
+        reader.onload = () => {
+            setData({...data,[e.target.name]:reader.result})
+        }
+
+}
+
     return (
             <CForm className="row g-3" onSubmit={handleSubmit}>
                 <CCol md={12}>
                     <CRow>
                         <CCol>
                             <CCol md={12}>
-                                <CFormInput name="profilePicture" type="file" label="Profile picture"/>
+                                <CFormInput onChange={handleChangeUpload} name="profileLogo" type="file" label="Profile picture"/>
                             </CCol>
                             <CCol md={12}>
-                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                                <img className='multi-choice-img' src={data.profileLogo} label="File"></img>
                             </CCol>
                         </CCol>
                         <CCol>
                             <CCol md={12}>
-                                <CFormInput name="storeLogo" type="file" label="Store Logo"/>
+                                <CFormInput onChange={handleChangeUpload} name="storeLogo" type="file" label="Store Logo"/>
                             </CCol>
                             <CCol md={12}>
-                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                                <img className='multi-choice-img' src={data.storeLogo} label="File"></img>
                             </CCol>
                         </CCol>
                     </CRow>
                     <CRow>
                         <CCol>
                             <CCol md={12}>
-                                <CFormInput name="profileBanner" type="file" label="Profile Banner"/>
+                                <CFormInput onChange={handleChangeUpload} name="profileBanner" type="file" label="Profile Banner"/>
                             </CCol>
                             <CCol md={12}>
-                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                                <img className='multi-choice-img' src={data.profileBanner} label="File"></img>
                             </CCol>
                         </CCol>
                         <CCol>
                             <CCol md={12}>
-                                <CFormInput name="storeBanner" type="file" label="Store Banner"/>
+                                <CFormInput onChange={handleChangeUpload} name="storeBanner" type="file" label="Store Banner"/>
                             </CCol>
                             <CCol md={12}>
-                                <img className='multi-choice-img' src="https://img.freepik.com/free-vector/isolated-young-handsome-man-different-poses-white-background-illustration_632498-859.jpg?w=740&t=st=1706293645~exp=1706294245~hmac=67329a29784fe4ea70833e53c5d07b13a67fdeddf36249e8c391d068bcefae83" label="File"></img>
+                                <img className='multi-choice-img' src={data.storeBanner} label="File"></img>
                             </CCol>
+                        </CCol>
+                    </CRow>
+                    <CRow>
+                        <CCol md={12}>
+                            <CButton type="submit">Save</CButton>
                         </CCol>
                     </CRow>
                 </CCol>

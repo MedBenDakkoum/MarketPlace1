@@ -40,7 +40,7 @@ router.get('/sellers', async (req,res) => {
 router.get('/sellers/:id', async (req,res) => {
     try{
         let seller = await adminService.getSellerById(req.params.id);
-        res.status(200).json(seller); 
+        res.status(200).json(seller);
     }catch(err){
         console.error(err);
         res.status(404).json({message: "Not Found"});
@@ -48,9 +48,17 @@ router.get('/sellers/:id', async (req,res) => {
 })
 router.put('/sellers/:id', async (req,res) => {
     try{
-        // console.log(req.body.message);
-        let rslt = await adminService.updateSeller(req.params.id,req.body.message);
+        let rslt = await adminService.updateSeller(req.params.id,req.body.data);
         res.status(200).json({"seller":rslt.rslt2,"store":rslt.rslt1}); 
+    }catch(err){
+        console.error(err);
+        res.status(404).json({message: "Not Found"});
+    }
+})
+router.post('/image/upload', async (req,res) => {
+    try{
+        let rslt = await adminService.uploadImage(req.body.data);
+        res.status(200).json({"url":rslt}); 
     }catch(err){
         console.error(err);
         res.status(404).json({message: "Not Found"});

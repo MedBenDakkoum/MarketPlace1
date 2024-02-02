@@ -1,10 +1,16 @@
 const User = require('../models/User');
 const Store = require('../models/Store')
 const Admin = require('../models/Admin');
+const { cloudinary } = require('../config/cloudinary');
+const { CLOUDINARY_STORAGE } = require('../config/config');
 
 async function getStoreNameById(id){
     let store = await Store.find({"_id":id}).select('title -_id');
     return store[0].title;
+}
+async function getSellerStoreById(id){
+    let seller = await User.find({"_id":id});
+    return seller[0].idStore;
 }
 async function getStoreById(id){
     let store = await Store.find({"_id":id});
@@ -28,18 +34,11 @@ async function getSellerById(id) {
 }
 async function updateSeller(id,data){
     try{
-        let newData = {
-            "isActive": data.isActive,
-            "gender": data.gender,
-            "name": data.name,
-            "email": data.email,
-            "phoneNumber": data.email,
-            "address": data.address
-        }
-        console.log(data.store);
-
-        let rslt1 = await Store.findOneAndUpdate({"_id":data.idStore},data.store);
-        let rslt2 = await User.findOneAndUpdate({"_id":id,"isSeller":true},newData);
+        let sellerData = {...data.seller} || {}
+        let storeData = {...data.store} || {}
+        let storeID = await getSellerStoreById(id);
+        let rslt1 = await Store.findOneAndUpdate({"_id":storeID},storeData);
+        let rslt2 = await User.findOneAndUpdate({"_id":id,"isSeller":true},sellerData);
         return {rslt1,rslt2}
     }catch(err){
         console.error(err);
@@ -57,9 +56,29 @@ async function getAdmin(id) {
         throw { statusCode: 404, message: 'No user with this id found'}
     }
 }
+async function uploadImage(image) {
+    try{
+        const uploadResponse = await cloudinary.uploader.upload(image, {
+            upload_preset: CLOUDINARY_STORAGE,
+        }, { quality: "auto" });
+
+        let imageUrl = uploadResponse.url;
+        let index = (imageUrl.indexOf('upload/')) + 6;
+
+        let compressedImg = imageUrl
+            .substring(0, index) +
+            "/c_fit,q_auto,f_auto,w_800" +
+            imageUrl.substring(index);
+
+        return compressedImg;
+    }catch(err){
+        console.log(err);
+    }
+}
 module.exports = {
     getSellers,
     getAdmin,
     getSellerById,
-    updateSeller
+    updateSeller,
+    uploadImage
 }

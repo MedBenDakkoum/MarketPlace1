@@ -30,6 +30,12 @@ const storeSchema = new mongoose.Schema({
     isPublic : {
         type:Boolean,
         default:true
+    },
+    logo:{
+        type:String
+    },
+    banner:{
+        type:String
     }
 },{timestamps:true});
 storeSchema.pre('save', function(next) {

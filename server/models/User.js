@@ -59,9 +59,10 @@ const userSchema = new mongoose.Schema({
         type: Number,
         default:0
     },
-    paymentMethods: [
-        {type:String}
-    ],
+    paymentMethod: {
+        method:{type:String,default:""},
+        details:{type:String,default:""}
+    },
     subscription: {
         //change is Active to false
         isSubscribed:{type:Boolean,default:true},
@@ -72,6 +73,15 @@ const userSchema = new mongoose.Schema({
     isActive:{
         type:Boolean,
         default:true
+    },
+    banner:{
+        type:String
+    },
+    socials:{
+        facebook:{type:String,default:""},
+        twitter:{type:String,default:""},
+        youtube:{type:String,default:""},
+        instagram:{type:String,default:""}
     }
 },{timestamps:true});
 

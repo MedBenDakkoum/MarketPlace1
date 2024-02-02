@@ -8,6 +8,7 @@ require("dotenv").config();
 require('./config/express')(app);
 require('./config/mongoose');
 app.use(auth())
+global.settings = require('./config/settings.json');
 
 // const io = require("socket.io")(http, {
 //     cors: {

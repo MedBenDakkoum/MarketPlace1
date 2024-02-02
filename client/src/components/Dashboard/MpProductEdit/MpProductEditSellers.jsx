@@ -28,6 +28,7 @@ const sellers = [
 ]
 
 function MpProductEditSellers() {
+    const params = useParams();
     const [rows, setRows] = useState([]);
     useEffect(()=> {
         let rows1 = sellers.map((element, index) => (
@@ -38,7 +39,7 @@ function MpProductEditSellers() {
                 <CTableDataCell>{element.storeName}</CTableDataCell>
                 <CTableDataCell>{element.productSales}</CTableDataCell>
                 <CTableDataCell>{element.productPrice}</CTableDataCell>
-                <CTableDataCell><a href={"/admin/mp/seller/"+element._id}>More Info</a></CTableDataCell>
+                <CTableDataCell><a href={"/admin/mp/s/"+element.userId+"/p/"+params.id}>More Info</a></CTableDataCell>
             </CTableRow>
         ));
         setRows(rows1);

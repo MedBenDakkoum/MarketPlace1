@@ -1,10 +1,10 @@
-import React,{useState} from 'react'
+import React,{useState,useEffect} from 'react'
 import {MpConfigDefault} from './MpConfig/MpConfigDefault';
 import {MpConfigApproval} from './MpConfig/MpConfigApproval';
 import {MpConfigCommission} from './MpConfig/MpConfigCommission';
 import {MpConfigPayment} from './MpConfig/MpConfigPayment';
-
 function MpConfig() {
+    
     const [inter, setInter] = useState("default");
     const [classes, setClasses] = useState({
         default:"single-section active",
@@ -43,13 +43,13 @@ function MpConfig() {
                         </div>
                     </div>
                     {inter=="default" ?
-                        <MpConfigDefault/>
+                        <MpConfigDefault settings={settings}/>
                         : inter=="approval" ? 
-                        <MpConfigApproval/>
+                        <MpConfigApproval settings={settings}/>
                         : inter =="commission" ?
-                        <MpConfigCommission/>
+                        <MpConfigCommission settings={settings}/>
                         : inter =="payment" ?
-                        <MpConfigPayment/>
+                        <MpConfigPayment settings={settings}/>
                         : <h1>Error 404</h1>
                     }
             </div>

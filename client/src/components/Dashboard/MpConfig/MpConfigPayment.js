@@ -1,39 +1,46 @@
 import React, {useEffect,useState} from 'react';
 import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
+import {getSettings,updateSettings} from '../../../services/settingsService.js'
 
 function MpConfigPayment() {
+    const [settings, setSettings] = useState([{
+        id: 0,
+        method: "",
+    }])
     const [rows, setRows] = useState([]);
     const [newmethod,setNewMethod]= useState("");
-    const [methods,setMethods] = useState([
-        {
-            id:1,
-            name:"Paypal"
-        },
-        {
-            id:2,
-            name:"RunPay"
-        }
-    ]);
+    useEffect(function(){
+        async function requestSettings(){
+            let setting = await getSettings();
+            setSettings([...setting.paymentMethods])
+        } 
+        requestSettings()
+    },[])
     useEffect(()=> { 
-        let rows1 = methods.map((element, index) => (
+        let rows1 = settings.map((element, index) => (
             <CTableRow key={element.id} color='light'>
                 <CTableDataCell>#</CTableDataCell>
                 <CTableDataCell>{element.id}</CTableDataCell>
-                <CTableDataCell>{element.name}</CTableDataCell>
+                <CTableDataCell>{element.method}</CTableDataCell>
                 <CTableDataCell><a href="#">Edit</a></CTableDataCell>
             </CTableRow>
         ));
         setRows(rows1);
-    },[methods,setMethods])
+    },[settings,setSettings])
     const handleChangeNew = (e)=>{
         setNewMethod(e.target.value);
     }
     const handleAddMethod = (e)=>{
-        setMethods([...methods, {id:methods.length+1,name:newmethod}]);
+        setSettings([...settings, {id:settings.length+1,method:newmethod}]);
+        console.log(settings);
+    }
+    const handleSumbit = async (e)=>{
+        e.preventDefault();
+        await updateSettings({data:{"paymentMethods":settings}})
     }
     return (
-            <CForm className="row g-3">
+            <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>
                     <CTable>
                         <CTableHead>

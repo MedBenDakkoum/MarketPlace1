@@ -30,7 +30,11 @@ import MpProductComboEdit from './components/Dashboard/MpProductCombo/MpProductC
 import MpOrdersView from './components/Dashboard/MpOrders/MpOrdersView';
 import MpSingleOrderView from './components/Dashboard/MpOrders/MpSingleOrderView'
 import AdminOrders from './components/Dashboard/AdminOrders'
-import SingleOrder from './components/Dashboard/SingleOrder'
+import AdminInvoices from './components/Dashboard/AdminInvoices'
+import AdminCarts from "./components/Dashboard/AdminCarts";
+import SingleOrder from './components/Dashboard/SingleOrder';
+import MpSingleSellerProduct from  './components/Dashboard/MpSingleSellerProduct';
+import Mp from './components/Dashboard/Mp'
 
 //import {Action as logoutAction} from './pages/Logout.js'
 
@@ -61,13 +65,16 @@ export default function App() {
         <Route path="mp/sellers/:id/orders" element={<MpOrdersView />} />
         <Route path="mp/orders/:id" element={<MpSingleOrderView />} />
         <Route path="mp/orders" element={<MpOrders />} />
+        <Route path="mp/s/:sid/p/:pid" element={<MpSingleSellerProduct/>}/>
         <Route path="mp" element={<Mp />} />
-          <Route path="orders" element={<AdminOrders />} />
-          <Route path="orders/:id" element={<SingleOrder />} />
-          <Route path="register" element={<Register />} />
-          <Route path="logout" exact element={LogOut} />
-        </Route>
-        <Route path="*" element={<Error404 />} />
+        <Route path="orders" element={<AdminOrders />} />
+        <Route path="orders/:id" element={<SingleOrder />} />
+        <Route path="invoices" element={<AdminInvoices />} />
+        <Route path="carts" element={<AdminCarts />} />
+        <Route path="register" element={<Register />} />
+        <Route path="logout" exact element={LogOut} />
+      </Route>
+      <Route path="*" element={<Error404 />} />
       </Routes>
   );
 }

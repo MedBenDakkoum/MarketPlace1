@@ -12,52 +12,29 @@ function MpSellerEditInfo() {
     const [loading, setLoading] = useState(true);
     const [data, setData] = useState({
         isActive:false,
-        gender:"",
-        avatar:"",
-        balance: 0,
-        paymentMethods: [],
-        _id: "",
-        name: "",
-        email: "",
-        phoneNumber: "",
-        idStore: "",
-        createdAt: "",
-        updatedAt: "",
-        userId: 0,
-});
-    const [store, setStore] = useState({
-        categories: [],
-        products: [],
-        orders: [],
-        isPublic: false,
-        _id: "",
-        title: "",
-        createdAt: "",
-        updatedAt: "",
-        link: "",
-        __v: 0
+        storeTitle:"",
+        storeLink:"",
+        name:"",
+        email:"",
+        phoneNumber:"",
+        gender:"male",
+        storeDescription:""
     });
-    // const [subscription, setSubscription] = useState({isActive:false});
     const params = useParams();
     useEffect(()=>{
         async function initialise(){
             let seller = await getSellerById(params.id);
+            let store = seller.store;
             setData({
                 isActive:seller.isActive,
+                storeTitle:store.title,
+                storeLink:store.link,
+                name:seller.name,
+                email:seller.email,
+                phoneNumber:seller.phoneNumber,
                 gender:seller.gender,
-                avatar:seller.avatar,
-                balance: seller.balance,
-                paymentMethods: seller.paymentMethods,
-                _id: seller._id,
-                name: seller.name,
-                email: seller.email,
-                phoneNumber: seller.phoneNumber,
-                idStore: seller.idStore,
-                createdAt: seller.createdAt,
-                updatedAt: seller.updatedAt,
-                userId: seller.userId,
+                storeDescription:store.description
             });
-            setStore(seller.store);
             // setSubscription(seller.subscription);
         }
         initialise();
@@ -67,14 +44,22 @@ function MpSellerEditInfo() {
         const { name, value } = e.target;
         setData({ ...data, [name]: value });
     }
-    const handleChangeStore = (e) => {
-        const { name, value } = e.target;
-        setStore({ ...store, [name]: value });
-    }
     const handleSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
-        let newData = {...data}
+        let newData = {
+            seller:{
+            isActive:data.isActive,
+            name:data.name,
+            email:data.email,
+            phoneNumber:data.phoneNumber,
+            gender:data.gender
+        },
+            store:{
+            title:data.storeTitle,
+            link:data.storeLink,
+            description:data.storeDescription
+        }}
         updateSeller(params.id,newData)
         .then(res => {
             if (!res.error) {
@@ -83,15 +68,10 @@ function MpSellerEditInfo() {
                 console.log(res.error);
             }
         }).catch(err => console.error('error from register: ', err))
-        console.log(newData);
     }
     const handleChangeOfIsActive = (e) => {
         setData({ ...data, isActive: !data.isActive })
     }
-    const handleChangeOfStoreIsPublic = (e) => {
-        setStore({ ...store, isPublic: !store.isPublic })
-    }
-
     return (
             <CForm className="row g-3" onSubmit={handleSubmit}>
 
@@ -100,10 +80,10 @@ function MpSellerEditInfo() {
                         <Switch onChange={handleChangeOfIsActive} checked={data.isActive} />
                     </CCol>
                     <CCol md={12}>
-                        <CFormInput name="title" onChange={handleChangeStore} type="text" value={store.title} id="inputStoreName" label="Store Name" />
+                        <CFormInput name="storeTitle" onChange={handleChangeData} type="text" value={data.storeTitle} id="inputStoreName" label="Store Name" />
                     </CCol>
                     <CCol md={12}>
-                        <CFormInput name="link" onChange={handleChangeStore} type="text" value={store.link} id="inputStoreLink" label="Store Link" />
+                        <CFormInput name="storeLink" onChange={handleChangeData} type="text" value={data.storeLink} id="inputStoreLink" label="Store Link" />
                     </CCol>
                     <CCol md={12}>
                         <CFormInput name="name" onChange={handleChangeData} type="text" value={data.name} id="inputName" label="Name" />
@@ -122,6 +102,9 @@ function MpSellerEditInfo() {
                     </CCol>
                     <CCol md={12}>
                         <CFormTextarea
+                        onChange={handleChangeData}
+                        value={data.storeDescription}
+                        name='storeDescription'
                         id="exampleFormControlTextarea1"
                         label="Store Description"
                         rows={3}

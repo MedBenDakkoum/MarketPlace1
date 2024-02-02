@@ -13,18 +13,28 @@ import {
 import { useNavigate } from "react-router-dom";
 let oc = 0;
 
-const ToggleOrders = () => {
-    if(oc){
-        document.getElementsByClassName('orders-dropdown')[0].style = "height:0"
-        oc=0;    
-    }else{
-        document.getElementsByClassName('orders-dropdown')[0].style = "height:120px"
-        oc=1;
-    }
-}
-
 function AdminSidebar({openSidebarToggle, OpenSidebar}) {
     const navigate= useNavigate();
+    const ToggleMp = () => {
+        if(oc){
+            document.getElementsByClassName('marketplace-dropdown')[0].style = "height:0"
+            oc=0;    
+        }else{
+            document.getElementsByClassName('marketplace-dropdown')[0].style = "height:160px"
+            oc=1;
+        }
+        navigate("/admin/mp");
+    }
+    
+    const ToggleOrders = () => {
+        if(oc){
+            document.getElementsByClassName('orders-dropdown')[0].style = "height:0"
+            oc=0;    
+        }else{
+            document.getElementsByClassName('orders-dropdown')[0].style = "height:120px"
+            oc=1;
+        }
+    }
   return (
     <aside
       id="sidebar"
@@ -46,14 +56,14 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
                 </a>
             </li>
             <li className='sidebar-list-item'>
-                <a onClick={ToggleOrders}>
+                <a className="sli" onClick={ToggleOrders}>
                     <BsFillArchiveFill className='icon'/> Orders
                 </a>
             </li>
             <div className='sidebar-list-dropdown orders-dropdown'>
-                    <a onClick={(e)=>{navigate("/admin/orders")}}>Orders</a>
-                    <a onClick={(e)=>{navigate("/admin/orders/invoices")}}>Invoices</a>
-                    <a onClick={(e)=>{navigate("/admin/orders/shoppingcart")}}>Shopping Cart</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/orders")}}>Orders</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/invoices")}}>Invoices</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/carts")}}>Shopping Cart</a>
             </div>
             <li className='sidebar-list-item'>
                 <a href="">
@@ -66,16 +76,16 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
                 </a>
             </li>
             <li className='sidebar-list-item'>
-                <a onClick={ToggleMp}>
+                <a className="sli" onClick={ToggleMp}>
                     <BsListCheck className='icon'/> Marketplace
                 </a>
             </li>
             <div className='sidebar-list-dropdown marketplace-dropdown'>
-                    <a onClick={(e)=>{navigate("/admin/mp/config")}}>Configuration</a>
-                    <a onClick={(e)=>{navigate("/admin/mp/sellers")}}>Sellers</a>
-                    <a onClick={(e)=>{navigate("/admin/mp/products")}}>Products</a>
-                    <a onClick={(e)=>{navigate("/admin/mp/orders")}}>Orders</a>
-                    <a onClick={(e)=>{navigate("/admin/mp/transactions")}}>Transactions</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/config")}}>Configuration</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/sellers")}}>Sellers</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/products")}}>Products</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/orders")}}>Orders</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/transactions")}}>Transactions</a>
             </div>
             <li className='sidebar-list-item'>
                 <a href="">
