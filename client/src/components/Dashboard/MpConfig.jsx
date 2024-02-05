@@ -43,13 +43,13 @@ function MpConfig() {
                         </div>
                     </div>
                     {inter=="default" ?
-                        <MpConfigDefault settings={settings}/>
+                        <MpConfigDefault/>
                         : inter=="approval" ? 
-                        <MpConfigApproval settings={settings}/>
+                        <MpConfigApproval/>
                         : inter =="commission" ?
-                        <MpConfigCommission settings={settings}/>
+                        <MpConfigCommission/>
                         : inter =="payment" ?
-                        <MpConfigPayment settings={settings}/>
+                        <MpConfigPayment/>
                         : <h1>Error 404</h1>
                     }
             </div>

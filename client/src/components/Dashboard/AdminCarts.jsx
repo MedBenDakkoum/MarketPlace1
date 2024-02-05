@@ -60,7 +60,7 @@ function AdminCarts() {
     return (
     <main className='main-container'>
         <div className='main-title'>
-            <h3>Orders</h3>
+            <h3>Shopping Carts</h3>
         </div>
         <CTable>
         <CTableHead>

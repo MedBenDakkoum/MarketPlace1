@@ -14,18 +14,6 @@ const HomePage = () => {
       <header className="App-header">
         <h1>Welcome</h1>
         <div>
-            <a href="/auth/register">
-            <button>
-                Register
-            </button>
-            </a>
-            <a href="/auth/login">
-            <button>
-                Login
-            </button>
-            </a>
-        </div>
-        <div>
           <h2>Available Stores</h2>
           <ul>
             {storeData.map((store) => (
