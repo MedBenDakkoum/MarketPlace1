@@ -7,34 +7,35 @@ import {
   Link,
   useNavigate,
 } from "react-router-dom";
-import Categories from './Pages/Categories';
-import Home from './Pages/Home';
-import Error404 from './Pages/Error404';
-import RootLayout from './Pages/RootLayout';
-import { ContextStore } from './ContextStore';
-import AdminRootLayout from './Pages/AdminRootLayout';
-import AdminLogOut from './Pages/AdminLogOut';
-import Login from './Pages/Login';
-import Register from './Pages/Register';
-import LogOut from './Pages/LogOut';
-import Store from './Pages/Store';
-import AdminHome from './components/Dashboard/AdminHome';
-import MpProducts from './components/Dashboard/MpProducts';
-import MpProductEdit from './components/Dashboard/MpProductEdit';
-import MpOrders from './components/Dashboard/MpOrders';
-import MpTransactions from './components/Dashboard/MpTransactions';
-import MpSellers from './components/Dashboard/MpSellers';
-import MpSellerEdit from './components/Dashboard/MpSellerEdit';
-import {MpConfig} from './components/Dashboard/MpConfig';
-import MpProductComboEdit from './components/Dashboard/MpProductCombo/MpProductComboEdit'
-import MpOrdersView from './components/Dashboard/MpOrders/MpOrdersView';
-import MpSingleOrderView from './components/Dashboard/MpOrders/MpSingleOrderView'
-import AdminOrders from './components/Dashboard/AdminOrders'
-import AdminInvoices from './components/Dashboard/AdminInvoices'
+import Categories from "./Pages/Categories";
+import Home from "./Pages/Home";
+import Error404 from "./Pages/Error404";
+import RootLayout from "./Pages/RootLayout";
+import { ContextStore } from "./ContextStore";
+import AdminRootLayout from "./Pages/AdminRootLayout";
+import AdminLogOut from "./Pages/AdminLogOut";
+import Login from "./Pages/Login";
+import Register from "./Pages/Register";
+import LogOut from "./Pages/LogOut";
+import Store from "./Pages/Store";
+import AdminHome from "./components/Dashboard/AdminHome";
+import MpProducts from "./components/Dashboard/MpProducts";
+import MpProductEdit from "./components/Dashboard/MpProductEdit";
+import MpOrders from "./components/Dashboard/MpOrders";
+import MpTransactions from "./components/Dashboard/MpTransactions";
+import MpSellers from "./components/Dashboard/MpSellers";
+import MpSellerEdit from "./components/Dashboard/MpSellerEdit";
+import { MpConfig } from "./components/Dashboard/MpConfig";
+import MpProductComboEdit from "./components/Dashboard/MpProductCombo/MpProductComboEdit";
+import MpOrdersView from "./components/Dashboard/MpOrders/MpOrdersView";
+import MpSingleOrderView from "./components/Dashboard/MpOrders/MpSingleOrderView";
+import AdminOrders from "./components/Dashboard/AdminOrders";
+import AdminInvoices from "./components/Dashboard/AdminInvoices";
 import AdminCarts from "./components/Dashboard/AdminCarts";
-import SingleOrder from './components/Dashboard/SingleOrder';
-import MpSingleSellerProduct from  './components/Dashboard/MpSingleSellerProduct';
-import Mp from './components/Dashboard/Mp'
+import SingleOrder from "./components/Dashboard/SingleOrder";
+import MpSingleSellerProduct from "./components/Dashboard/MpSingleSellerProduct";
+import Mp from "./components/Dashboard/Mp";
+import AddSeller from "./components/Dashboard/AddSeller";
 
 //import {Action as logoutAction} from './pages/Logout.js'
 
@@ -65,8 +66,10 @@ export default function App() {
         <Route path="mp/sellers/:id/orders" element={<MpOrdersView />} />
         <Route path="mp/orders/:id" element={<MpSingleOrderView />} />
         <Route path="mp/orders" element={<MpOrders />} />
-        <Route path="mp/s/:sid/p/:pid" element={<MpSingleSellerProduct/>}/>
+        <Route path="mp/s/:sid/p/:pid" element={<MpSingleSellerProduct />} />
         <Route path="mp" element={<Mp />} />
+        <Route path="mp/seller/add" element={<AddSeller />} />
+
         <Route path="orders" element={<AdminOrders />} />
         <Route path="orders/:id" element={<SingleOrder />} />
         <Route path="invoices" element={<AdminInvoices />} />
@@ -75,6 +78,6 @@ export default function App() {
         <Route path="logout" exact element={LogOut} />
       </Route>
       <Route path="*" element={<Error404 />} />
-      </Routes>
+    </Routes>
   );
 }

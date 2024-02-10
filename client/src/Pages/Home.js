@@ -1,43 +1,128 @@
-import React from "react";
-import "../components/Home/HomePage.css";
+import { useEffect, useState } from "react";
+import InfiniteScroll from "react-infinite-scroll-component";
+import CategoriesNav from "../components/Categories/CategoriesNav";
+import ProductCard from "../components/ProductCard/ProductCard";
+import { Col, Spinner, Dropdown } from "react-bootstrap";
+import {
+  BiSortDown,
+  BiSort,
+  BiDownArrowAlt,
+  BiUpArrowAlt,
+  BiSortUp,
+} from "react-icons/bi";
+import "../components/Siders/SearchSider.css";
+import "../components/Categories/Categories.css";
+import "../components/ProductCard/ProductCard.css";
 
-const storeData = [
-  { id: 1, name: "Store 1", type: "Electronics" },
-  { id: 2, name: "Store 2", type: "Clothing" },
-  { id: 3, name: "Store 3", type: "Books" }
+function Home({ match }) {
+  const [products, setProduct] = useState([]);
+  const [page, setPage] = useState(1);
+  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [sort, setSort] = useState("oldest");
 
-];
+  const handleSearch = (e) => {
+    e.preventDefault();
+    setQuery(e.target.value);
+  };
 
-const HomePage = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Welcome</h1>
-        <div>
-            <a href="/auth/register">
-            <button>
-                Register
-            </button>
-            </a>
-            <a href="/auth/login">
-            <button>
-                Login
-            </button>
-            </a>
-        </div>
-        <div>
-          <h2>Available Stores</h2>
-          <ul>
-            {storeData.map((store) => (
-              <li key={store.id}>
-                {store.name} - {store.type}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </header>
-    </div>
+    <>
+      <div id="sider">
+        <input
+          className="col-lg-6"
+          type="text"
+          placeholder="Search..."
+          name="search"
+          value={query}
+          onChange={handleSearch}
+        />
+      </div>
+      <CategoriesNav />
+      <div className="container">
+        <Dropdown id="dropdown-sort">
+          <Dropdown.Toggle variant="light" id="dropdown-basic">
+            Sort <BiSort />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item
+              onClick={() => {
+                setSort("oldest");
+              }}
+            >
+              Oldest <BiDownArrowAlt />
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setSort("newest");
+              }}
+            >
+              Newest <BiUpArrowAlt />
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setSort("lowerPrice");
+              }}
+            >
+              Price <BiSortDown />
+            </Dropdown.Item>
+            <Dropdown.Item
+              onClick={() => {
+                setSort("biggerPrice");
+              }}
+            >
+              Price <BiSortUp />{" "}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        {!loading ? (
+          <InfiniteScroll
+            dataLength={products.length}
+            // next={() => {
+            //   if (query === "") {
+            //     getAll(page, currentCategory).then((res) => {
+            //       setProduct([...products, ...res.products]);
+            //       setPage(page + 1);
+            //     });
+            //   }
+            // }}
+            hasMore={() => {
+              if (products.length > 0) {
+                return true;
+              }
+              return false;
+            }}
+            className="row"
+          >
+            {products
+              .sort((a, b) => {
+                if (sort === "oldest") {
+                  return a.addedAt.localeCompare(b.addedAt);
+                }
+                if (sort === "newest") {
+                  return b.addedAt.localeCompare(a.addedAt);
+                }
+                if (sort === "lowerPrice") {
+                  return b.price - a.price;
+                }
+                if (sort === "biggerPrice") {
+                  return a.price - b.price;
+                }
+              })
+              .map((x) => (
+                <Col xs={12} md={6} lg={3} key={x._id.toString()}>
+                  <ProductCard params={x} />
+                </Col>
+              ))}
+          </InfiniteScroll>
+        ) : (
+          <div className="spinner">
+            <Spinner animation="border" />
+          </div>
+        )}
+      </div>
+    </>
   );
-};
+}
 
-export default HomePage;
+export default Home;
