@@ -36,6 +36,9 @@ const storeSchema = new mongoose.Schema({
     },
     banner:{
         type:String
+    },
+    businessEmail:{
+        type:String
     }
 },{timestamps:true});
 storeSchema.pre('save', function(next) {

@@ -22,6 +22,18 @@ async function getProducts(storeId) {
 async function getInfo(){
 
 }
+async function getStoreById(storeId) {
+    return await Store.findById(storeId);
+}
+async function updateStore(id,data){
+    try{
+        console.log(data);
+        let rslt = await Store.findOneAndUpdate({"_id":id},data);
+        return rslt
+    }catch(err){
+        console.error(err);
+    }
+}
 // async function findByCategory(category) {
 //     return await Product.find({ category: category })
 // }
@@ -66,5 +78,7 @@ async function getInfo(){
 // }
 
 module.exports = {
-    getProducts
+    getProducts,
+    getStoreById,
+    updateStore
 }

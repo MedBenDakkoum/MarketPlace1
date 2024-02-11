@@ -17,7 +17,7 @@
       "method": "Payoneer"
     }
   ],
-  "supportEmail": "support@tderrst.com",
+  "supportEmail": "support@test.com",
   "AllowNewSellers": true,
   "SellerNeedAdminApproval": false,
   "SellerCanOnOffStore": true,

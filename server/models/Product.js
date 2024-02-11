@@ -7,17 +7,30 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    price:{
+        type:Number
+    },
     newPrice: {
         type: Number,
         required: true,
-        trim: true,
     },
+    earning:{
+        type:Number
+    },  
     images: [{
         type: String,
     }],
     seller: {
         type: mongoose.Types.ObjectId,
         ref: 'User'
+    },
+    status:{
+        type:String,
+        default:"Pending"
+    },
+    initialProduct:{
+        type:mongoose.Types.ObjectId,
+        ref:'Product'
     },
     isActive: {
         type: Boolean,

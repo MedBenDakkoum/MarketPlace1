@@ -21,7 +21,7 @@ router.use('/user', userController);
 router.use('/messages', messageController);
 router.use('/api/admin', isAdmin ,adminController);
 router.use('/s/', storeController);
-router.use('/seller/',sellerController);
+router.use('/api/seller',sellerController);
 router.use('/settings',settingsController);
 
 module.exports = router;
