@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Context } from '../../ContextStore';
 import { Navbar, NavDropdown, Nav, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { BsFillPersonFill, BsFillEnvelopeFill, BsFillPlusCircleFill } from 'react-icons/bs';
+import { BsFillPersonFill, BsGrid1X2Fill, BsFillPlusCircleFill } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5'
 
 import './Header.css'
@@ -39,15 +39,14 @@ function Header() {
                                 <NavLink className="dropdown-item" to={`/seller/${userData._id}`}>
                                     <BsFillPersonFill />Profile
                                 </NavLink>
-
-                                {/* <NavDropdown.Divider /> */}
-
+                                
+                                <NavDropdown.Divider />
+                                <NavLink className="dropdown-item" to={`/dashboard/`}>
+                                    <BsGrid1X2Fill />Dashboard
+                                </NavLink>
                                 {/* <NavLink className="dropdown-item" to="/your-sells">
                                     <BsFillGridFill />Sells
                             </NavLink> */}
-                                <NavLink className="dropdown-item" to="/messages">
-                                    <BsFillEnvelopeFill />Messages
-                            </NavLink>
                                 {/* <NavLink className="dropdown-item" to="/wishlist">
                                     <BsFillHeartFill />Wishlist
                             </NavLink> */}

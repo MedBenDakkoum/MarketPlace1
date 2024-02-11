@@ -35,7 +35,18 @@ import AdminCarts from "./components/Dashboard/AdminCarts";
 import SingleOrder from './components/Dashboard/SingleOrder';
 import MpSingleSellerProduct from  './components/Dashboard/MpSingleSellerProduct';
 import Mp from './components/Dashboard/Mp'
-
+import SellerDashLayout from './Pages/SellerDashLayout'
+import SDHome from './components/SD/SDHome'
+import SDProfile from './components/SD/SDProfile'
+import SDStore from './components/SD/SDStore'
+import SDProducts from './components/SD/SDProducts'
+import SDOrders from './components/SD/SDOrders'
+import SDReturns from './components/SD/SDReturns'
+import SDTransactions from './components/SD/SDTransactions'
+import SDPayment from './components/SD/SDPayment'
+import SDSubscription from "./components/SD/SDSubscription";
+import SDSingleProduct from "./components/SD/SDSingleProduct";
+import SellerProfile from "./components/Profile/SellerProfile"
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -47,6 +58,19 @@ export default function App() {
       <Route path="/" context={ContextStore} element={<RootLayout />}>
         <Route index element={<Home />} />
         <Route path="s" element={<Store />} />
+        <Route path="dashboard" element={<SellerDashLayout />} >
+          <Route index element={<SDHome />} />
+          <Route path="profile" element={<SDProfile />} />
+          <Route path="store" element={<SDStore />} />
+          <Route path="products" element={<SDProducts />} />
+          <Route path="products/:id" element={<SDSingleProduct />} />
+          <Route path="orders" element={<SDOrders />} />
+          <Route path="returns" element={<SDReturns />} />
+          <Route path="transactions" element={<SDTransactions />} />
+          <Route path="payment" element={<SDPayment />} />
+          <Route path="subscription" element={<SDSubscription />} />
+        </Route>
+        <Route path="/seller/:id" element={<SellerProfile />}/>
       </Route>
       <Route path="/auth" element={<RootLayout />}>
         <Route index element={<Login />} />
@@ -74,6 +98,7 @@ export default function App() {
         <Route path="register" element={<Register />} />
         <Route path="logout" exact element={LogOut} />
       </Route>
+    
       <Route path="*" element={<Error404 />} />
       </Routes>
   );
