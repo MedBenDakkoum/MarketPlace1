@@ -1,44 +1,61 @@
 import React,{useState,useEffect} from "react";
 import {LineChart,PieChart} from '@mui/x-charts';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { CForm,CCol,CFormInput,CRow, CFormTextarea,CButton} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import {getProductSeo,updateProductSeo} from "../../../services/dashboardService"
+import { Spinner } from 'react-bootstrap';
 
 function SDProductSEO() {
     const navigate= useNavigate();
+    const params = useParams();
+    const [loading, setLoading] = useState(false);
     const [data,setData] = useState({
-        meta_title:"",
-        meta_description:"",
-        friendly_url:""
+        metaTitle:"",
+        metaDescription:"",
+        friendlyUrl:""
     });
     useEffect(function(){
-        //set initial data
+        async function init(){
+            let d = await getProductSeo(params.id);
+            setData({
+                metaTitle:d.seo?.metaTitle || "",
+                metaDescription:d.seo?.metaDescription || "",
+                friendlyUrl:d.seo?.friendlyUrl || ""
+            });
+        }
+        init()
     },[])
     const handleChange = (e)=>{
         setData({...data,[e.target.name]:e.target.value});
     }
-    const handleSumbit = (e)=>{
+    const handleSumbit = async (e)=>{
+        setLoading(true)
         e.preventDefault();
         let newData = {...data}
-        console.log(newData);
+        console.log(newData)
+        await updateProductSeo(params.id,newData).then(function(e){
+            setLoading(false)
+        })
     }
     return (
         <div className="sd-singleproduct-section">
+            {!loading?
             <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>
                     <CRow>
                         <CCol md={12}>
-                            <CFormInput value={data.meta_title} onChange={handleChange} name="meta_title" type="text" label="Meta title"/>
+                            <CFormInput value={data.metaTitle} onChange={handleChange} name="metaTitle" type="text" label="Meta title"/>
                         </CCol>
                     </CRow>
                     <CRow>
                         <CCol md={12}>
-                            <CFormTextarea value={data.meta_description} onChange={handleChange} name="meta_description" type="text" label="Meta description"/>
+                            <CFormTextarea value={data.metaDescription} onChange={handleChange} name="metaDescription" type="text" label="Meta description"/>
                         </CCol>
                     </CRow>
                     <CRow>
                         <CCol md={12}>
-                            <CFormInput value={data.friendly_url} onChange={handleChange} name="friendly_url" type="text" label="Friendly URL"/>
+                            <CFormInput value={data.friendlyUrl} onChange={handleChange} name="friendlyUrl" type="text" label="Friendly URL"/>
                         </CCol>
                     </CRow>
                     <CRow>
@@ -50,6 +67,11 @@ function SDProductSEO() {
                     </CRow>
                 </CCol>
             </CForm>
+            : 
+            <div className="spinner">
+                <Spinner animation="border" />
+            </div> 
+            }
         </div>
     );
 }

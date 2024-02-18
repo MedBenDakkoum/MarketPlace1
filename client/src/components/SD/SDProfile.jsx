@@ -3,11 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { CForm,CCol,CFormInput,CButton,CRow,CFormSelect} from '@coreui/react';
 import {getSellerProfile,uploadImage,updateProfile}  from '../../services/dashboardService';
 import { Spinner } from 'react-bootstrap';
+import Alert from '../Alert/Alert';
 
 
 function SDProfile() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:""
+    })
     const [data,setData] = useState({
         name:"",
         gender:"male",
@@ -99,11 +104,13 @@ function SDProfile() {
     }
     return (
       <main className="sd-container">
+            <Alert/>
           <div className="sd-section-title">
             <h1>Profile</h1>
           </div>
           <div className="sd-section-main">
             {!loading?
+            
           <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>
                     <CRow>

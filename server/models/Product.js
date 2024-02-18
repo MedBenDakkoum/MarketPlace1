@@ -16,7 +16,14 @@ const productSchema = new mongoose.Schema({
     },
     earning:{
         type:Number
-    },  
+    },
+    priceAddType:{
+        type:String,
+        default:"percentage"
+    },
+    priceAddAmount:{
+        type:Number
+    },
     images: [{
         type: String,
     }],
@@ -35,6 +42,11 @@ const productSchema = new mongoose.Schema({
     isActive: {
         type: Boolean,
         default: true
+    },
+    seo:{
+        metaTitle:String,
+        metaDescription:String,
+        friendlyUrl:String
     }
 });
 

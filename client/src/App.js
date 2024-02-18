@@ -47,6 +47,8 @@ import SDPayment from './components/SD/SDPayment'
 import SDSubscription from "./components/SD/SDSubscription";
 import SDSingleProduct from "./components/SD/SDSingleProduct";
 import SellerProfile from "./components/Profile/SellerProfile"
+import AddSeller from "./components/Dashboard/AddSeller"
+
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -57,7 +59,7 @@ export default function App() {
     <Routes>
       <Route path="/" context={ContextStore} element={<RootLayout />}>
         <Route index element={<Home />} />
-        <Route path="s" element={<Store />} />
+        <Route path="s/:link" element={<Store />} />
         <Route path="dashboard" element={<SellerDashLayout />} >
           <Route index element={<SDHome />} />
           <Route path="profile" element={<SDProfile />} />
@@ -70,6 +72,7 @@ export default function App() {
           <Route path="payment" element={<SDPayment />} />
           <Route path="subscription" element={<SDSubscription />} />
         </Route>
+        
         <Route path="/seller/:id" element={<SellerProfile />}/>
       </Route>
       <Route path="/auth" element={<RootLayout />}>

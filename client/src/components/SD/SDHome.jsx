@@ -44,7 +44,6 @@ function SDHome() {
         ]
     });
     useEffect(function(){
-        
         async function initData(){
             setLoading(true)
             let newDashInfo = await getDashboardInfo();
@@ -56,7 +55,6 @@ function SDHome() {
             setLoading(false)
         }
         initData();
-        
     },[])
     useEffect(function(){
       switch(chartTime){

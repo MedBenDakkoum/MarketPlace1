@@ -20,7 +20,7 @@ router.use('/products', productController);
 router.use('/user', userController);
 router.use('/messages', messageController);
 router.use('/api/admin', isAdmin ,adminController);
-router.use('/s/', storeController);
+router.use('/api/store', storeController);
 router.use('/api/seller',sellerController);
 router.use('/settings',settingsController);
 

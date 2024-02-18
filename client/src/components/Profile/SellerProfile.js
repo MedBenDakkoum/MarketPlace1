@@ -3,14 +3,14 @@ import ActiveSells from './Sells/ActiveSells'
 import { Col, Row, Button, Form, Modal } from 'react-bootstrap';
 import { BsFillPersonFill } from 'react-icons/bs';
 import { MdEmail, MdPhoneAndroid } from 'react-icons/md'
-import { FaSellsy } from 'react-icons/fa'
 import { RiMessage3Fill } from 'react-icons/ri';
 import { createChatRoom } from '../../services/messagesData'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getPublicSellerInfoById } from '../../services/sellerData';
 function SellerProfile() {
     const [showMsg, setShowMdg] = useState(false);
     const navigate = useNavigate()
+    const params = useParams();
     const [message, setMessage] = useState("");
     const handleClose = () => setShowMdg(false);
     const handleShow = () => setShowMdg(true);
@@ -25,7 +25,6 @@ function SellerProfile() {
         e.preventDefault();
         setMessage(e.target.value)
     }
-    
     const onMsgSent = (e) => {
         e.preventDefault();
         createChatRoom(data._id, message)
@@ -35,7 +34,17 @@ function SellerProfile() {
             .catch(err => console.log(err))
     }
     useEffect(function(){
-
+        async function initData(){
+            let seller = await getPublicSellerInfoById(params.id);
+            setData({
+                _id:seller.user._id,
+                avatar:seller.user.avatar,
+                name:seller.user.name,
+                email:seller.user.email,
+                phoneNumber:seller.user.phoneNumber
+            })
+        }
+        initData();
     },[])
     return (
         <>
@@ -43,7 +52,7 @@ function SellerProfile() {
                 <div className="container">
                     <Row className="profile-row">
                         <Col lg={2} md={5} sm={12}>
-                            <img id="avatar" alt="avatar" src={data.avatar} />
+                            <img id="avatar" alt="avatar" width="300" src={data.avatar} />
                         </Col>
                         <Col lg={2} md={3} sm={12}>
                             <p><BsFillPersonFill /> {data.name}</p>

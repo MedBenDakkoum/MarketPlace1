@@ -1,27 +1,50 @@
 const Product = require('../models/Product');
+const initialProduct = require('../models/initialProduct');
 const Store = require("../models/Store")
 const User = require('../models/User');
 const { cloudinary } = require('../config/cloudinary');
 const { CLOUDINARY_STORAGE } = require('../config/config');
 
-async function getProducts(storeId) {
+async function getProducts(storeLink) {
     try{
-        let prods = [];
-        let store = Store.find({_id:storeId});
-        if(store.isPublic){
-            store.products.forEach(function(p){
-                prods.push(Product.findOne({_id: p}).exec());
-            })
-        }else{
-            return [];
-        }
+        return new Promise(async (resolve, reject) => {
+            let store = await Store.findOne({link:storeLink});
+            if(store){
+                if(store.isPublic){
+                    let user = await User.findOne({idStore: store._id},{});
+                    let products = await Product.find({seller:user._id},{"initialProduct":1,"newPrice":1,"isActive":1})
+                    let prods = [...products] 
+                    let newProds = []
+                    console.log(products);
+                    var getingProds = new Promise((resolve1, reject) => {
+                        prods.forEach(async (p,i) => {
+                            let newP = {...p,img:"",name:"",price:0};
+                            if(p.isActive){
+                                await initialProduct.findOne({_id: p.initialProduct}).then((e)=>{
+                                    newProds.push({img:e.images[0] || "",name:e.name,price:p.newPrice});
+                                })
+                            }
+                            if(i==prods.length-1) resolve1()
+                        })
+                    });
+                    getingProds.then(()=>{
+                        resolve(newProds)
+                    })
+                }else{
+                    resolve([{}]);
+                }
+            }else{
+                resolve([{msg:"Not Found"}]);
+            }
+        })
     }catch(err){
         throw err;
     }
 }
-async function getInfo(){
-
+async function getInfoByLink(storeLink){
+    return await Store.findOne({link:storeLink},{"banner":1,"logo":1,"title":1,"description":1});
 }
+
 async function getStoreById(storeId) {
     return await Store.findById(storeId);
 }
@@ -80,5 +103,6 @@ async function updateStore(id,data){
 module.exports = {
     getProducts,
     getStoreById,
-    updateStore
+    updateStore,
+    getInfoByLink
 }
