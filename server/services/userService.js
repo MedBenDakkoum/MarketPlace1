@@ -167,6 +167,8 @@ async function getProds(sellerId){
     }
 }
 
+
+
 async function getInitProds(cats){
     try{
         return new Promise(async (resolve, reject) => {

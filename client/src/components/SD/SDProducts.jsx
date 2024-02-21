@@ -7,10 +7,20 @@ import Switch from "react-switch";
 import { MDBDataTable } from 'mdbreact';
 import {getProducts,getInitialProducts,toggleActive} from "../../services/dashboardService"
 import { Spinner } from 'react-bootstrap';
-
+import Alert from '../Alert/Alert';
+import SellNowProd from './SDProduct/SellNowProd'
 function SDProducts() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+      msg:"",
+      type:"",
+      refresh:true
+  })
+  const [addNewSellProd, setAddNewSellProd] = useState({
+    active:false,
+    id:""
+  })
     const [refresh, setRefresh] = useState(true);
     const [addProdPop, setAddProdPop] = useState(false);
     const [prodRows,setProdRows] = useState([]);
@@ -115,10 +125,15 @@ const [initialProdRows,setInitialProdRows] = useState([]);
   };
   const handleChangeActive = async(c,e,id)=>{
     setLoading(true);
-    await toggleActive(id).then(function(a){
+    await toggleActive(id)
+    .then(updatedData => {
       setRefresh(!refresh);
-      setLoading(false)
+      setAlert({msg:"Updated !",type:"success",refresh:!alert.refresh})
     })
+    .catch(error => {
+      setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+    });
+      setLoading(false)
   }
   const isInitialProductUsed = (ipID)=>{
     return new Promise(async (resolve, reject) => {
@@ -133,6 +148,12 @@ const [initialProdRows,setInitialProdRows] = useState([]);
         i++;
       })
   })
+  }
+  const handleSellNow = (e) =>{
+    setAddNewSellProd({
+      active:true,
+      id: e.target.attributes.id.value
+    })
   }
   const handleToggleProductPop = (e)=>{
     if(addProdPop){
@@ -177,7 +198,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
           ) 
         }else{
           item.used = (
-            <CButton type="button">
+            <CButton id={item._id} onClick={handleSellNow} type="button" >
               Sell now
             </CButton>
           )
@@ -224,6 +245,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
     
     return (
       <main className="sd-container">
+        <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
           <div className="sd-section-title">
             <h1>Products</h1>
           </div>
@@ -231,6 +253,9 @@ const [initialProdRows,setInitialProdRows] = useState([]);
             {
               addProdPop? 
               <div className="addprod-pop-container">
+                {addNewSellProd.active?
+                  <SellNowProd id={addNewSellProd.id} />
+                :
                 <div className="addprod-pop-main">
                   <BsXSquareFill onClick={handleToggleProductPop} className="exit-fullscreen"/>
                   <MDBDataTable
@@ -241,6 +266,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
                     data={initialData}
                   />
                 </div>
+                }
               </div> 
               : "" 
             }

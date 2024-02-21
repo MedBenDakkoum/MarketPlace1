@@ -6,11 +6,18 @@ import { BsCart, BsCartCheckFill, BsCartFill, BsEye, BsImage, BsEyeFill, BsPenci
 import { MDBDataTable } from 'mdbreact';
 import {getProductImages,uploadImage,updateProductImages} from "../../../services/dashboardService"
 import { Spinner } from 'react-bootstrap';
+import Switch from "react-switch";
+import Alert from '../../Alert/Alert';
 
 function SDProductImages() {
     const navigate= useNavigate();
     const params = useParams();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:"",
+        refresh:true
+    })
     const [viewingImage, setViewingImage] = useState({
         viewing:false,
         img:"",
@@ -24,13 +31,7 @@ function SDProductImages() {
             initial:false
         }
     ]);
-    const [addedRows, setAddedRows] = useState([
-        {
-            id:0,
-            imgURL:"",
-            initial:false
-        }
-    ]);
+    const [usedImages, setUsedImages] = useState([]);
     const [rows, setRows] = useState([])
     let data = {
         columns: [
@@ -47,7 +48,13 @@ function SDProductImages() {
             width: 270
           },
           {
-            label: 'Actions',
+            label: 'Used',
+            field: 'used',
+            sort: 'asc',
+            width: 100
+          },
+          {
+            label: 'View',
             field: 'actions',
             sort: 'asc',
             width: 100
@@ -76,58 +83,78 @@ function SDProductImages() {
                 let imgs = await getProductImages(params.id);
                 let newInitImgs = []
                 let i=0
-                imgs.initImages.map(function(e){
-                    let toAdd={id:i,imgURL:e,initial:true}
-                    newInitImgs.push(toAdd)
+                imgs.initImages.map(async function(e){
+                    let toAdd={id:i,imgURL:e,initial:true,used:imgs.prodImages.indexOf(e)>=0};
+                    newInitImgs.push(toAdd);
                     i++;
                 })
-                let newProdImgs = []
-                imgs.prodImages.map(function(e){
-                    let toAdd={id:i,imgURL:e,initial:false}
-                    newProdImgs.push(toAdd)
-                    i++;
-                })
-                if(i==imgs.initImages.length+imgs.prodImages.length){
-                    resolve({a:newInitImgs,b:newProdImgs})
+                if(i==imgs.initImages.length){
+                    resolve({a:newInitImgs,b:imgs.prodImages})
                 }
             })
             aa.then((e)=>{
                 setInitialRows([...e.a]);
-                setAddedRows([...e.b]);
-                setUrlRows([...e.a,...e.b])
+                setUsedImages([...e.b]);
+                let newRows =[...e.a]
+                newRows.map((item)=>{
+                    item.used = (
+                        <Switch id={item.imgURL} onChange={handleUsedImages} checked={item.used}></Switch>
+                    )
+                    item.actions = (
+                        <div className="prods-actions">
+                            <BsEyeFill link={item.imgURL} onClick={handleViewImage}/>
+                        </div>
+                    )
+                    item.img = (
+                        <img src={item.imgURL} width="80px"/>
+                    )
+                })
+                setRows([...newRows])
             })
         }
         init()
     },[])
-    useEffect(function(){
-        setUrlRows([...initialRows,...addedRows])
-    },[addedRows,setAddedRows])
+    // useEffect(function(){
+    //     setUrlRows([...initialRows])
+    // },[usedImages,setUsedImages])
 
-    const handleDeleteImage = (e)=>{
-        let id=""
-        if(e.target==e.currentTarget){
-            id = e.target.getAttribute("id");
+    // const handleDeleteImage = (e)=>{
+    //     let id=""
+    //     if(e.target==e.currentTarget){
+    //         id = e.target.getAttribute("id");
+    //     }else{
+    //         id = e.target.parentNode.getAttribute("id");
+    //     }
+    //     let i=0;
+    //     let newAddedRows = []
+    //     addedRows.map(function(item){
+    //         if(item.id!=parseInt(id)){
+    //             newAddedRows.push(item);
+    //         }
+    //         if(i==addedRows.length-1){
+    //             setAddedRows([...newAddedRows])
+    //         }
+    //         i++;
+    //     })
+    //     setUrlRows([...initialRows,...addedRows])
+    // }
+    const handleUsedImages = (c,e,i)=>{
+        if(usedImages.indexOf(i)>=0){
+            let newUsedImages= [...usedImages]
+            newUsedImages.splice(usedImages.indexOf(i),1)
+            setUsedImages([...newUsedImages])
         }else{
-            id = e.target.parentNode.getAttribute("id");
+            setUsedImages([...usedImages,i])
         }
-        let i=0;
-        let newAddedRows = []
-        addedRows.map(function(item){
-            if(item.id!=parseInt(id)){
-                newAddedRows.push(item);
-            }
-            if(i==addedRows.length-1){
-                setAddedRows([...newAddedRows])
-            }
-            i++;
-        })
-        setUrlRows([...initialRows,...addedRows])
     }
     useEffect(()=> {
-        let newRows =[...urlRows]
+        let newRows =[...initialRows]
           newRows.map((item)=>{
+            item.used = (
+                <Switch id={item.imgURL} onChange={handleUsedImages} checked={usedImages.indexOf(item.imgURL)>=0}></Switch>
+            )
             item.actions = (
-                <div className="prods-actions">{!item.initial? <BsTrashFill onClick={handleDeleteImage} id={item.id}/> : ""}
+                <div className="prods-actions">
                   <BsEyeFill link={item.imgURL} onClick={handleViewImage}/>
                 </div>
             )
@@ -136,17 +163,18 @@ function SDProductImages() {
             )
           })
           setRows([...newRows])
-      },[urlRows, setUrlRows])
-    const handleSumbit = async (e)=>{
+    },[usedImages, setUsedImages])
+
+    const handleSubmit = async (e)=>{
         setLoading(true);
         e.preventDefault();
-        let newData = [];
-        addedRows.forEach(function(e){
-            newData.push(e.imgURL)
-        })
-        await updateProductImages(params.id,{images:newData}).then(function(e){
+        await updateProductImages(params.id,{images:usedImages})
+        .then(function(e){
             setLoading(false);
-        })
+            setAlert({msg:"Saved successfully !",type:"success",refresh:!alert.refresh})
+        }).catch(error => {
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });
     }
     const handleExitFullScreen = (e)=>{
         setViewingImage({
@@ -154,26 +182,27 @@ function SDProductImages() {
             img:""
         })
     }
-    const handleAddImage = (e)=>{
-        setLoading(true);
-        const reader = new FileReader();
+    // const handleAddImage = (e)=>{
+    //     setLoading(true);
+    //     const reader = new FileReader();
 
-        reader.readAsDataURL(e.target.files[0]);
+    //     reader.readAsDataURL(e.target.files[0]);
 
-        reader.onload = async () => {
-            await uploadImage(reader.result).then((r,err)=>{
-                if(err){
-                    console.log(err);
-                }else{
-                    setAddedRows([...addedRows, {id: addedRows[addedRows.length-1].id+1,imgURL:r.url,initial:false}]);
-                }
-            })
+    //     reader.onload = async () => {
+    //         await uploadImage(reader.result).then((r,err)=>{
+    //             if(err){
+    //                 console.log(err);
+    //             }else{
+    //                 setAddedRows([...addedRows, {id: addedRows[addedRows.length-1].id+1,imgURL:r.url,initial:false}]);
+    //             }
+    //         })
             
-            setLoading(false);
-        }
-    }
+    //         setLoading(false);
+    //     }
+    // }
     return (
         <div className="sd-singleproduct-section">
+            <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
             {!loading?
             <>
             {viewingImage.viewing?
@@ -183,13 +212,13 @@ function SDProductImages() {
                 </div>
              :    <></>
             }
-            <CForm className="row g-3" onSubmit={handleSumbit}>
+            <CForm className="row g-3" onSubmit={handleSubmit}>
                 <CCol md={12}>
-                    <CRow>
+                    {/* <CRow>
                         <CCol md={12}>
                             <CFormInput onChange={handleAddImage} name="AddImg" type="file" id="price" label="Add Image"/>
                         </CCol>
-                    </CRow>
+                    </CRow> */}
                     <CRow>
                         <MDBDataTable
                             striped

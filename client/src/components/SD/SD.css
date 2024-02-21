@@ -241,3 +241,10 @@
     display: flex;
     justify-content: end;
 }
+.info-prod-sell-now{
+    display: flex;
+    gap: 20px;
+}
+.info-prod-sell-now img{
+    width: 200px;
+}

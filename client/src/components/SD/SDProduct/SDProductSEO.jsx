@@ -5,11 +5,17 @@ import { CForm,CCol,CFormInput,CRow, CFormTextarea,CButton} from '@coreui/react'
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getProductSeo,updateProductSeo} from "../../../services/dashboardService"
 import { Spinner } from 'react-bootstrap';
+import Alert from '../../Alert/Alert';
 
 function SDProductSEO() {
     const navigate= useNavigate();
     const params = useParams();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:"",
+        refresh:true
+    })
     const [data,setData] = useState({
         metaTitle:"",
         metaDescription:"",
@@ -35,11 +41,15 @@ function SDProductSEO() {
         let newData = {...data}
         console.log(newData)
         await updateProductSeo(params.id,newData).then(function(e){
-            setLoading(false)
-        })
+            setLoading(false);
+            setAlert({msg:"Saved successfully !",type:"success",refresh:!alert.refresh})
+        }).catch(error => {
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });
     }
     return (
         <div className="sd-singleproduct-section">
+            <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
             {!loading?
             <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>

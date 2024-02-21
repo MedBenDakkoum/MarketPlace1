@@ -4,9 +4,18 @@ import { useNavigate ,useParams} from "react-router-dom";
 import { CForm,CCol,CFormSelect,CRow,CFormInput,CButton, CFormTextarea} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getProductPrice,changeProductPrice} from "../../../services/dashboardService";
+import { Spinner } from 'react-bootstrap';
+import Alert from '../../Alert/Alert';
+
 function SDProductPrice() {
     const navigate= useNavigate();
     const params = useParams();
+    const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:"",
+        refresh:true
+    })
     const [priceAddAmount,setPriceAddAmount]=useState(0);
     const [priceAddType,setPriceAddType]=useState("percentage");
     const [data,setData] = useState({
@@ -39,8 +48,16 @@ function SDProductPrice() {
     }
     const handleSumbit = async (e)=>{
         e.preventDefault();
+        setLoading(true);
         let newData = {initPrice:data.initialPrice,priceAddType:priceAddType,priceAddAmount:priceAddAmount,price:data.price}
         await changeProductPrice(params.id,newData)
+        .then(updatedData => {
+            setAlert({msg:"Saved successfully !",type:"success",refresh:!alert.refresh})
+          })
+          .catch(error => {
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });
+        setLoading(false);
     }
     const calculate = (t,p,a)=>{
         if(isNaN(a)){
@@ -59,6 +76,8 @@ function SDProductPrice() {
     }
     return (
         <div className="sd-singleproduct-section">
+            <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
+            {!loading?
             <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>
                     <CRow>
@@ -86,6 +105,11 @@ function SDProductPrice() {
                     </CRow>
                 </CCol>
             </CForm>
+            :
+            <div className="spinner">
+                <Spinner animation="border" />
+            </div> 
+            }
         </div>
     );
 }

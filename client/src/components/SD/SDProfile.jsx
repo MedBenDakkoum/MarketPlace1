@@ -11,7 +11,8 @@ function SDProfile() {
     const [loading, setLoading] = useState(false);
     const [alert, setAlert]= useState({
         msg:"",
-        type:""
+        type:"",
+        refresh:true
     })
     const [data,setData] = useState({
         name:"",
@@ -65,11 +66,10 @@ function SDProfile() {
         reader.onload = async () => {
             await uploadImage(reader.result).then((r,err)=>{
                 if(err){
-                    console.log(err);
+                    setAlert({msg:err.message+" !",type:"fail",refresh:!alert.refresh})
                 }else{
                     setData({...data, [e.target.name]: r.url});
-                    console.log([e.target.name]);
-                    console.log(r.url);
+                    setAlert({msg:"Image uploaded !",type:"success",refresh:!alert.refresh})
                 }
             })
             setLoading(false);
@@ -99,12 +99,20 @@ function SDProfile() {
             avatar:data.avatar,
             banner:data.banner
         }
-        await updateProfile(newData);
-        setLoading(false)
+        await updateProfile(newData)
+        .then(updatedData => {
+            setLoading(false);
+            setAlert({msg:"Saved successfuly!",type:"success",refresh:!alert.refresh})
+          })
+          .catch(error => {
+            setLoading(false);
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });;
+        
     }
     return (
       <main className="sd-container">
-            <Alert/>
+            <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
           <div className="sd-section-title">
             <h1>Profile</h1>
           </div>

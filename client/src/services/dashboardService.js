@@ -65,15 +65,20 @@ export async function uploadImage(data) {
     })).json();
 }
 export async function updateProfile(data) {
-    return (await fetch(`${baseUrl}/api/seller/`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({data})
-    })).json();
+    try {
+        const response = await axios.put(`${baseUrl}/api/seller/`, {data}, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error updating seller:', error);
+        throw error;
+    }
 }
+
 export async function getProductPrice(pid){
     return (await fetch(`${baseUrl}/api/seller/products/${pid}/price`, {credentials: 'include'})).json();
 }
@@ -121,7 +126,7 @@ export async function updateProductSeo(id,data) {
         });
         return response.data;
     } catch (error) {
-        console.error("Error changing product price:", error);
+        console.error("Error changing product seo info:", error);
         throw error;
     }
 }

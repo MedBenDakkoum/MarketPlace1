@@ -109,6 +109,16 @@ router.get('/products', async (req,res) => {
         res.status(404).json({message: "Not Found"});
     }
 })
+router.post('/products', async (req,res) => {
+    try{
+        userService.addProd(req.user._id,req.body).then((rslt)=>{
+            res.status(200).json(rslt); 
+        });
+    }catch(err){
+        console.error(err);
+        res.status(404).json({message: "Not Found"});
+    }
+})
 router.get('/products/init', async (req,res) => {
     try{
         let storeId = await User.findById(req.user._id,{"idStore":1});

@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
 })
 
 router.use('/auth', authController);
-router.use('/products', productController);
+router.use('/api/products', productController);
 router.use('/user', userController);
 router.use('/messages', messageController);
 router.use('/api/admin', isAdmin ,adminController);
