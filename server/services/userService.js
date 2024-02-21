@@ -82,7 +82,22 @@ async function getDashboardHome(sellerId) {
     productCount.Total=pt;
     return {orders:orderCount,products:productCount,info:{earnings:earnings,sales:sales}};
 }
-
+async function addProd(sellerId,data){
+    let iP = await initialProduct.findById(data.productId);
+    let product=new Product({
+        seller:sellerId,
+        initialProduct:data.productId,
+        ref:iP.ref,
+        price:iP.price,
+        newPrice:data.price.price,
+        earning:data.price.price-iP.price,
+        priceAddType:data.price.priceAddType,
+        priceAddAmount:data.price.priceAddAmount,
+        images:iP.images,
+    })
+    let p = await product.save();
+    return p; 
+}
 async function uploadImage(image) {
     try{
         const uploadResponse = await cloudinary.uploader.upload(image, {
@@ -332,5 +347,6 @@ module.exports = {
     getProductSeo,
     updateProductSeo,
     toggleActive,
-    getInitProds
+    getInitProds,
+    addProd
 }

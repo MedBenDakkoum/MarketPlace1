@@ -116,6 +116,20 @@ export async function updateProductImages(id,data) {
 export async function getProductSeo(pid){
     return (await fetch(`${baseUrl}/api/seller/products/${pid}/seo`, {credentials: 'include'})).json();
 }
+export async function addProduct(data) {
+    try {
+        const response = await axios.post(`${baseUrl}/api/seller/products`, data, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error adding new product :", error);
+        throw error;
+    }
+}
 export async function updateProductSeo(id,data) {
     try {
         const response = await axios.put(`${baseUrl}/api/seller/products/${id}/seo`, data, {

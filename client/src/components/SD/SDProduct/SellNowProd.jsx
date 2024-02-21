@@ -4,11 +4,19 @@ import { useNavigate,useParams } from "react-router-dom";
 import { CForm,CCol,CFormSelect,CFormInput,CButton,CRow} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getInitProductById} from '../../../services/productData'
+import {addProduct} from '../../../services/dashboardService'
+import Alert from '../../Alert/Alert';
+
 function SellNowProd({ id=""}) {
     const navigate= useNavigate();
     const [priceAddAmount,setPriceAddAmount]=useState(0);
     const [priceAddType,setPriceAddType]=useState("percentage");
     const [productInfo, setProductInfo] = useState({});
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:"",
+        refresh:true
+    })
     const [data,setData] = useState({
         initialPrice:0,
         price:0,
@@ -38,17 +46,16 @@ function SellNowProd({ id=""}) {
     }
     const handleSumbit = async (e)=>{
         e.preventDefault();
-        // setLoading(true);
-        let newData = {initPrice:data.initialPrice,priceAddType:priceAddType,priceAddAmount:priceAddAmount,price:data.price}
-        // await changeProductPrice(id,newData)
-        // .then(updatedData => {
-        //     setAlert({msg:"Saved successfully !",type:"success",refresh:!alert.refresh})
-        //   })
-        //   .catch(error => {
-        //     setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
-        //   });
-        // setLoading(false);
-        console.log(newData)
+        setLoading(true);
+        let newData = {productId:id,price:{initPrice:data.initialPrice,priceAddType:priceAddType,priceAddAmount:priceAddAmount,price:data.price}}
+        await addProduct(newData)
+        .then(updatedData => {
+            setAlert({msg:"Added successfully !",type:"success",refresh:!alert.refresh})
+          })
+          .catch(error => {
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });
+        setLoading(false);
     }
     const calculate = (t,p,a)=>{
         if(isNaN(a)){
@@ -68,7 +75,7 @@ function SellNowProd({ id=""}) {
     
     return (
         <div className="addprod-pop-main">
-            
+                <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
                 {!Object.keys(productInfo).length==0?
                 <>
                 <div className="info-prod-sell-now">
