@@ -154,5 +154,97 @@
     top: 10px;
     right: 10px;
     font-size: 30px;
+    cursor: pointer;
     color: rgb(255, 69, 69);
+}
+.store-container{
+    position: relative;
+    height: 100%;
+}
+.store-header{
+    max-height: 400px;
+    position: relative;
+}
+.store-banner{
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 0 0 1000px rgba(11, 20, 77, 0.548);
+    background-image: url("https://static.vecteezy.com/system/resources/thumbnails/004/299/835/small/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-free-vector.jpg");
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: -1;
+}
+.store-banner img{
+    width: 100%;
+    visibility: hidden;
+}
+.store-info img{
+    height: 50%;
+    z-index: 100;
+    border-radius: 50%;
+}
+.store-info{
+    width: 100%;
+    height: 400px;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0 50px;
+    padding-top: 50px;
+    z-index: 100;
+    gap: 20px;
+    position: absolute;
+    top: 0;
+    color: white;
+}
+.store-title-description h1{
+    font-weight: 900;
+}
+.store-title-description p{
+    font-weight: 300;
+}
+.store-products{
+    display: grid;
+    grid-template-columns: auto auto auto;
+    width: 100%;
+    padding: 50px;
+    position: relative;
+}
+.single-store-product{
+    width: 100%;
+    padding: 20px;
+    /* border: 1px solid black; */
+    color: white;
+}
+.single-store-product img{
+    width: 100%;
+}
+.addprod-pop-container{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 10;
+}
+.addprod-pop-main{
+    position: relative;
+    width: 600px;
+    height: 100%;
+    background-color: #263043;
+    z-index: 9999;
+    padding: 30px 10px;
+}
+.add-button{
+    display: flex;
+    justify-content: end;
+}
+.info-prod-sell-now{
+    display: flex;
+    gap: 20px;
+}
+.info-prod-sell-now img{
+    width: 200px;
 }

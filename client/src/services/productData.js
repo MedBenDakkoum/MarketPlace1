@@ -9,6 +9,9 @@ export async function getAll(page, category, query) {
         return (await fetch(`${baseUrl}/products?page=${page}`, { credentials: 'include' })).json();
     }
 }
+export async function getInitProductById(id) {
+    return (await fetch(`${baseUrl}/api/products/${id}`, { credentials: 'include' })).json();
+}
 
 export async function getSpecific(id) {
     return (await fetch(`${baseUrl}/products/specific/${id}`, { credentials: 'include' })).json();

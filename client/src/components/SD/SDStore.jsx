@@ -3,11 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { CForm,CCol,CFormInput,CButton,CRow, CFormTextarea} from '@coreui/react';
 import {getStore,updateStore,uploadImage}  from '../../services/dashboardService';
 import { Spinner } from 'react-bootstrap';
+import Alert from '../Alert/Alert';
 
 
 function SDStore() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
+    const [alert, setAlert]= useState({
+        msg:"",
+        type:"",
+        refresh:true
+    })
     const [data,setData] = useState({
       banner:"https://static.vecteezy.com/system/resources/thumbnails/004/299/835/small/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-free-vector.jpg",
       logo:"https://store.webkul.com/media/catalog/product/cache/1/image/260x260/9df78eab33525d08d6e5fb8d27136e95/p/r/prerstahsop-advance-mv-mp-thumbnail-260x260_1.png",
@@ -40,7 +46,13 @@ function SDStore() {
   const handleSumbit = async (e)=>{
         e.preventDefault();
         setLoading(true);
-        let store = await updateStore(data);
+        await updateStore(data)
+        .then(updatedData => {
+            setAlert({msg:"Saved successfuly!",type:"success",refresh:!alert.refresh})
+          })
+          .catch(error => {
+            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+          });
         setLoading(false)
   }
   const handleTogglePrivacy = (e)=>{
@@ -55,11 +67,10 @@ function SDStore() {
     reader.onload = async () => {
         await uploadImage(reader.result).then((r,err)=>{
             if(err){
-                console.log(err);
+                setAlert({msg:err.message+" !",type:"fail",refresh:!alert.refresh})
             }else{
                 setData({...data, [e.target.name]: r.url});
-                console.log([e.target.name]);
-                console.log(r.url);
+                setAlert({msg:"Image uploaded !",type:"success",refresh:!alert.refresh})
             }
         })
         setLoading(false);
@@ -67,6 +78,7 @@ function SDStore() {
 }
     return (
       <main className="sd-container">
+        <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
           <div className="sd-section-title">
             <h1>Store</h1>
           </div>

@@ -20,8 +20,10 @@ const AdminRootLayout = () => {
   useEffect(() => {
     async function fetchData() {
         let u=await getInfo();
+        console.log(u);
         setAdminData(u.user);
         setLoading(false);
+
       }
       fetchData();
     

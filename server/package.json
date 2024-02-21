@@ -6,7 +6,7 @@
   "scripts": {
     "server": "nodemon index --ignore client",
     "client": "cd .. && npm start --prefix client ",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
+    "start": "nodemon index",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

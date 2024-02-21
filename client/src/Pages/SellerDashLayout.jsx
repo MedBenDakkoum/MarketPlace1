@@ -1,15 +1,21 @@
 // src/Pages/RootLayout.js
 import '../components/SD/SD.css'
-import React from 'react';
+import React,{useContext} from 'react';
 import { Outlet } from 'react-router-dom';
 import SDSideBar from '../components/SD/SDSideBar'
+import { Context } from '../ContextStore';
+import Error404 from './Error404';
 
 const SellerDashLayout = () => {
+  const { userData, setUserData } = useContext(Context);
   return (
-    <div className='seller-dash-layout'>
+    <>
+    {userData ? (<div className='seller-dash-layout'>
       <SDSideBar/>
       <Outlet/>
-    </div>
+    </div>) : <Error404/>
+    }
+    </>
   );
 };
 

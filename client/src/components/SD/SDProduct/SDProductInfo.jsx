@@ -1,11 +1,13 @@
 import React,{useState,useEffect} from "react";
 import {LineChart,PieChart} from '@mui/x-charts';
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { CForm,CCol,CFormSelect,CRow,CFormInput,CButton, CFormTextarea} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import {getInitialProdData} from "../../../services/dashboardService"
 
 function SDProductInfo() {
     const navigate= useNavigate();
+    const params = useParams();
     const [data,setData] = useState({
         name:"",
         description:"",
@@ -15,15 +17,19 @@ function SDProductInfo() {
         manufacterName:""
     });
     useEffect(function(){
-        //set initial data
+        async function init(){
+            let newData = await getInitialProdData(params.id);
+            setData({
+                name:newData.name || "",
+                description:newData.description || "",
+                reference:newData.ref || "",
+                quantity:newData.quantity || "",
+                weight:newData.weight || "",
+                manufacterName:newData.manufacterName || ""
+            });
+          }
+          init()
     },[])
-    const handleChange = (e)=>{
-        setData({...data,[e.target.name]: e.target.value})
-    }
-    const handleSumbit = (e)=>{
-        e.preventDefault();
-        console.log(data);
-    }
     return (
         <div className="sd-singleproduct-section">
             <CForm className="row g-3">

@@ -32,23 +32,23 @@ import MpSingleOrderView from "./components/Dashboard/MpOrders/MpSingleOrderView
 import AdminOrders from "./components/Dashboard/AdminOrders";
 import AdminInvoices from "./components/Dashboard/AdminInvoices";
 import AdminCarts from "./components/Dashboard/AdminCarts";
-import AddSeller from "./components/Dashboard/AddSeller";
-
-import SingleOrder from "./components/Dashboard/SingleOrder";
-import MpSingleSellerProduct from "./components/Dashboard/MpSingleSellerProduct";
-import Mp from "./components/Dashboard/Mp";
-import SellerDashLayout from "./Pages/SellerDashLayout";
-import SDHome from "./components/SD/SDHome";
-import SDProfile from "./components/SD/SDProfile";
-import SDStore from "./components/SD/SDStore";
-import SDProducts from "./components/SD/SDProducts";
-import SDOrders from "./components/SD/SDOrders";
-import SDReturns from "./components/SD/SDReturns";
-import SDTransactions from "./components/SD/SDTransactions";
-import SDPayment from "./components/SD/SDPayment";
+import SingleOrder from './components/Dashboard/SingleOrder';
+import MpSingleSellerProduct from  './components/Dashboard/MpSingleSellerProduct';
+import Mp from './components/Dashboard/Mp'
+import SellerDashLayout from './Pages/SellerDashLayout'
+import SDHome from './components/SD/SDHome'
+import SDProfile from './components/SD/SDProfile'
+import SDStore from './components/SD/SDStore'
+import SDProducts from './components/SD/SDProducts'
+import SDOrders from './components/SD/SDOrders'
+import SDReturns from './components/SD/SDReturns'
+import SDTransactions from './components/SD/SDTransactions'
+import SDPayment from './components/SD/SDPayment'
 import SDSubscription from "./components/SD/SDSubscription";
 import SDSingleProduct from "./components/SD/SDSingleProduct";
-import SellerProfile from "./components/Profile/SellerProfile";
+import SellerProfile from "./components/Profile/SellerProfile"
+import AddSeller from "./components/Dashboard/AddSeller"
+
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -59,8 +59,8 @@ export default function App() {
     <Routes>
       <Route path="/" context={ContextStore} element={<RootLayout />}>
         <Route index element={<Home />} />
-        <Route path="s" element={<Store />} />
-        <Route path="dashboard" element={<SellerDashLayout />}>
+        <Route path="s/:link" element={<Store />} />
+        <Route path="dashboard" element={<SellerDashLayout />} >
           <Route index element={<SDHome />} />
           <Route path="profile" element={<SDProfile />} />
           <Route path="store" element={<SDStore />} />
@@ -72,7 +72,8 @@ export default function App() {
           <Route path="payment" element={<SDPayment />} />
           <Route path="subscription" element={<SDSubscription />} />
         </Route>
-        <Route path="/seller/:id" element={<SellerProfile />} />
+        
+        <Route path="/seller/:id" element={<SellerProfile />}/>
       </Route>
       <Route path="/auth" element={<RootLayout />}>
         <Route index element={<Login />} />

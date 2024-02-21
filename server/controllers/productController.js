@@ -3,6 +3,8 @@ const router = Router();
 const { cloudinary } = require('../config/cloudinary');
 const isAuth = require('../middlewares/isAuth')
 const Product = require('../models/Product');
+const initialProduct = require('../models/initialProduct');
+
 const User = require('../models/User');
 const moment = require('moment');
 
@@ -27,11 +29,10 @@ router.get('/', async (req, res) => {
     }
 })
 
-router.get('/:category', async (req, res) => {
-    const { page } = req.query;
+router.get('/:id', async (req, res) => {
     try {
-        let products = await Product.paginate({ category: req.params.category }, { page: parseInt(page) || 1, limit: 10 });
-        res.status(200).json({ products: products.docs, pages: products.pages });
+        let product = await initialProduct.findById(req.params.id);
+        res.status(200).json(product);
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
