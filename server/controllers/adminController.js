@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const adminService = require("../services/adminService");
+const sellerService = require("../services/sellerService");
+const imageService = require("../services/imageService");
+const categorieService = require("../services/categorieService");
 // const isAuth = require('../middlewares/isAuth');
 // const isGuest = require('../middlewares/isGuest');
-const { SECRET, ADMIN_COOKIE_NAME } = require("../config/config");
-const jwt = require("jsonwebtoken");
+const { ADMIN_COOKIE_NAME } = require("../config/config");
 
 router.get("/", async (req, res) => {
   try {
@@ -25,6 +27,19 @@ router.get("/", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
+router.get("/basicInfo", async (req, res) => {
+  try {
+    if (req.adminUser) {
+      let basicInfo = await adminService.getBasicInfo();
+      res.status(200).json(basicInfo);
+    } else {
+      res.status(200).json({ user: { isAdmin: false } });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
 router.post("/logout", (req, res) => {
   try {
     res.clearCookie(ADMIN_COOKIE_NAME);
@@ -37,7 +52,7 @@ router.post("/logout", (req, res) => {
 
 router.get("/sellers", async (req, res) => {
   try {
-    let sellers = await adminService.getSellers();
+    let sellers = await sellerService.getSellers();
     res.status(200).json(sellers);
   } catch (err) {
     console.error(err);
@@ -46,7 +61,7 @@ router.get("/sellers", async (req, res) => {
 });
 router.post("/sellers", async (req, res) => {
   try {
-    let newSeller = await adminService.addSeller(req.body.data);
+    let newSeller = await sellerService.addSeller(req.body.data);
     res.status(200).json(newSeller);
   } catch (err) {
     console.error(err);
@@ -55,7 +70,7 @@ router.post("/sellers", async (req, res) => {
 });
 router.get("/sellers/:id", async (req, res) => {
   try {
-    let seller = await adminService.getSellerById(req.params.id);
+    let seller = await sellerService.getSellerById(req.params.id);
     res.status(200).json(seller);
   } catch (err) {
     console.error(err);
@@ -64,7 +79,7 @@ router.get("/sellers/:id", async (req, res) => {
 });
 router.put("/sellers/:id", async (req, res) => {
   try {
-    let rslt = await adminService.updateSeller(req.params.id, req.body.data);
+    let rslt = await sellerService.updateSeller(req.params.id, req.body.data);
     res.status(200).json({ seller: rslt.rslt2, store: rslt.rslt1 });
   } catch (err) {
     console.error(err);
@@ -73,11 +88,20 @@ router.put("/sellers/:id", async (req, res) => {
 });
 router.post("/image/upload", async (req, res) => {
   try {
-    let rslt = await adminService.uploadImage(req.body.data);
+    let rslt = await imageService.uploadImage(req.body.data);
     res.status(200).json({ url: rslt });
   } catch (err) {
     console.error(err);
     res.status(404).json({ message: "Not Found" });
+  }
+});
+router.get("/categories", async (req, res) => {
+  try {
+    let cats = await categorieService.getAll();
+    res.status(200).json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not tFound" });
   }
 });
 module.exports = router;

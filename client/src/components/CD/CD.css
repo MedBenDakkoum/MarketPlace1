@@ -1,0 +1,43 @@
+.client-dash-layout{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+.client-dash{
+    width: 100%;
+    max-width: 900px;
+    background-color: #263043;
+}
+.cd-nav-bar-container{
+    width: 100%;
+}
+.cd-nav-bar{
+    display: flex;
+    gap: 5px;
+    height: 50px;
+}
+.single-nav-bar-section{
+    padding: 5px 15px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    cursor: pointer;
+}
+.single-nav-bar-section.active{
+    background-color: rgb(23, 58, 255);
+}
+.single-nav-bar-section h1{
+    font-size: 24px;
+    color: white;
+    padding: 0;
+    margin: 0;
+}
+.cd-section-container{
+    padding: 20px;
+    color: rgb(228, 228, 228);
+}
+.cd-section-title{
+    
+}

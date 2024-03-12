@@ -2,7 +2,7 @@ import { useContext } from 'react';
 import { Context } from '../../ContextStore';
 import { Navbar, NavDropdown, Nav, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { NavLink } from 'react-router-dom';
-import { BsFillPersonFill, BsGrid1X2Fill, BsFillPlusCircleFill } from 'react-icons/bs';
+import { BsFillPersonFill, BsGrid1X2Fill, BsCart, BsCartFill } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5'
 
 import './Header.css'
@@ -23,15 +23,15 @@ function Header() {
                     </Nav>
                     {userData?
                         (<Nav>
-                            <NavLink className="nav-item" id="addButton" to="/add-product">
+                            <NavLink className="nav-item" id="addButton" to="/cart">
                                 <OverlayTrigger key="bottom" placement="bottom"
                                     overlay={
                                         <Tooltip id={`tooltip-bottom`}>
-                                            <strong>Add</strong>  a sell.
+                                            <strong>View</strong>  Cart.
                                         </Tooltip>
                                     }
                                 > 
-                                    <BsFillPlusCircleFill />
+                                    <BsCartFill style={{fontSize:"30px"}}/>
                                 </OverlayTrigger>
                             </NavLink>
 
@@ -41,9 +41,14 @@ function Header() {
                                 </NavLink>
                                 
                                 <NavDropdown.Divider />
+                                {userData?.isSeller?
                                 <NavLink className="dropdown-item" to={`/dashboard/`}>
                                     <BsGrid1X2Fill />Dashboard
                                 </NavLink>
+                            :     <NavLink className="dropdown-item" to={`/cd`}>
+                            <BsGrid1X2Fill />Dashboard
+                        </NavLink>
+                            }
                                 {/* <NavLink className="dropdown-item" to="/your-sells">
                                     <BsFillGridFill />Sells
                             </NavLink> */}

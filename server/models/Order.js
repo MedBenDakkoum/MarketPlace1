@@ -15,7 +15,7 @@ const orderSchema = new mongoose.Schema({
     totalShippingPrice:{
         type:Number
     },
-    totalShippingDiscount:{
+    totalDiscount:{
         type:Number
     },
     totalPrice:{
@@ -24,18 +24,31 @@ const orderSchema = new mongoose.Schema({
     sellerEarnings:{
         type:Number
     },
-    products:[{
-        type:mongoose.Types.ObjectId,
-        ref:'Product'  
-    }],
-    sellerId:{
+    products:[
+        {
+            productId:{
+                type:mongoose.Types.ObjectId,
+                ref:"Product"
+            },
+            storeId:{
+                type:mongoose.Types.ObjectId,
+                ref:"Store"
+            },
+            attributes:Object,
+            quantity:Number
+        }    
+    ],
+    clientId:{
         type:mongoose.Types.ObjectId,
         ref:'User'
     },
-    trakingLink:{
+    trackingLink:{
+        type:String
+    },
+    paymentMethod:{
         type:String
     }
-});
+},{timestamps:true});
 orderSchema.plugin(AutoIncrement, { inc_field: 'orderId' });
 
 

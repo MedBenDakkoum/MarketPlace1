@@ -1,18 +1,25 @@
 const { Router } = require('express');
 const router = Router();
-const { cloudinary } = require('../config/cloudinary');
-const isAuth = require('../middlewares/isAuth')
-const Product = require('../models/Product');
 const User = require('../models/User');
-const moment = require('moment');
-
+const orderService = require('../services/orderService');
 const storeService = require('../services/storeService');
+const productService = require('../services/productService');
 
+router.get('/orders', async (req, res) => {
+    try {
+        let storeId = await User.findById(req.user._id,{"idStore":1});
+        let orders = await orderService.getOrdersById(storeId.idStore);
+        res.status(200).json(orders);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message })
+    }
+})
 router.get('/:link', async (req, res) => {
     try {
-        let storeInfo = await storeService.getInfoByLink(req.params.link);
+        let storeInfo = await storeService.getPublicInfoByLink(req.params.link);
         if(storeInfo){
-            storeService.getProducts(req.params.link).then(function(storeProds){
+            productService.getProductsByStoreLink(req.params.link).then(function(storeProds){
                 res.status(200).json({info:storeInfo,products:storeProds});
             });
         }else{

@@ -61,3 +61,33 @@ export async function addSeller(data) {
     throw error;
   }
 }
+export async function getBasicInfo() {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/basicInfo`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error adding seller:", error);
+    throw error;
+  }
+}
+export async function getCategories() {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/categories`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error getting Categories:", error);
+    throw error;
+  }
+}

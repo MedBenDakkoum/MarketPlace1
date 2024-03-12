@@ -47,6 +47,16 @@ const userSchema = new mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         ref:'Store'
     },
+    sellerType:{
+        type:String,
+        default:"Personal"
+    },
+    RNE:{
+        type:String,
+    },
+    matriculeFiscale:{
+        type:String,
+    },
     address: {
         line1: {type:String, required:true},
         line2: {type:String, default: ""},
@@ -74,6 +84,10 @@ const userSchema = new mongoose.Schema({
         type:Boolean,
         default:true
     },
+    status:{
+        type:String,
+        default:"Pending"
+    },
     banner:{
         type:String
     },
@@ -82,6 +96,15 @@ const userSchema = new mongoose.Schema({
         twitter:{type:String,default:""},
         youtube:{type:String,default:""},
         instagram:{type:String,default:""}
+    },
+    supplierUsername:{
+        type:String
+    },
+    supplierPassword:{
+        type:String
+    },
+    supplierSecretKey:{
+        type:String
     }
 },{timestamps:true});
 

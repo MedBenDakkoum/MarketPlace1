@@ -7,13 +7,37 @@ const Store = require('../models/Store');
 
 async function registerUser(userData) {
     try{
-        let { name, email, gender, phoneNumber, password, repeatPassword, isSeller, storeName,categories, line1 ,line2, zipcode, city, country, state } = userData;
+        let { 
+            name,
+            email,
+            gender,
+            phoneNumber,
+            password,
+            repeatPassword,
+            isSeller, 
+            storeName,
+            categories, 
+            line1,
+            line2, 
+            zipcode, 
+            city, 
+            country, 
+            state 
+        } = userData;
         let errors = [];
         let checkUser = await User.findOne({ email });
         if (checkUser) errors.push('This email address is already in use; ');
         if(isSeller){
             if (storeName.length ==0) errors.push('Store Name is Required');
             if (categories.length ==0) errors.push('At least one categorie is Required');
+            if(userData.sellerType=="Business"){
+                if(userData.RNE.length==0){
+                    errors.push('RNA is Required');
+                }
+                if(userData.matriculeFiscale.length==0){
+                    errors.push('Matricule Fiscale is Required');
+                }
+            }
         }
         if (line1.length ==0) errors.push('Address Line 1 is Required');
         //city, country, state
@@ -39,6 +63,8 @@ async function registerUser(userData) {
                 "phoneNumber":phoneNumber,
                 "gender":gender,
                 "isSeller":true,
+                "sellerType":userData.sellerType,
+                
                 "idStore": storeId._id,
                 "address":{
                     "line1": line1,

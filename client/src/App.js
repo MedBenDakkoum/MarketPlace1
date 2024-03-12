@@ -48,7 +48,11 @@ import SDSubscription from "./components/SD/SDSubscription";
 import SDSingleProduct from "./components/SD/SDSingleProduct";
 import SellerProfile from "./components/Profile/SellerProfile"
 import AddSeller from "./components/Dashboard/AddSeller"
-
+import SingleProduct from "./components/SingleProduct/SingleProduct"
+import Cart from "./Pages/Cart"
+import ClientDashLayout from "./Pages/ClientDashLayout"
+import CDOrders from "./components/CD/CDOrders"
+import CDProfile from "./components/CD/CDProfile"
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -72,8 +76,13 @@ export default function App() {
           <Route path="payment" element={<SDPayment />} />
           <Route path="subscription" element={<SDSubscription />} />
         </Route>
-        
+        <Route path="cd" element={<ClientDashLayout />} >
+          <Route index element={<CDProfile />} />
+          <Route path="orders" element={<CDOrders />} />
+        </Route>
         <Route path="/seller/:id" element={<SellerProfile />}/>
+        <Route path="/products/:id" element={<SingleProduct/>}/>
+        <Route path="/cart" element={<Cart/>}/>
       </Route>
       <Route path="/auth" element={<RootLayout />}>
         <Route index element={<Login />} />

@@ -1,3 +1,4 @@
+import axios from 'axios';
 const baseUrl = 'http://localhost:5000';
 
 export async function getAll(page, category, query) {
@@ -13,10 +14,9 @@ export async function getInitProductById(id) {
     return (await fetch(`${baseUrl}/api/products/${id}`, { credentials: 'include' })).json();
 }
 
-export async function getSpecific(id) {
-    return (await fetch(`${baseUrl}/products/specific/${id}`, { credentials: 'include' })).json();
+export async function getProductFullInfo(id) {
+    return (await fetch(`${baseUrl}/api/products/${id}`, { credentials: 'include' })).json();
 }
-
 export async function createProduct(product) {
     return (await fetch(`${baseUrl}/products/create`, {
         method: 'POST',

@@ -1,11 +1,11 @@
 const baseUrl = 'http://localhost:5000';
 
 export async function getSettings() {
-    return (await fetch(`${baseUrl}/settings`)).json();
+    return (await fetch(`${baseUrl}/api/settings`)).json();
 }
 
 export async function updateSettings(data) {
-    return (await fetch(`${baseUrl}/settings`,{
+    return (await fetch(`${baseUrl}/api/settings`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

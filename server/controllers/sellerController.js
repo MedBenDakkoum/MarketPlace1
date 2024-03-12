@@ -2,14 +2,18 @@ const { Router } = require('express');
 const router = Router();
 const User = require('../models/User');
 // const isAuth = require('../middlewares/isAuth')
-const productService = require('../services/productService');
 const userService = require('../services/userService');
 const storeService = require('../services/storeService');
+const sellerService = require('../services/sellerService');
+const imageService = require('../services/imageService');
+const productService = require('../services/imageService');
+
 const Product = require('../models/Product');
 const Store = require('../models/Store');
+
 router.get('/', async (req, res) => {
     try {
-        let user = await userService.getSellerById(req.user._id);
+        let user = await sellerService.getSellerById(req.user._id);
         res.status(200).json(user);
     } catch (error) {
         console.error(error)
@@ -70,7 +74,7 @@ router.get('/dashboard', async (req, res) => {
         if(req.user._id==undefined){
             res.status(401).json({message:"Not Authenticated"});
         }
-        let user = await userService.getDashboardHome(req.user._id);
+        let user = await sellerService.getDashboardHome(req.user._id);
         res.status(200).json(user);
     } catch (error) {
         console.log(error)
@@ -92,7 +96,7 @@ router.get('/isSeller', async (req,res)=>{
 });
 router.post('/image/upload', async (req,res) => {
     try{
-        let rslt = await userService.uploadImage(req.body.data);
+        let rslt = await imageService.uploadImage(req.body.data);
         res.status(200).json({"url":rslt}); 
     }catch(err){
         console.error(err);
@@ -101,7 +105,7 @@ router.post('/image/upload', async (req,res) => {
 })
 router.get('/products', async (req,res) => {
     try{
-        userService.getProds(req.user._id).then((rslt)=>{
+        productService.getProdsBySellerId(req.user._id).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -111,7 +115,7 @@ router.get('/products', async (req,res) => {
 })
 router.post('/products', async (req,res) => {
     try{
-        userService.addProd(req.user._id,req.body).then((rslt)=>{
+        productService.assignProdToSeller(req.user._id,req.body).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -123,7 +127,7 @@ router.get('/products/init', async (req,res) => {
     try{
         let storeId = await User.findById(req.user._id,{"idStore":1});
         let cats = await Store.findById(storeId.idStore,{"categories":1})
-        userService.getInitProds(cats.categories).then((rslt)=>{
+        initProdsService.getInitProds(cats.categories).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -134,7 +138,7 @@ router.get('/products/init', async (req,res) => {
 router.get('/products/:id/init', async (req,res) => {
     try{
         let initProdId = await Product.findById(req.params.id,{"initialProduct":1});
-        userService.getInitProdById(initProdId.initialProduct).then((rslt)=>{
+        initProdsService.getInitProdById(initProdId.initialProduct).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -145,7 +149,7 @@ router.get('/products/:id/init', async (req,res) => {
 router.get('/products/:id/price', async (req,res) => {
     try{
         //add check if product is owned by seller
-        userService.getProductPrice(req.params.id).then((rslt)=>{
+        productService.getProductPriceByProductId(req.params.id).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -156,7 +160,7 @@ router.get('/products/:id/price', async (req,res) => {
 router.put('/products/:id/price', async (req,res) => {
     try{
         //add check if product is owned by seller
-        userService.changeProductPrice(req.params.id,req.body).then((rslt)=>{
+        productService.changeProductPrice(req.params.id,req.body).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -164,9 +168,10 @@ router.put('/products/:id/price', async (req,res) => {
         res.status(404).json({message: "Not Found"});
     }
 })
+
 router.get('/products/:id/images', async (req,res) => {
     try{
-        userService.getProductImages(req.params.id).then((rslt)=>{
+        productService.getProductImages(req.params.id).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -174,9 +179,10 @@ router.get('/products/:id/images', async (req,res) => {
         res.status(404).json({message: "Not Found"});
     }
 })
+
 router.put('/products/:id/images', async (req,res) => {
     try{
-        userService.updateProductImages(req.params.id,req.body).then((rslt)=>{
+        productService.updateProductImages(req.params.id,req.body).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -186,7 +192,7 @@ router.put('/products/:id/images', async (req,res) => {
 })
 router.get('/products/:id/seo', async (req,res) => {
     try{
-        userService.getProductSeo(req.params.id).then((rslt)=>{
+        productService.getProductSeo(req.params.id).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -196,7 +202,7 @@ router.get('/products/:id/seo', async (req,res) => {
 })
 router.put('/products/:id/seo', async (req,res) => {
     try{
-        userService.updateProductSeo(req.params.id,req.body).then((rslt)=>{
+        productService.updateProductSeo(req.params.id,req.body).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){
@@ -206,7 +212,7 @@ router.put('/products/:id/seo', async (req,res) => {
 })
 router.post('/products/:id/toggle', async (req,res) => {
     try{
-        userService.toggleActive(req.params.id).then((rslt)=>{
+        productService.toggleActive(req.params.id).then((rslt)=>{
             res.status(200).json(rslt);
         });
     }catch(err){
@@ -216,7 +222,7 @@ router.post('/products/:id/toggle', async (req,res) => {
 })
 router.get('/:id', async (req, res) => {
     try {
-        let user = await userService.getSellerById(req.params.id);
+        let user = await sellerService.getSellerById(req.params.id);
         console.log(req.user);
         let jsonRes = {
             _id: user._id, name: user.name, email: user.email, phoneNumber: user.phoneNumber,

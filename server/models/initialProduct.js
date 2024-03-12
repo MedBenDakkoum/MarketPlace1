@@ -13,9 +13,6 @@ const initialProductSchema = new mongoose.Schema({
     name: {
         type: String,
     },
-    ean13: {
-        type: String,
-    },
     description: {
         type: String,
     },
@@ -32,7 +29,7 @@ const initialProductSchema = new mongoose.Schema({
     quantity:{
         type:Number
     },
-    wholeSalePrice:{
+    wholeSalePrice:{ //
         type:Number
     },
     price:{
@@ -56,10 +53,22 @@ const initialProductSchema = new mongoose.Schema({
     isAvailable:{
         type:Boolean
     },
-    manufacturerName:{
+    manufacturerName:{ //
         type:String
     },
-    lastUpdated:{
+    lastUpdated:{ //
+        type:String
+    },
+    meta_title:{
+        type:String
+    },
+    meta_description:{
+        type:String
+    },
+    friendlyUrl:{
+        type:String
+    },
+    description_short:{
         type:String
     }
 });

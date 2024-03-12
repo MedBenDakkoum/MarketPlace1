@@ -8,9 +8,19 @@ const CategorieSchema = new mongoose.Schema({
     name:{
         type:String
     },
-    parentRef: {
+    parent: {
         type:String,
+    },
+    level:{
+        type:Number,
+    },
+    description:{
+        type:String
+    },
+    link_rewrite:{
+        type:String
     }
+
 });
 
 

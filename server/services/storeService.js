@@ -1,56 +1,72 @@
 const Product = require('../models/Product');
-const initialProduct = require('../models/initialProduct');
 const Store = require("../models/Store")
 const User = require('../models/User');
-const { cloudinary } = require('../config/cloudinary');
-const { CLOUDINARY_STORAGE } = require('../config/config');
 
-async function getProducts(storeLink) {
-    try{
-        return new Promise(async (resolve, reject) => {
-            let store = await Store.findOne({link:storeLink});
-            if(store){
-                if(store.isPublic){
-                    let user = await User.findOne({idStore: store._id},{});
-                    let products = await Product.find({seller:user._id},{"initialProduct":1,"newPrice":1,"isActive":1})
-                    let prods = [...products] 
-                    let newProds = []
-                    console.log(products);
-                    var getingProds = new Promise((resolve1, reject) => {
-                        prods.forEach(async (p,i) => {
-                            let newP = {...p,img:"",name:"",price:0};
-                            if(p.isActive){
-                                await initialProduct.findOne({_id: p.initialProduct}).then((e)=>{
-                                    newProds.push({img:e.images[0] || "",name:e.name,price:p.newPrice});
-                                })
-                            }
-                            if(i==prods.length-1) resolve1()
-                        })
-                    });
-                    getingProds.then(()=>{
-                        resolve(newProds)
-                    })
-                }else{
-                    resolve([{}]);
-                }
-            }else{
-                resolve([{msg:"Not Found"}]);
-            }
-        })
-    }catch(err){
-        throw err;
-    }
-}
-async function getInfoByLink(storeLink){
+// async function getOrders(storeId) {
+//     try{
+//         return new Promise(async (resolve, reject) => {
+//             let orders = await Order.find({products:{
+//                 $elemMatch: {storeId:storeId}
+//             }});
+//             let extractSellerOrders = new Promise(async (resolve1,reject1)=>{
+//                 let newOrders = [];
+//                 let i=0;
+//                 orders.forEach(function(order){
+//                     const divising = new Promise(async(resolve2,reject2)=>{
+//                         let newProducts = []
+//                         let j=0;
+//                         order.products.forEach(async function(product){
+//                             if(product.storeId.toString()==storeId.toString()){
+//                                 newProducts.push(
+//                                     {
+//                                         productId:product.productId,
+//                                         quantity:product.quantity,
+//                                         attributes:product.attributes
+//                                     }
+//                                 );
+//                             }
+//                             if(j==order.products.length-1){
+//                                 let prices = await getTotalPrices(newProducts); 
+//                                 resolve2({
+//                                     prices: prices,
+//                                     products:newProducts
+//                                 })
+//                             }
+//                             j++;
+//                         })
+//                     })
+//                     divising.then(function(data){
+//                         newOrders.push({...data,date:order.date,status:order.status,clientId:order.clientId,orderId:order.orderId,paymentMethod:order.paymentMethod || ""});
+//                         if(i==orders.length-1){
+//                             resolve1(newOrders);
+//                         }
+//                         i++;
+//                     })
+                    
+//                 })
+//             })
+//             extractSellerOrders.then(function(rslt){
+//                 resolve(rslt);
+//             })
+//         })
+//     }catch(err){
+//         throw err;
+//     }
+// }
+async function getPublicInfoByLink(storeLink){
     return await Store.findOne({link:storeLink},{"banner":1,"logo":1,"title":1,"description":1});
 }
 
 async function getStoreById(storeId) {
     return await Store.findById(storeId);
 }
+async function getStoreByProductId(productId) {
+    let prod = await Product.findById(productId,{"seller":1});
+    let u = await User.findById(prod.seller,{"idStore":1});
+    return await Store.findById(u.idStore);
+}
 async function updateStore(id,data){
     try{
-        console.log(data);
         let rslt = await Store.findOneAndUpdate({"_id":id},data);
         return rslt
     }catch(err){
@@ -101,8 +117,8 @@ async function updateStore(id,data){
 // }
 
 module.exports = {
-    getProducts,
     getStoreById,
     updateStore,
-    getInfoByLink
+    getPublicInfoByLink,
+    getStoreByProductId,
 }
