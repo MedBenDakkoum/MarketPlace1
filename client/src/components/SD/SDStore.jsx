@@ -4,11 +4,13 @@ import { CForm,CCol,CFormInput,CButton,CRow, CFormTextarea} from '@coreui/react'
 import {getStore,updateStore,uploadImage}  from '../../services/dashboardService';
 import { Spinner } from 'react-bootstrap';
 import Alert from '../Alert/Alert';
+import { getSettings } from '../../services/settingsService';
 
 
 function SDStore() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
+    const [settings, setSettings] = useState({});
     const [alert, setAlert]= useState({
         msg:"",
         type:"",
@@ -27,6 +29,9 @@ function SDStore() {
         async function initData(){
             setLoading(true);
             let store = await getStore();
+            await getSettings().then((s)=>{
+                setSettings(s);
+            })
             setData({
                 banner: store.banner || "",
                 logo: store.logo || "",
@@ -86,6 +91,7 @@ function SDStore() {
           {!loading?
           <CForm className="row g-3" onSubmit={handleSumbit}>
                 <CCol md={12}>
+                    {settings?.SellerCanOnOffStore? 
                     <CRow>
                         <CCol md={12} style={{display:"flex",justifyContent:"flex-end"}}>
                             <CButton onClick={handleTogglePrivacy} type="button">
@@ -95,6 +101,7 @@ function SDStore() {
                             </CButton>
                         </CCol>
                     </CRow>
+                    : ""}
                     <CRow>
                         <CCol md={12}>
                             <CFormInput onChange={handleChangeImage} name="banner" type="file" id="storeBanner" label="Store Banner" />

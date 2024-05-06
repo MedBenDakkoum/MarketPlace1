@@ -6,29 +6,24 @@
     },
     {
       "id": 2,
-      "method": "Edinar"
-    },
-    {
-      "id": 3,
-      "method": "Paypal"
-    },
-    {
-      "id": 4,
       "method": "Payoneer"
     }
   ],
   "supportEmail": "support@test.com",
   "AllowNewSellers": true,
-  "SellerNeedAdminApproval": false,
+  "SellerNeedAdminApproval": true,
   "SellerCanOnOffStore": true,
-  "CityCountryZipCodeRequired": false,
   "SellerCanAddSocials": true,
-  "SellerCanOnOffProds": false,
-  "ProductUpdateNeedAdminApproval": true,
   "ShowAdminCommision": true,
   "SellerCanAddOnSale": true,
   "Commision": {
     "type": "percentage",
     "details": "10"
+  },
+  "invoices": {
+    "EnableInvoices": true,
+    "EnableProductImagesInvoices": true,
+    "InvoiceLegalInfo": "kkkf fd ",
+    "InvoiceFooterText": "efzjnzfjzkn"
   }
 }

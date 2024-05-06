@@ -1,0 +1,14 @@
+{
+    "sd_sidebar":{
+        "Dashboard":"لوحة القيادة",
+        "Profile":"الحساب",
+        "Store":"محل",
+        "Products":"منتجات",
+        "Orders":"طلبات",
+        "Returns":"عائدات",
+        "Transactions":"المعاملات",
+        "Payment":"تسديد الديون",
+        "Subscription":"الاشتراك",
+        "Social":"وسائل التواصل الاجتماعي"
+    }
+}

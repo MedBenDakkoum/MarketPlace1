@@ -1,6 +1,8 @@
 import React,{useState,useEffect} from 'react'
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,useParams } from 'react-router-dom';
+import { MDBDataTable } from 'mdbreact';
+import {getSingleSellerOrders,getSellerById} from '../../../services/adminService'
 
 const sellerOrders = [
     {
@@ -51,47 +53,79 @@ const sellerOrders = [
 function MpOrdersView() {
     const navigate = useNavigate();
     const [rows, setRows] = useState([]);
+    const [sellersOrders,setSellersOrders] = useState([]);
+    const [sellerInfo,setSellerInfo] = useState([]);
+    const params = useParams();
+    const data = {
+        columns: [
+          {
+            label: 'User ID',
+            field: 'userId',
+            width: 150
+          },
+          {
+            label: 'Customer Name',
+            field: 'customerName',
+            width: 150
+          },
+          {
+            label: 'Total Price',
+            field: 'totalPrice',
+            width: 200
+          },
+          {
+            label: 'Admin Commission',
+            field: 'adminCommission',
+            width: 100
+          },
+          {
+            label: 'Supplier Tax',
+            field: 'supplierTax',
+            width: 100
+          },
+          {
+            label: 'Seller Amount',
+            field: 'sellerAmount',
+            width: 100
+          },
+          {
+            label: 'Status',
+            field: 'status',
+            width: 100
+          },
+          {
+            label: 'Orderd On',
+            field: 'orderdOn',
+            width: 100
+          }
+        ],
+        rows:rows
+      };
     useEffect(()=> {
-        let rows1 = sellerOrders.map((element, index) => (
-            <CTableRow key={element.id} color='light'>
-                <CTableDataCell>#</CTableDataCell>
-                <CTableDataCell>{element.id}</CTableDataCell>
-                <CTableDataCell>{element.customerName}</CTableDataCell>
-                <CTableDataCell>{element.totalPrice}</CTableDataCell>
-                <CTableDataCell>{element.adminCommission}</CTableDataCell>
-                <CTableDataCell>{element.supplierTax}</CTableDataCell>
-                <CTableDataCell>{element.sellerAmount}</CTableDataCell>
-                <CTableDataCell>{element.status}</CTableDataCell>
-                <CTableDataCell>{element.orderdOn}</CTableDataCell>
-                <CTableDataCell><a style={{color:"blue",cursor:'pointer'}} onClick={(e)=>{navigate("/admin/mp/orders/"+element.id)}}>View Order</a></CTableDataCell>
-            </CTableRow>
-        ));
-        setRows(rows1);
+        async function init(){
+            let sellersOrders = await getSingleSellerOrders(params.id);
+            let sInfo = await getSellerById(params.id);
+            setSellerInfo(sInfo);
+            setSellersOrders(sellersOrders);
+        }
+        init();
     },[])
+    useEffect(()=> {
+        let rows1 = [...sellersOrders];
+        setRows(rows1);
+    },[sellersOrders,setSellersOrders])
     return (
     <main className='main-container'>
         <div className='main-title'>
-            <h3>Seller Orders</h3>
+            <h3>Seller '{sellerInfo.name}' Orders</h3>
         </div>
-        <CTable>
-        <CTableHead>
-            <CTableRow color='light'>
-                <CTableHeaderCell scope="col">#</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Order ID</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Customer Name</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Total Price</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Admin Tax</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Supplier Tax</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Seller amount</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-                <CTableHeaderCell scope="col">Order Date</CTableHeaderCell>
-                <CTableHeaderCell scope="col">View Order</CTableHeaderCell>
-            </CTableRow>
-        </CTableHead>
-        <CTableBody>
-            {rows}
-        </CTableBody>
-        </CTable>
+        <MDBDataTable
+            striped
+            small
+            noBottomColumns={true}
+            style={{color:"white"}}
+            data={data}
+        />
     </main>
     
   )

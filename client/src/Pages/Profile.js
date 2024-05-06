@@ -4,7 +4,7 @@ import Wishlist from '../components/Profile/Wishlist/Wishlist'
 import ActiveSells from '../components/Profile/Sells/ActiveSells';
 import ArchivedSells from '../components/Profile/Sells/ArchivedSells'
 import SellerProfile from '../components/Profile/SellerProfile'
-import { getSellerById } from '../services/sellerData';
+// import { getSellerById } from '../services/sellerData';
 import { Col, Row, Button } from 'react-bootstrap';
 
 import '../components/Profile/Profile.css';
@@ -39,9 +39,9 @@ function Profile({ match, history }) {
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        getSellerById(match.params.id)
-            .then(res => setUser(res.user))
-            .catch(err => console.log(err))
+        // getSellerById(match.params.id)
+        //     .then(res => setUser(res.user))
+        //     .catch(err => console.log(err))
     }, [match.params.id])
    
     return (

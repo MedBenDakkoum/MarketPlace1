@@ -1,52 +1,20 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {getSellerById} from '../../../services/sellerData';
-import {updateSeller,getCategories} from '../../../services/adminService'
+import {updateSeller,getCategories,getSellerById} from '../../../services/adminService'
 import CheckboxTree from 'react-checkbox-tree';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
 import {BsCheckSquare, BsChevronDown, BsChevronRight, BsFileEarmark, BsFileEarmarkFill, BsFillFileMinusFill, BsFillFolderFill, BsFillPlusSquareFill, BsFolder, BsFolder2Open, BsFolderFill, BsSquare} from 'react-icons/bs';
 
-// const nodes = [
-//   {
-//     value: 'fashion',
-//     label: 'Fashion',
-//     children: [
-//       { value: 'sunglasses',label: 'Sunglasses',},
-//       { value: 'watches', label: 'Watches' },
-//       { value: 'shoes', label: 'Shoes' },
-//       { value: 'bags', label: 'Bags' },
-//     ],
-//   },
-//   {
-//     value: 'electronics',
-//     label: 'Electronics',
-//     children: [
-//       { value: 'tvs',label: 'TVs',},
-//       { value: 'computers', label: 'Computers' },
-//       { value: 'cameras', label: 'Cameras' },
-//     ],
-//   },
-//   {
-//     value: 'entertainment',
-//     label: 'Entertainment',
-//     children: [
-//       { value: 'movies',label: 'Movies',},
-//       { value: 'video games', label: 'Video Games' },
-//       { value: 'books', label: 'Books' },
-//     ],
-//   }
-// ];
 function MpSellerEditCategories() {
+    const lang = localStorage.getItem("lang");
     const [checked, setChecked] = useState([]);
     const [expanded, setExpanded] = useState([]);
     const [categories, setCategories] = useState([]);
     const [data,setData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [nodes,setNodes]= useState([])
-
-
     const formatCategories = (categories)=> {
       const categoryDict = {};
       categories.forEach(category => {
@@ -59,7 +27,7 @@ function MpSellerEditCategories() {
       function formatCategory(category) {
           const formattedCategory = {
               value: category.reference,
-              label: category.name
+              label: category.name[lang]
           };
           if (categoryDict[category.reference]) {
               formattedCategory.children = categoryDict[category.reference].map(child => formatCategory(child));
@@ -113,7 +81,6 @@ function MpSellerEditCategories() {
                 console.log(res.error);
             }
         }).catch(err => console.error('error from register: ', err))
-        console.log(newData);
     }
     const handleSelectAll = (e)=>{
         setChecked(data);
@@ -138,16 +105,16 @@ function MpSellerEditCategories() {
                         showExpandAll={true}
                         checkModel="all"
                         icons={{
-                            check: <BsCheckSquare style={{color:"white"}} className="rct-icon rct-icon-check"  />,
-                            uncheck: <BsSquare style={{color:"white"}} className="rct-icon rct-icon-uncheck" />,
-                            halfCheck: <BsCheckSquare style={{color:"white"}} className="rct-icon rct-icon-half-check"  />,
-                            expandClose: <BsChevronRight style={{color:"white"}} className="rct-icon rct-icon-expand-close"  />,
-                            expandOpen: <BsChevronDown style={{color:"white"}} className="rct-icon rct-icon-expand-open"  />,
-                            expandAll: <BsFillPlusSquareFill style={{color:"white"}} className="rct-icon rct-icon-expand-all"  />,
-                            collapseAll: <BsFillFileMinusFill style={{color:"white"}} className="rct-icon rct-icon-collapse-all" />,
-                            parentClose: <BsFolderFill style={{color:"white"}} className="rct-icon rct-icon-parent-close"/>,
-                            parentOpen: <BsFolder2Open style={{color:"white"}}  className="rct-icon rct-icon-parent-open"  />,
-                            leaf: <BsFileEarmarkFill style={{color:"white"}} className="rct-icon rct-icon-leaf-close" />
+                            check: <BsCheckSquare style={{color:"#1c1c1c"}} className="rct-icon rct-icon-check"  />,
+                            uncheck: <BsSquare style={{color:"#1c1c1c"}} className="rct-icon rct-icon-uncheck" />,
+                            halfCheck: <BsCheckSquare style={{color:"#1c1c1c"}} className="rct-icon rct-icon-half-check"  />,
+                            expandClose: <BsChevronRight style={{color:"#1c1c1c"}} className="rct-icon rct-icon-expand-close"  />,
+                            expandOpen: <BsChevronDown style={{color:"#1c1c1c"}} className="rct-icon rct-icon-expand-open"  />,
+                            expandAll: <BsFillPlusSquareFill style={{color:"#1c1c1c"}} className="rct-icon rct-icon-expand-all"  />,
+                            collapseAll: <BsFillFileMinusFill style={{color:"#1c1c1c"}} className="rct-icon rct-icon-collapse-all" />,
+                            parentClose: <BsFolderFill style={{color:"#1c1c1c"}} className="rct-icon rct-icon-parent-close"/>,
+                            parentOpen: <BsFolder2Open style={{color:"#1c1c1c"}}  className="rct-icon rct-icon-parent-open"  />,
+                            leaf: <BsFileEarmarkFill style={{color:"#1c1c1c"}} className="rct-icon rct-icon-leaf-close" />
                         }}
                     />
                     </CCol>

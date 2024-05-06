@@ -39,6 +39,13 @@ const productSchema = new mongoose.Schema({
         type:mongoose.Types.ObjectId,
         ref:'Product'
     },
+    type:{
+        type:String
+    },
+    initialProducts:[{
+        type:mongoose.Types.ObjectId,
+        ref:'Product'
+    }],
     isActive: {
         type: Boolean,
         default: true

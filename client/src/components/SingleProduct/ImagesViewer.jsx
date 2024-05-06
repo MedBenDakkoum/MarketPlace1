@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from 'react';
-import "./Product.css"
+import styles from "./Product.module.css"
 function ImagesViewer({ imgs=[""] }) {
     const [currentImg, setCurrentImg] = useState(imgs[0]);
     const handleChangeViewedImage = (e)=>{
@@ -9,11 +9,11 @@ function ImagesViewer({ imgs=[""] }) {
 
     }
     return (
-        <div className="images-navigation-viewer">
-            <div className="current-image">
+        <div className={styles["images-navigation-viewer"]}>
+            <div className={styles["current-image"]}>
                 <img src={currentImg} alt="" />
             </div>
-            <div className="list-images">
+            <div className={styles["list-images"]}>
                 {imgs.map((img)=>(
                     <img key={img} onClick={handleChangeViewedImage} style={{cursor:"pointer"}} className={img==currentImg?"active" :""} src={img} alt="" />
                 ))}

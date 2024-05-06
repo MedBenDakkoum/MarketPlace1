@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const AutoIncrement = require('mongoose-sequence')(mongoose);
 
 const CartSchema = new mongoose.Schema({
     id: mongoose.Types.ObjectId,
@@ -11,7 +12,8 @@ const CartSchema = new mongoose.Schema({
         attributes:{type:Object},
         quantity:Number
     }]
-});
+},{timestamps:true});
 
+CartSchema.plugin(AutoIncrement, { inc_field: 'cartId' });
 
 module.exports = mongoose.model('Cart', CartSchema);

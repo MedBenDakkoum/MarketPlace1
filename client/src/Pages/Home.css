@@ -1,0 +1,39 @@
+body{
+    background-color: #f6fafd;
+}
+.home-section-title{
+    width: 100%;
+    padding: 20px 8%;
+    font-size: 28px;
+}
+.home-recommended-items-container{
+    padding: 0 8%;
+    margin-bottom: 40px;
+}
+.home-recommended-items{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));;
+    gap: 15px;
+}
+.hri-item{
+    background-color: white;
+    padding: 20px;
+    border: 1px solid #DEE2E7;
+    border-radius: 10px;
+}
+.hri-item img{
+    width: 100%;
+    object-fit: contain;
+}
+.hri-item-info p{
+    margin: 0;
+    padding: 10px 0;
+    color: #1c1c1c;
+    text-wrap: wrap;
+    word-wrap:break-word;
+}
+.hri-item-info span{
+    margin: 0;
+    padding: 0;
+}

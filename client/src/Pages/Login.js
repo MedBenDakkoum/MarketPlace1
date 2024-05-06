@@ -44,7 +44,6 @@ function Login({navigate}) {
         
         <>
             {!userData? <>
-            <SimpleSider />
             <div className="container auth-form">
                 <h1 className="auth-heading">Sign In</h1>
                 <Form className="col-lg-6" onSubmit={handleSubmitLogin}>
@@ -71,6 +70,7 @@ function Login({navigate}) {
                         <Button variant="dark" className="col-lg-12 btnAuth" type="submit">Sign In</Button>
                     }
                     <p className="bottom-msg-paragraph">Don't have an account? <Link to="/auth/register">Sign Up</Link>!</p>
+                    <p className="bottom-msg-paragraph" style={{padding:0}}>Forgot Password? <Link to="/auth/forgot-password">Reset password</Link>!</p>
                 </Form>
             </div>
             </> : <h1>Already Logged In</h1>}

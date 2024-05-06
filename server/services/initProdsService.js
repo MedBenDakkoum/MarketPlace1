@@ -1,5 +1,9 @@
 const initialProduct = require('../models/initialProduct');
 
+async  function getAll() {
+    try{return await initialProduct.find({})}catch(err){console.log(err);throw err;}
+}
+
 async function getInitProds(cats){
     try{
         return new Promise(async (resolve, reject) => {
@@ -40,5 +44,6 @@ async function getInitProdById(id){
 
 module.exports ={
     getInitProdById,
-    getInitProds
+    getInitProds,
+    getAll
 }

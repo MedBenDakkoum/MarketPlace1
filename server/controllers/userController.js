@@ -1,10 +1,13 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../models/User');
+const Review = require('../models/Review');
 // const isAuth = require('../middlewares/isAuth')
 const userService = require('../services/userService');
 const imageService = require('../services/imageService');
 const cartService = require('../services/cartService');
+const orderService = require('../services/orderService');
+const reviewService = require('../services/reviewService');
 
 router.get('/', async (req, res) => {
     try {
@@ -115,10 +118,16 @@ router.get('/isSeller', async (req,res)=>{
 });
 router.get('/cart', async (req,res)=>{
     try {
-        let cart = await cartService.getCart(req.user._id);
-        res.status(200).json(cart);
+        if(req.user){
+            let cart = await cartService.getCart(req.user._id);
+            res.status(200).json(cart);
+        }else{
+            res.status(200).json({notLoggedIn:true})
+        }
+        
     } catch (error) {
-        res.status(500).json({ error });
+        console.log(error);
+        res.status(500).json({ error :error.message});
     }
 });
 router.put('/cart', async (req,res)=>{
@@ -160,11 +169,39 @@ router.get('/orders',async (req,res)=>{
 })
 router.put('/orders',async (req,res)=>{
     try {
-        let cart = await orderService.makeOrder(req.user._id,req.body.paymentMethod);
+        let cart = await orderService.makeOrder(req.user._id,req.body.paymentMethod,req.query.lang);
         res.status(200).json(cart);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error :error.message });
+    }
+})
+router.post('/reviews/:pId', async (req, res) => {
+    try {
+        await reviewService.addReview(req.user._id,req.params.pId,req.body).then((rslt)=>{
+            res.status(200).json(rslt);
+        }).catch((err)=>{
+            res.status(400).json(err.message);
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error :error});
+    }
+})
+router.delete('/reviews/:pId', async (req, res) => {
+    try {
+        await Review.find({userId:req.user._id,_id:req.params.pId}).then(async (rslt)=>{
+            await reviewService.removeReviewById(req.params.pId).then((rslt)=>{
+                res.status(200).json(rslt);
+            }).catch((err)=>{
+                res.status(400).json(err.message);
+            })
+        }).catch((err)=>{
+            res.status(400).json({msg:"You can't delete this review !"})
+        })
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error :error});
     }
 })
 router.get('/:id', async (req, res) => {

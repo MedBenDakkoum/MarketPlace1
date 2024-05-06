@@ -6,6 +6,7 @@ import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getInitialProdData} from "../../../services/dashboardService"
 
 function SDProductInfo() {
+    const lang = localStorage.getItem("lang");
     const navigate= useNavigate();
     const params = useParams();
     const [data,setData] = useState({
@@ -14,18 +15,16 @@ function SDProductInfo() {
         reference:"",
         quantity:"",
         weight:"",
-        manufacterName:""
     });
     useEffect(function(){
         async function init(){
             let newData = await getInitialProdData(params.id);
             setData({
-                name:newData.name || "",
-                description:newData.description || "",
+                name:newData.name[lang] || "",
+                description:newData.description[lang] || "",
                 reference:newData.ref || "",
                 quantity:newData.quantity || "",
                 weight:newData.weight || "",
-                manufacterName:newData.manufacterName || ""
             });
           }
           init()
@@ -49,9 +48,6 @@ function SDProductInfo() {
                         </CCol>
                         <CCol md={12}>
                             <CFormInput name="weight" value={data.weight} type="text" id="weight" label="Weight" disabled/>
-                        </CCol>
-                        <CCol md={12}>
-                            <CFormInput name="manufacterName" value={data.manufacterName} type="text" id="manufacterName" label="Manufacter Name" disabled/>
                         </CCol>
                     </CRow>
                 </CCol>

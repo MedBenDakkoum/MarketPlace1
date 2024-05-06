@@ -1,0 +1,26 @@
+{
+    "sd_sidebar":{
+        "Dashboard":"Dashboard",
+        "Profile":"Profile",
+        "Store":"Store",
+        "Products":"Products",
+        "Orders":"Orders",
+        "Returns":"Returns",
+        "Transactions":"Transactions",
+        "Payment":"Payment",
+        "Subscription":"Subscription",
+        "Social":"Social"
+    },
+    "OrderStatus":{
+        "PENDING":"Pending",
+        "AWAITING_PAYMENT":"Awaiting Payment",
+        "AWAITING_PICKUP":"Awaiting Pickup",
+        "AWAITING_SHIPMENT":"Awaiting Shipment",
+        "COMPLETED":"Completed",
+        "SHIPPED":"Shipped",
+        "REFUNDED":"Refunded",
+        "CANCELED":"Canceled",
+        "ERROR":"Order error",
+        "UNKNOW_STATUS":"Unknown order status"
+    }
+}

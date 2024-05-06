@@ -6,7 +6,9 @@ const userService = require('../services/userService');
 const storeService = require('../services/storeService');
 const sellerService = require('../services/sellerService');
 const imageService = require('../services/imageService');
-const productService = require('../services/imageService');
+const productService = require('../services/productService');
+const initProdsService = require('../services/initProdsService');
+const settingsService = require('../services/settingsService');
 
 const Product = require('../models/Product');
 const Store = require('../models/Store');
@@ -22,22 +24,37 @@ router.get('/', async (req, res) => {
 })
 router.put('/', async (req, res) => {
     try {   
-        let newData={
-            name: req.body.data.name,
-            gender: req.body.data.gender,
-            phoneNumber: req.body.data.phoneNumber,
-            email: req.body.data.email,
-            address: req.body.data.address,
-            avatar: req.body.data.avatar,
-            banner: req.body.data.banner
+        console.log(req.body.data);
+        
+        if(req.body.data.hasOwnProperty("socials")){
+            let settings = await settingsService.getSettings();
+            if(settings.SellerCanAddSocials){
+                let user = await userService.updateProfile(req.user._id,req.body.data);
+                res.status(200).json(user.socials);
+            }else{
+                res.status(200).json(req.body.data.socials);
+            }
+            
+        }else{
+            let newData={
+                name: req.body.data.name,
+                gender: req.body.data.gender,
+                phoneNumber: req.body.data.phoneNumber,
+                email: req.body.data.email,
+                address: req.body.data.address,
+                avatar: req.body.data.avatar,
+                banner: req.body.data.banner
+            }
+            let user = await userService.updateProfile(req.user._id,newData);
+            let newpass={}
+            if(req.body.data.hasOwnProperty("password")){
+                if(req.body.data.password.currentPass!=="" || req.body.data.password.newPass!==""  || req.body.data.password.reNewPass!==""){
+                    console.log(req.body.data.password);
+                    newpass = await userService.updatePassword(req.user._id,req.body.data.password);
+                }
+            }
+            res.status(200).json({user,newpass});
         }
-        let user = await userService.updateProfile(req.user._id,newData);
-        let newpass={}
-        if(req.body.data.password.currentPass!=="" || req.body.data.password.newPass!==""  || req.body.data.password.reNewPass!==""){
-            console.log(req.body.data.password);
-            newpass = await userService.updatePassword(req.user._id,req.body.data.password);
-        }
-        res.status(200).json({user,newpass});
     } catch (error) {
         console.error(error)
         res.status(500).json({ error :error});
@@ -94,6 +111,7 @@ router.get('/isSeller', async (req,res)=>{
         res.status(500).json({ error });
     }
 });
+
 router.post('/image/upload', async (req,res) => {
     try{
         let rslt = await imageService.uploadImage(req.body.data);
@@ -102,7 +120,8 @@ router.post('/image/upload', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.get('/products', async (req,res) => {
     try{
         productService.getProdsBySellerId(req.user._id).then((rslt)=>{
@@ -112,7 +131,8 @@ router.get('/products', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.post('/products', async (req,res) => {
     try{
         productService.assignProdToSeller(req.user._id,req.body).then((rslt)=>{
@@ -122,7 +142,8 @@ router.post('/products', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.get('/products/init', async (req,res) => {
     try{
         let storeId = await User.findById(req.user._id,{"idStore":1});
@@ -134,7 +155,8 @@ router.get('/products/init', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.get('/products/:id/init', async (req,res) => {
     try{
         let initProdId = await Product.findById(req.params.id,{"initialProduct":1});
@@ -145,7 +167,8 @@ router.get('/products/:id/init', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.get('/products/:id/price', async (req,res) => {
     try{
         //add check if product is owned by seller
@@ -156,7 +179,8 @@ router.get('/products/:id/price', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
+
 router.put('/products/:id/price', async (req,res) => {
     try{
         //add check if product is owned by seller
@@ -167,7 +191,7 @@ router.put('/products/:id/price', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
 
 router.get('/products/:id/images', async (req,res) => {
     try{
@@ -178,7 +202,7 @@ router.get('/products/:id/images', async (req,res) => {
         console.error(err);
         res.status(404).json({message: "Not Found"});
     }
-})
+});
 
 router.put('/products/:id/images', async (req,res) => {
     try{
@@ -203,6 +227,16 @@ router.get('/products/:id/seo', async (req,res) => {
 router.put('/products/:id/seo', async (req,res) => {
     try{
         productService.updateProductSeo(req.params.id,req.body).then((rslt)=>{
+            res.status(200).json(rslt); 
+        });
+    }catch(err){
+        console.error(err);
+        res.status(404).json({message: "Not Found"});
+    }
+})
+router.get('/products/:id/attributes', async (req,res) => {
+    try{
+        productService.getProductAttributes(req.params.id).then((rslt)=>{
             res.status(200).json(rslt); 
         });
     }catch(err){

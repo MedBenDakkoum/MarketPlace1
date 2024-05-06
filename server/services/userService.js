@@ -8,7 +8,34 @@ const initialProduct = require('../models/initialProduct');
 const { cloudinary } = require('../config/cloudinary');
 const { CLOUDINARY_STORAGE } = require('../config/config');
 const { SALT } = require('../config/config');
-var moment = require('moment'); 
+
+async function getCustomers(){
+    try{
+        return new Promise(async (resolve,reject)=>{
+            await User.find().select("-address").then(async function(customers){
+                let rslt = []
+                for (const customer of customers) {
+                    await Order.find( {'clientId':customer._id},{"createdAt":1} )
+                        .sort({"createdAt": 1})
+                            .then(function(orders){
+                                rslt.push({
+                                    _id:customer._id,
+                                    name:customer.name,
+                                    isSeller:customer.isSeller,
+                                    userId:customer.userId,
+                                    orders:orders.length,
+                                    lastOrderAt:orders[0]?.createdAt,
+                                    active:customer.isActive
+                                })
+                            });
+                }
+                resolve(rslt);
+            })
+        })
+    }catch(err){
+        console.error(err);
+    }
+}
 
 async function edit(userId, userData) {
     return await User.updateOne({ _id: userId }, { $set: { ...userData } });
@@ -89,14 +116,33 @@ async function updatePassword(id,data){
 
 const getAddress = async (client)=> {
     return new Promise(async (resolve, reject) => {
-        console.log(client);
         await User.findById(client,{"address":1}).then(function(user){
-            console.log(user);
-            resolve(user.address);
+            if(user){
+                resolve(user.address);
+            }else{
+                resolve({})
+            }
         }).catch(function(err){
-            console.log(err);
             reject("error getting address");
         })
+    })
+}
+const changeUserActive = async (userId) =>{
+    return new Promise(async (resolve, reject) => {
+        await User.findById(userId)
+            .then(async(user)=>{
+                if(user){
+                    await user.update({isActive:!user.isActive})
+                    .then((rslt)=>{
+                        resolve({msg:"Activity changed!",status:true});
+                    })
+                    .catch((e)=>{
+                        reject({msg:"Something went wrong!",status:false});
+                    })
+                }else{
+                    reject({msg:"Invalid User!",status:false});
+                }
+            })
     })
 }
 module.exports = {
@@ -104,5 +150,7 @@ module.exports = {
     getUserById,
     updateProfile,
     updatePassword,
-    getAddress
+    getAddress,
+    getCustomers,
+    changeUserActive
 }

@@ -158,6 +158,20 @@ export async function getInitialProducts(){
         throw error;
     }
 }
+export async function getProductAttributes(id){
+    try {
+        const response = await axios.get(`${baseUrl}/api/seller/products/${id}/attributes`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting products attributes:", error);
+        throw error;
+    }
+}
 export async function toggleActive(id) {
     try {
         const response = await axios.post(`${baseUrl}/api/seller/products/${id}/toggle`, {

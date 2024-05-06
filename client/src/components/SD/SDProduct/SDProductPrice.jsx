@@ -35,10 +35,10 @@ function SDProductPrice() {
         init();
     },[])
     useEffect(function(){
-        setData({...data,price:calculate(priceAddType,parseInt(data.initialPrice),parseInt(priceAddAmount))})
+        setData({...data,price:calculate(priceAddType,parseFloat(data.initialPrice),parseFloat(priceAddAmount))})
     },[priceAddType,setPriceAddType])
     useEffect(function(){
-        setData({...data,price:calculate(priceAddType,parseInt(data.initialPrice),parseInt(priceAddAmount))})
+        setData({...data,price:calculate(priceAddType,parseFloat(data.initialPrice),parseFloat(priceAddAmount))})
     },[priceAddAmount,setPriceAddAmount])
     const handleChangeAddedPrice = (e)=>{
         setPriceAddAmount(e.target.value);

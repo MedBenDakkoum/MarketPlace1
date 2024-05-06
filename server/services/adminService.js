@@ -43,7 +43,7 @@ async function getBasicInfo(){
               _id: null,
               count: { $sum: 1 },
               totalSales: { $sum: "$totalPrice" },
-              totalRevenue: { $sum: "$totalPrice" }
+              totalRevenue: { $sum: "$sellerEarnings" }
             }
           }
         ]);
@@ -51,9 +51,8 @@ async function getBasicInfo(){
           daysToSub+=7
           salesRevenue.push({
             name: 'Week '+(i+1).toString(),
-            sales: sales,
-            revenue: 2400,
-            amt: 2400,
+            sales: sales[0]?.totalSales || 0,
+            revenue: sales[0]?.totalRevenue || 0
           })
       }
       Promise.all([numProds, numCats, numCustomers,numOrders]).then((values) => {
@@ -61,7 +60,8 @@ async function getBasicInfo(){
           numProds:values[0], 
           numCats:values[1], 
           numCustomers:values[2],
-          numOrders:values[3]
+          numOrders:values[3],
+          data:salesRevenue
         }
         resolve(resJson);
       });

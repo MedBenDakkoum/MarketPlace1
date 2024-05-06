@@ -105,6 +105,10 @@ const userSchema = new mongoose.Schema({
     },
     supplierSecretKey:{
         type:String
+    },
+    nbrReviews:{
+        type:Number,
+        default:0
     }
 },{timestamps:true});
 

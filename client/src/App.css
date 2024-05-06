@@ -1,4 +1,4 @@
-a {
+/* a {
     color: black;
 }
 
@@ -9,4 +9,20 @@ a:hover {
 
 .spinner-border {
     margin: 0 auto;
+} */
+.overlay-spinner{
+    background-color: rgba(1, 0, 15, 0.788);
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left:0;
+    z-index: 9999999;
+    align-items: center;
+    justify-content: center;
+}
+.forgot-password{
+    display: flex;
+    justify-content: center;
+    padding: 40px;
 }

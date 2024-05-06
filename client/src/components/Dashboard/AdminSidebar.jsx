@@ -20,10 +20,9 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
             document.getElementsByClassName('marketplace-dropdown')[0].style = "height:0"
             oc=0;    
         }else{
-            document.getElementsByClassName('marketplace-dropdown')[0].style = "height:160px"
+            document.getElementsByClassName('marketplace-dropdown')[0].style = "height:240px"
             oc=1;
         }
-        navigate("/admin/mp");
     }
     
     const ToggleOrders = () => {
@@ -42,7 +41,7 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
     >
       <div className="sidebar-title">
         <div className="sidebar-brand sli">
-          <BsCart3 className="icon_header" /> SHOP
+          <BsCart3 className="icon_header" /> ADGHAL
         </div>
         <span className="icon close_icon" onClick={OpenSidebar}>
           X
@@ -51,7 +50,7 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
 
         <ul className='sidebar-list'>
             <li className='sidebar-list-item'>
-                <a href="/admin">
+                <a onClick={(e)=>{navigate("/admin")}}>
                     <BsGrid1X2Fill className='icon'/> Dashboard
                 </a>
             </li>
@@ -66,12 +65,12 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
                     <a className="drop-a" onClick={(e)=>{navigate("/admin/carts")}}>Shopping Cart</a>
             </div>
             <li className='sidebar-list-item'>
-                <a href="">
+                <a onClick={(e)=>{navigate("/admin/categories")}}>
                     <BsFillGrid3X3GapFill className='icon'/> Categories
                 </a>
             </li>
             <li className='sidebar-list-item'>
-                <a href="">
+                <a onClick={(e)=>{navigate("/admin/customers")}}>
                     <BsPeopleFill className='icon'/> Customers
                 </a>
             </li>
@@ -84,17 +83,13 @@ function AdminSidebar({openSidebarToggle, OpenSidebar}) {
                     <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/config")}}>Configuration</a>
                     <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/sellers")}}>Sellers</a>
                     <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/products")}}>Products</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/reviews")}}>Reviews</a>
                     <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/orders")}}>Orders</a>
-                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/transactions")}}>Transactions</a>
+                    <a className="drop-a" onClick={(e)=>{navigate("/admin/mp/employees")}}>Employees</a>
             </div>
             <li className='sidebar-list-item'>
-                <a href="">
-                    <BsMenuButtonWideFill className='icon'/> Reports
-                </a>
-            </li>
-            <li className='sidebar-list-item'>
-                <a href="">
-                    <BsFillGearFill className='icon'/> Setting
+                <a onClick={(e)=>{navigate("/admin/settings")}}>
+                    <BsFillGearFill className='icon'/> Settings
                 </a>
             </li>
         </ul>

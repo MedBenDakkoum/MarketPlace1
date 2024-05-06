@@ -1,7 +1,7 @@
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const User = require('../models/User');
 const initialProduct = require('../models/initialProduct');
-
 
 function ObjectEquals(x, y) {
     const ok = Object.keys, tx = typeof x, ty = typeof y;
@@ -64,15 +64,28 @@ async function addToCart(userId, data) {
 function removeFromCart(userId, cartItemId) {
     try{
         return new Promise(async (resolve,reject)=>{
-            let cart = await Cart.findOne({ user: userId, products: { $elemMatch: { _id: cartItemId } } });
-            if(cart){
-                let result = await Cart.updateOne(
-                    { user: userId },
-                    { $pull: { products: { _id: cartItemId } } }
-                );
-                resolve(result);
+            if(cartItemId=="all"){
+                let cart = await Cart.findOne({ user: userId });
+                if(cart){
+                    let result = await Cart.updateOne(
+                        { user: userId },
+                        { products : [] }
+                    );
+                    resolve(result);
+                }else{
+                    reject({message:"Cart not found"})
+                }
             }else{
-                reject({message:"Cart not found"})
+                let cart = await Cart.findOne({ user: userId, products: { $elemMatch: { _id: cartItemId } } });
+                if(cart){
+                    let result = await Cart.updateOne(
+                        { user: userId },
+                        { $pull: { products: { _id: cartItemId } } }
+                    );
+                    resolve(result);
+                }else{
+                    reject({message:"Cart not found"})
+                }
             }
         })
     }catch(error){
@@ -84,42 +97,69 @@ async function getCart(id){
     try{
         return new Promise(async (resolve, reject) => {
             let c = await Cart.find({user:id});
-            let cartData = [...c[0].products];
-            let prodCartInfo =  new Promise(async (resolve1, reject) => {
-                let newData = [];
-                let i =0;
-                cartData.forEach(async function(prod){
-                    let pr = await Product.findById(prod.id,{"initialProduct":1,"images":1,"newPrice":1});
-                    let prName = await initialProduct.findById(pr.initialProduct,{"name":1});
-                    newData.push(
-                        {
-                            itemId: prod._id,
-                            id: prod.id,
-                            info:{
-                                img: pr.images[0],
-                                name: prName.name,
-                                price: pr.newPrice
-                            },
-                            attributes:prod.attributes,
-                            quantity: prod.quantity
+            if(c){
+                let cartData = [...c[0].products];
+                let prodCartInfo =  new Promise(async (resolve1, reject) => {
+                    let newData = [];
+                    let i =0;
+                    cartData.forEach(async function(prod){
+                        let pr = await Product.findById(prod.id,{"initialProduct":1,"images":1,"newPrice":1});
+                        let prName = await initialProduct.findById(pr.initialProduct,{"name":1});
+                        newData.push(
+                            {
+                                itemId: prod._id,
+                                id: prod.id,
+                                info:{
+                                    img: pr.images[0],
+                                    name: prName.name,
+                                    price: pr.newPrice
+                                },
+                                attributes:prod.attributes,
+                                quantity: prod.quantity
+                            }
+                        );
+                        if(i==cartData.length-1){
+                            resolve1(newData);
                         }
-                    );
-                    if(i==cartData.length-1){
-                        resolve1(newData);
-                    }
-                    i++;
+                        i++;
+                    })
                 })
-            })
-            prodCartInfo.then((rslt)=>{
-                resolve(rslt);
-            })
+                if(cartData.length>0){
+                    prodCartInfo.then((rslt)=>{
+                        resolve(rslt);
+                    })
+                }else{
+                    resolve([]);
+                }
+            }else{
+                resolve({notLoggedIn:false})
+            }
         })
     }catch(err){
         console.error(err);
-        reject(err);
+    }
+}
+async function getAll(){
+    try{
+        return new Promise(async (resolve,reject) => {
+            await Cart.find().then(async (carts)=>{
+                let rslt = []
+                for (const cart of carts) {
+                    let cartToAdd = await getCart(cart.user);
+                    let cartUser = await User.findById(cart.user,{'name':1});
+                    console.log(cartUser);
+                    rslt.push({cart,items:cartToAdd,customerName:cartUser?.name});
+                }
+                resolve(rslt);
+            });
+        })
+    }catch(err){
+        console.log(err)
+        throw err;
     }
 }
 module.exports = {
+    getAll,
     addToCart,
     removeFromCart,
     getCart

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const categorieService = require( '../services/categorieService');
+const reviewService = require('../services/reviewService');
 
 router.get("/categories", async (req, res) => {
     try {
@@ -10,5 +11,16 @@ router.get("/categories", async (req, res) => {
       res.status(404).json({ message: "Not Found" });
     }
 });
-
+router.get('/reviews/:pId', async (req, res) => {
+  try {
+      await reviewService.getReviewsByProductId(req.params.pId).then((rslt)=>{
+          res.status(200).json(rslt);
+      }).catch((err)=>{
+          res.status(400).json(err.message);
+      })
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error :error});
+  }
+})
 module.exports = router;

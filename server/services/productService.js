@@ -1,10 +1,19 @@
+const initialProduct = require('../models/initialProduct');
 const Product = require('../models/Product');
 const User = require('../models/User');
+const Store = require('../models/Store');
 
 async function getAll() {
-    return await Product.paginate();
+    return await Product.find({});
 }
-
+async function getFullProd(id){
+    let prod = await Product.findById(id);
+    let iProd = await initialProduct.findById(prod.initialProduct);
+    return {
+        product : prod,
+        initialProduct: iProd
+    }
+}
 async function findByCategory(category) {
     return await Product.find({ category: category })
 }
@@ -146,8 +155,8 @@ async function changeProductPrice(pid,data){
                     },{
                         priceAddType:data.priceAddType,
                         priceAddAmount:data.priceAddAmount,
-                        newPrice:calculate(data.priceAddType,parseInt(data.initPrice),parseInt(data.priceAddAmount)),
-                        earning:calculate(data.priceAddType,parseInt(data.initPrice),parseInt(data.priceAddAmount))-parseInt(data.initPrice)
+                        newPrice:calculate(data.priceAddType,parseFloat(data.initPrice),parseFloat(data.priceAddAmount)),
+                        earning:calculate(data.priceAddType,parseFloat(data.initPrice),parseFloat(data.priceAddAmount))-parseFloat(data.initPrice)
                     }))
             })
             changeProduct.then(function(p){
@@ -173,10 +182,24 @@ async function getProductImages(pid){
         console.error(err);
     }
 }
+
 async function getProductSeo(pid){
     try{
         return new Promise(async (resolve, reject) => {
-            resolve(await Product.findById(pid,{"seo":1}))
+            let prod = await Product.findById(pid,{"seo":1,initialProduct:1});
+            let prodIp = await initialProduct.findById(prod.initialProduct,{"meta_description":1,"meta_title":1,"meta_description":1});
+            resolve(prod.seo)
+        })
+    }catch(err){
+        console.error(err);
+    }
+}
+
+async function getProductAttributes(pid){
+    try{
+        return new Promise(async (resolve, reject) => {
+            let iP = await Product.findById(pid,{initialProduct:1});
+            resolve(await initialProduct.findById(iP.initialProduct,{"attributes":1}))
         })
     }catch(err){
         console.error(err);
@@ -216,5 +239,7 @@ module.exports = {
     updateProductImages,
     getProductSeo,
     toggleActive,
-    updateProductSeo
+    updateProductSeo,
+    getProductAttributes,
+    getFullProd
 }

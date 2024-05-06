@@ -6,8 +6,14 @@ const orderSchema = new mongoose.Schema({
     date:{
         type:String
     },
+    reference:{
+        type:String
+    },
     status: {
         type:String,
+    },
+    statusUpdatesAt:{
+        type:Date
     },
     totalProductsPrice:{
         type:Number
@@ -47,6 +53,19 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod:{
         type:String
+    },
+    messages:[{
+        messageSubject: String,
+        messageContent: String,
+        messageDate: Date
+    }],
+    invoiceId:{
+        type: mongoose.Types.ObjectId,
+        ref:'Invoice'
+    },
+    isVerified:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true});
 orderSchema.plugin(AutoIncrement, { inc_field: 'orderId' });

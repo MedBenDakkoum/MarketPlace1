@@ -38,6 +38,9 @@ export async function getUser() {
 export async function getInfo() {
     return await (await fetch(`${baseUrl}/api/admin`, {credentials: 'include'})).json()
 }
+export async function getEmployee() {
+    return await (await fetch(`${baseUrl}/api/employee`, {credentials: 'include'})).json()
+}
 export async function getUserActiveSells(id) {
     return (await fetch(`${baseUrl}/products/sells/active/${id}`, {credentials: 'include'})).json();
 }
@@ -145,9 +148,9 @@ export async function deleteFromCart(dataa) {
         throw error;
     }
 }
-export async function makeOrder(data) {
+export async function makeOrder(data,lang) {
     try {
-        const response = await axios.put(`${baseUrl}/api/user/orders`, data, {
+        const response = await axios.put(`${baseUrl}/api/user/orders?lang=${lang}`, data, {
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -170,6 +173,62 @@ export async function getUserProfile(){
         return response.data;
     } catch (error) {
         console.error('Error adding to cart:', error);
+        throw error;
+    }
+}
+export async function sendPasswordReset(data){
+    try {
+        const response = await axios.post(`${baseUrl}/auth/password-reset`,data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending reset pass link:', error);
+        throw error;
+    }
+}
+export async function doPasswordReset(userId,token,data){
+    try {
+        const response = await axios.post(`${baseUrl}/auth/password-reset/${userId}/${token}`,data, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending reset pass link:', error);
+        throw error;
+    }
+}
+export async function addReview(pId,review){
+    try {
+        const response = await axios.post(`${baseUrl}/api/user/reviews/${pId}`,review, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending reset pass link:', error);
+        throw error;
+    }
+}
+export async function removeReview(pId){
+    try {
+        const response = await axios.delete(`${baseUrl}/api/user/reviews/${pId}`, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Error sending reset pass link:', error);
         throw error;
     }
 }

@@ -1,8 +1,11 @@
 import React, {useEffect,useState} from 'react';
 import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
 import {getSettings,updateSettings} from '../../../services/settingsService.js'
+import { ThreeDots } from 'react-loader-spinner'
+import Swal from 'sweetalert2';
 
 function MpConfigCommission() {
+    const [loading,setLoading] = useState(false);
     const [settings, setSettings] = useState({
         type: "",
         details: 0,
@@ -22,10 +25,36 @@ function MpConfigCommission() {
     }
     const handleSumbit = async (e)=>{
         e.preventDefault();
-        await updateSettings({data:{"Commision":settings}})
+        await updateSettings({data:{"Commision":settings}}).then((rslt)=>{
+            setLoading(false);
+            Swal.fire({
+                icon: "success",
+                title: "Settings Updated",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        })
+        .catch((e)=>{
+            setLoading(false);
+            Swal.fire({
+                icon: "error",
+                title: "Oops !",
+                text: e.message,
+            });
+        })
     }
     return (
             <CForm className="row g-3" onSubmit={handleSumbit}>
+                <ThreeDots
+                    visible={loading}
+                    height="100"
+                    width="100"
+                    color="#4fa94d"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="overlay-spinner"
+                />
                 <CCol md={12}>
                     <CCol md={6}>
                         <label>Global Commission</label><br/>

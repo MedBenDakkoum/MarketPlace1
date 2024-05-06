@@ -1,7 +1,7 @@
 const Product = require('../models/Product');
 const Store = require("../models/Store")
 const User = require('../models/User');
-
+const settingsService = require("./settingsService")
 // async function getOrders(storeId) {
 //     try{
 //         return new Promise(async (resolve, reject) => {
@@ -67,8 +67,21 @@ async function getStoreByProductId(productId) {
 }
 async function updateStore(id,data){
     try{
-        let rslt = await Store.findOneAndUpdate({"_id":id},data);
-        return rslt
+        if(data.hasOwnProperty("isPublic")){
+            let settings = await settingsService.getSettings();
+            if(settings.SellerCanOnOffStore){
+                let rslt = await Store.findOneAndUpdate({"_id":id},data);
+                return rslt
+            }else{
+                delete data.isPublic;
+                let rslt = await Store.findOneAndUpdate({"_id":id},data);
+                return rslt
+            }
+        }else{
+            let rslt = await Store.findOneAndUpdate({"_id":id},data);
+            return rslt
+        }
+        
     }catch(err){
         console.error(err);
     }

@@ -10,8 +10,10 @@ import MultiSelect from "../components/MultiSelect";
 import {getLocationCountry,getLocationStates,getStateCities,emailInUse} from '../services/publicData'
 import Select from 'react-select'
 import Alert from '../components/Alert/Alert';
+import { getSettings } from '../services/settingsService';
 
 function Register({ navigate }) {
+    const lang = localStorage.getItem("lang");
     const selectCityRef =useRef();
     const [termsAccepted,setTermsAccepted] = useState(false);
     const [alert, setAlert]= useState({
@@ -20,7 +22,8 @@ function Register({ navigate }) {
         refresh:true
     })
     const [loading, setLoading] = useState(false);
-    const [locationCountry,setLocationCountry] = useState({});
+    const [settings, setSettings] = useState({});
+    const [locationCountry,setLocationCountry] = useState("");
     const [locationStates,setLocationStates] = useState([]);
     const [locationCitiesData,setLocationCitiesData] = useState([]);
     const [locationCities,setLocationCities] = useState([]);
@@ -56,7 +59,9 @@ function Register({ navigate }) {
     
     useEffect(function(){
         async function init(){
-            let country = await getLocationCountry();
+            await getLocationCountry().then(function(country){
+                setLocationCountry(country.Country)
+            });
             await getLocationStates().then(function(states){
                 let sts=[]
                 let i=0;
@@ -72,10 +77,8 @@ function Register({ navigate }) {
                 let i = 0;
                 let newCats = [];
                 cats.forEach(function(cat){
-                    console.log(cat.name+" :");
-                    console.log(hasNoParent(cat,cats));
                     if(hasNoParent(cat,cats)){
-                        newCats.push({ value: cat.reference, label: cat.name });
+                        newCats.push({ value: cat.reference, label: cat.name[lang] });
                     }
                     if(i==cats.length-1){
                         setCategories(newCats);
@@ -83,9 +86,9 @@ function Register({ navigate }) {
                     i++;
                 })
             })
-            setLocationCountry(country.Country)
-            setSellerFormData({...sellerFormData,country:country.Country})
-            setClientFormData({...clientFormData,country:country.Country})
+            await getSettings().then(function(setts){
+                setSettings(setts);
+            })
         }
         init()
     },[])
@@ -123,7 +126,7 @@ function Register({ navigate }) {
         supplierUsername:"",
         supplierPassword:"",
         supplierSecretKey:"",
-        sellerType:"",
+        sellerType:"personal",
         RNE:"",
         matriculeFiscale:""
     });
@@ -198,6 +201,13 @@ function Register({ navigate }) {
         setSellerFormData({...sellerFormData,zipcode:locationZipCode});
         setClientFormData({...clientFormData,zipcode:locationZipCode});
       },[locationZipCode,setLocationZipCode])
+
+      useEffect(function(){
+        console.log("Country: ");
+        console.log(locationCountry);
+        setSellerFormData({...sellerFormData,country:locationCountry});
+        setClientFormData({...clientFormData,country:locationCountry});
+      },[locationCountry,setLocationCountry])
 
       const handleChangeState = async (e)=>{
         selectCityRef.current.clearValue();
@@ -289,7 +299,10 @@ function Register({ navigate }) {
       const handleSellerSubmit = (e) => {
         e.preventDefault();
         setLoading(true);
+        console.log("country: ");
+        console.log(locationCountry);
         sellerFormData["categories"] = getCats();
+        sellerFormData["country"] = locationCountry;
         registerUser(sellerFormData)
             .then(res => {
                 if (!res.error) {
@@ -304,6 +317,15 @@ function Register({ navigate }) {
         e.preventDefault();
         setClientFormVisible(!isClientFormVisible);
       };
+      const changeToClientForm = (e) => {
+        e.preventDefault();
+        setClientFormVisible(true);
+      };
+      const changeToSellerForm = (e) => {
+        e.preventDefault();
+        setClientFormVisible(false);
+      };
+      
     useEffect(()=>{
         setErrors({});
         setLocationCities([]);
@@ -345,7 +367,7 @@ function Register({ navigate }) {
             supplierUsername:"",
             supplierPassword:"",
             supplierSecretKey:"",
-            sellerType:"",
+            sellerType:"personal",
             RNE:"",
             matriculeFiscale:""
         });
@@ -358,29 +380,32 @@ function Register({ navigate }) {
     }
     return (
         <>
-        {!userData? <>
-            <SimpleSider />
-            
+        {!userData? <>            
             <div className="container auth-form">
                 <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
-                <div className="toggle-button">
-                    <Button variant="primary" size="lg" onClick={toggleForm}>
-                    Switch to {isClientFormVisible ? 'Seller' : 'Client'} Registration
-                    </Button>
-                </div>
                 <h1 className="auth-heading">Sign Up</h1>
+                <div className="toggle-button">
+                    <Button variant="primary" size="lg" onClick={changeToClientForm}>
+                        Client
+                    </Button>
+                    {settings?.AllowNewSellers?
+                    <Button variant="primary" size="lg" onClick={changeToSellerForm}>
+                        Seller
+                    </Button>
+                    : ""}
+                </div>
                 {!isClientFormVisible?
                 <Form className="col-lg-8" onSubmit={handleSellerSubmit}>
                     <Form.Row>
                         <Form.Group controlId="forName" className="col-lg-12">
                             <Form.Label>Account Type: *</Form.Label>
                             <Form.Control as="select" name="sellerType" onChange={handleSellerChange}>
-                                <option selected>Personal</option>
-                                <option>Business</option>
+                                <option value="personal" selected>Personal</option>
+                                <option value="business">Business</option>
                             </Form.Control>
                         </Form.Group>
                     </Form.Row>
-                    {sellerFormData.sellerType=="Business"?
+                    {sellerFormData.sellerType=="business"?
                     <>
                     <Form.Row>
                         <Form.Group controlId="forName" className="col-lg-6">

@@ -1,19 +1,101 @@
 import { useEffect, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
-import CategoriesNav from "../components/Categories/CategoriesNav";
-import ProductCard from "../components/ProductCard/ProductCard";
-import { Col, Spinner, Dropdown } from "react-bootstrap";
-import {
-  BiSortDown,
-  BiSort,
-  BiDownArrowAlt,
-  BiUpArrowAlt,
-  BiSortUp,
-} from "react-icons/bi";
-import "../components/Siders/SearchSider.css";
-import "../components/Categories/Categories.css";
-import "../components/ProductCard/ProductCard.css";
-
+import DealsOffers from "../components/Home/DealsOffers";
+import CategoriePriceFromSection from "../components/Home/CategoriePriceFromSection";
+import './Home.css';
+const homeProds=[
+  {
+    "title":"Soft Chairs",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/4/image4.jpg",
+  },
+  {
+    "title":"Sofa & chair",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/1/image1.jpg",
+  },
+  {
+    "title":"Kitchen dishes",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/2/image2.jpg",
+  },
+  {
+    "title":"Smart watches",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/3/image3.jpg",
+  },
+  {
+    "title":"Kitchen mixer",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/5/image5.jpg",
+  },
+  {
+    "title":"Blenders",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/6/image6.jpg",
+  },
+  {
+    "title":"Home appliance",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/7/image7.jpg",
+  },
+  {
+    "title":"Coffee maker",
+    "priceFrom":20.0,
+    "img":"https://ettajer.com.tn/8/image8.jpg",
+  }
+]
+const recommendedItems = [
+  {
+    img:"https://ettajer.com.tn/1/image1.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/2/image2.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/3/image3.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/4/image4.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/5/image5.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/6/image6.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/7/image7.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/8/image8.jpg",
+    price:20.0,
+    name:"Black T shirt for men zkejfzej Lorem; dsnfkjsdnfjksdnfkjk dfjksfn"
+  },
+  {
+    img:"https://ettajer.com.tn/20/image20.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+  {
+    img:"https://ettajer.com.tn/21/image21.jpg",
+    price:20.0,
+    name:"Black T shirt for men"
+  },
+]
 function Home({ match }) {
   const [products, setProduct] = useState([]);
   const [page, setPage] = useState(1);
@@ -28,99 +110,25 @@ function Home({ match }) {
 
   return (
     <>
-      <div id="sider">
-        <input
-          className="col-lg-6"
-          type="text"
-          placeholder="Search..."
-          name="search"
-          value={query}
-          onChange={handleSearch}
-        />
-      </div>
-      <CategoriesNav />
-      <div className="container">
-        <Dropdown id="dropdown-sort">
-          <Dropdown.Toggle variant="light" id="dropdown-basic">
-            Sort <BiSort />
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item
-              onClick={() => {
-                setSort("oldest");
-              }}
-            >
-              Oldest <BiDownArrowAlt />
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setSort("newest");
-              }}
-            >
-              Newest <BiUpArrowAlt />
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setSort("lowerPrice");
-              }}
-            >
-              Price <BiSortDown />
-            </Dropdown.Item>
-            <Dropdown.Item
-              onClick={() => {
-                setSort("biggerPrice");
-              }}
-            >
-              Price <BiSortUp />{" "}
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
-        {!loading ? (
-          <InfiniteScroll
-            dataLength={products.length}
-            // next={() => {
-            //   if (query === "") {
-            //     getAll(page, currentCategory).then((res) => {
-            //       setProduct([...products, ...res.products]);
-            //       setPage(page + 1);
-            //     });
-            //   }
-            // }}
-            hasMore={() => {
-              if (products.length > 0) {
-                return true;
-              }
-              return false;
-            }}
-            className="row"
-          >
-            {products
-              .sort((a, b) => {
-                if (sort === "oldest") {
-                  return a.addedAt.localeCompare(b.addedAt);
-                }
-                if (sort === "newest") {
-                  return b.addedAt.localeCompare(a.addedAt);
-                }
-                if (sort === "lowerPrice") {
-                  return b.price - a.price;
-                }
-                if (sort === "biggerPrice") {
-                  return a.price - b.price;
-                }
-              })
-              .map((x) => (
-                <Col xs={12} md={6} lg={3} key={x._id.toString()}>
-                  <ProductCard params={x} />
-                </Col>
-              ))}
-          </InfiniteScroll>
-        ) : (
-          <div className="spinner">
-            <Spinner animation="border" />
-          </div>
-        )}
-      </div>
+      <DealsOffers/>
+      <CategoriePriceFromSection title="Home and outdoor" prods={homeProds}/>
+      <CategoriePriceFromSection title="Consumer electronics" prods={homeProds}/>
+      <h1 className="home-section-title" style={{color:"#1c1c1c"}}>
+        Recommended items
+      </h1>
+      <section className="home-recommended-items-container">
+        <div className="home-recommended-items">
+          {recommendedItems.map((item)=>(
+            <div className="hri-item">
+              <img src={item.img} />
+              <div className="hri-item-info">
+                <p>{item.price} TND</p>
+                <span>{item.name}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }

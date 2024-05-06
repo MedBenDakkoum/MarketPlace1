@@ -1,12 +1,15 @@
 const User = require('../models/User');
+const Employee = require('../models/Employee');
 const Admin = require('../models/Admin');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/config');
 const Store = require('../models/Store');
+const settingsService = require("../services/settingsService")
 
 async function registerUser(userData) {
     try{
+        let settings = await settingsService.getSettings();
         let { 
             name,
             email,
@@ -56,6 +59,7 @@ async function registerUser(userData) {
             let store = new Store({"title":storeName,"categories":categories});
             console.log(store);
             let storeId = await store.save();
+            let isActiveAttr = !settings.SellerNeedAdminApproval; 
             newData = {
                 "name":name,
                 "email":email,
@@ -64,7 +68,7 @@ async function registerUser(userData) {
                 "gender":gender,
                 "isSeller":true,
                 "sellerType":userData.sellerType,
-                
+                "isActive":isActiveAttr,
                 "idStore": storeId._id,
                 "address":{
                     "line1": line1,
@@ -104,25 +108,38 @@ async function registerUser(userData) {
 async function loginUser({ email, password }) {
     
     let user = await User.findOne({ email });
+
+    if (!user) throw { message: 'Invalid email or password' };
+    let hasValidPass = await bcrypt.compare(password, user.password);
+    console.log("hasValidPass")
+    console.log(hasValidPass)
+    if (!hasValidPass) throw { message: "Invalid email or password" }
+    let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller}, SECRET);
+    return token;
+}
+
+async function loginAdmin({ email, password }) {
+    
+    let employee = await Employee.findOne({ email });
     let admin = await Admin.findOne({ email });
 
-    if (!user && !admin) throw { message: 'Invalid email or password' };
+    if (!employee && !admin) throw { message: 'Invalid email or password' };
     let hasValidPass,isValidAdmin;
-    if(user){
-        hasValidPass = await bcrypt.compare(password, user.password);
+    if(employee){
+        hasValidPass = await bcrypt.compare(password, employee.password);
     }else{
         isValidAdmin = await bcrypt.compare(password, admin.password);
     }
     if (!hasValidPass && ! isValidAdmin) throw { message: "Invalid email or password" }
     let token;
     if(hasValidPass){
-        token = jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller}, SECRET);
+        token = jwt.sign({ _id: employee._id, email: employee.email, phoneNumber: employee.phoneNumber}, SECRET);
     }else{
         token = jwt.sign({_id: admin._id, email : admin.email, isAdmin: admin.isAdmin}, SECRET);
     }
-    console.log("token: "+token);
     return token;
 }
+
 
 async function getUser(id) {
     try{
@@ -140,5 +157,6 @@ async function getUser(id) {
 module.exports = {
     registerUser,
     loginUser,
-    getUser
+    getUser,
+    loginAdmin
 }

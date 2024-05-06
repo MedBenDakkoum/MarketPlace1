@@ -1,0 +1,26 @@
+{
+    "sd_sidebar":{
+        "Dashboard":"Tableau de bord",
+        "Profile":"Profil",
+        "Store":"Magasin",
+        "Products":"Produits",
+        "Orders":"Commandes",
+        "Returns":"Retour",
+        "Transactions":"Transactions",
+        "Payment":"Paiement",
+        "Subscription":"Abonnement",
+        "Social":"Social"
+    },
+    "OrderStatus":{
+        "PENDING":"En attente",
+        "AWAITING_PAYMENT":"En attente de paiement",
+        "AWAITING_PICKUP":"En attente de ramassage",
+        "AWAITING_SHIPMENT":"En attente d'expédition",
+        "COMPLETED":"Complété",
+        "SHIPPED":"Expédié",
+        "REFUNDED":"Remboursé",
+        "CANCELED":"Annulé",
+        "ERROR":"Erreur de commande",
+        "UNKNOW_STATUS":"Statut de commande inconnu"
+    }
+}

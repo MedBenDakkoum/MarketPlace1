@@ -11,9 +11,11 @@ export async function getAll(page, category, query) {
     }
 }
 export async function getInitProductById(id) {
-    return (await fetch(`${baseUrl}/api/products/${id}`, { credentials: 'include' })).json();
+    return (await fetch(`${baseUrl}/api/products/init/${id}`, { credentials: 'include' })).json();
 }
-
+export async function getReviews(id) {
+    return (await fetch(`${baseUrl}/api/public/reviews/${id}`, { credentials: 'include' })).json();
+}
 export async function getProductFullInfo(id) {
     return (await fetch(`${baseUrl}/api/products/${id}`, { credentials: 'include' })).json();
 }
@@ -51,8 +53,6 @@ export async function archiveSell(id) {
 export async function wishProduct(id) {
     return (await fetch(`${baseUrl}/products/wish/${id}`, { credentials: 'include' })).json();
 }
-
-
 
 
 

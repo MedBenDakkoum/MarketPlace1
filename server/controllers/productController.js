@@ -36,6 +36,15 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+router.get('/init/:id', async (req, res) => {
+    try {
+        let iP = await initialProduct.findById(req.params.id);
+        res.status(200).json(iP);
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+});
+
 router.get('/specific/:id', async (req, res) => {
     try {
         let product = await (await Product.findById(req.params.id)).toJSON()

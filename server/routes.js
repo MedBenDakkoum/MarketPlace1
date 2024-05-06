@@ -7,6 +7,7 @@ const storeController = require('./controllers/storeController');
 const sellerController = require("./controllers/sellerController");
 const settingsController = require("./controllers/settingsController");
 const publicController = require("./controllers/publicController");
+const employeeController = require("./controllers/employeeController");
 const testController = require("./controllers/testController");
 
 const isAuth = require('./middlewares/isAuth');
@@ -18,12 +19,13 @@ router.get('/', (req, res) => {
 
 router.use('/auth', authController);
 router.use('/api/products', productController);
-router.use('/api/user', userController);
+router.use('/api/user', isAuth,userController);
 router.use('/api/admin', isAdmin ,adminController);
 router.use('/api/store', storeController);
 router.use('/api/seller',sellerController);
 router.use('/api/settings',settingsController);
 router.use('/api/public',publicController);
+router.use('/api/employee',employeeController);
 router.use('/api/test',testController);
 
 module.exports = router;

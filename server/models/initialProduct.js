@@ -11,10 +11,10 @@ const initialProductSchema = new mongoose.Schema({
         type: String,
     },
     name: {
-        type: String,
+        type: Object,
     },
     description: {
-        type: String,
+        type: Object,
     },
     images: [{
         type: String,
@@ -23,13 +23,10 @@ const initialProductSchema = new mongoose.Schema({
         type: String,
     }],
     features: [{
-        name:String,
-        value:String
+        name:Object,
+        value:Object
     }],
     quantity:{
-        type:Number
-    },
-    wholeSalePrice:{ //
         type:Number
     },
     price:{
@@ -53,24 +50,29 @@ const initialProductSchema = new mongoose.Schema({
     isAvailable:{
         type:Boolean
     },
-    manufacturerName:{ //
-        type:String
-    },
-    lastUpdated:{ //
+    lastUpdated:{ 
         type:String
     },
     meta_title:{
-        type:String
+        type:Object
     },
     meta_description:{
-        type:String
-    },
-    friendlyUrl:{
-        type:String
+        type:Object
     },
     description_short:{
+        type:Object
+    },
+    attributes:[{
+        name: {
+            type: Object
+        },
+        values: [{
+            type:Object
+        }]
+    }],
+    additional_categories:[{
         type:String
-    }
+    }]
 });
 
 initialProductSchema.plugin(mongoosePaginate);

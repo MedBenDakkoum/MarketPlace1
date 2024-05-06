@@ -5,9 +5,11 @@ import { CForm,CCol,CFormSelect,CFormInput,CButton,CRow} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getInitProductById} from '../../../services/productData'
 import {addProduct} from '../../../services/dashboardService'
-import Alert from '../../Alert/Alert';
+import { ThreeDots } from 'react-loader-spinner'
+import Swal from 'sweetalert2';
 
 function SellNowProd({ id=""}) {
+    const lang = localStorage.getItem("lang");
     const navigate= useNavigate();
     const [priceAddAmount,setPriceAddAmount]=useState(0);
     const [priceAddType,setPriceAddType]=useState("percentage");
@@ -33,10 +35,10 @@ function SellNowProd({ id=""}) {
         setData({price:productInfo.price || 0,initialPrice:productInfo.price || 0});
     },[productInfo,setProductInfo])
     useEffect(function(){
-        setData({...data,price:calculate(priceAddType,parseInt(data.initialPrice),parseInt(priceAddAmount))})
+        setData({...data,price:calculate(priceAddType,parseFloat(data.initialPrice),parseFloat(priceAddAmount)).toFixed(2)})
     },[priceAddType,setPriceAddType])
     useEffect(function(){
-        setData({...data,price:calculate(priceAddType,parseInt(data.initialPrice),parseInt(priceAddAmount))})
+        setData({...data,price:calculate(priceAddType,parseFloat(data.initialPrice),parseFloat(priceAddAmount)).toFixed(2)})
     },[priceAddAmount,setPriceAddAmount])
     const handleChangeAddedPrice = (e)=>{
         setPriceAddAmount(e.target.value);
@@ -50,10 +52,19 @@ function SellNowProd({ id=""}) {
         let newData = {productId:id,price:{initPrice:data.initialPrice,priceAddType:priceAddType,priceAddAmount:priceAddAmount,price:data.price}}
         await addProduct(newData)
         .then(updatedData => {
-            setAlert({msg:"Added successfully !",type:"success",refresh:!alert.refresh})
+            Swal.fire({
+                icon: "success",
+                title: "Added Successfully !",
+                showConfirmButton: false,
+                timer: 1500
+              });
           })
           .catch(error => {
-            setAlert({msg:error.message+" !",type:"fail",refresh:!alert.refresh})
+            Swal.fire({
+                icon: "error",
+                title: "Oops !",
+                text:error.message,
+              });
           });
         setLoading(false);
     }
@@ -75,14 +86,23 @@ function SellNowProd({ id=""}) {
     
     return (
         <div className="addprod-pop-main">
-                <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
+                <ThreeDots
+                    visible={loading}
+                    height="100"
+                    width="100"
+                    color="#4fa94d"
+                    radius="9"
+                    ariaLabel="three-dots-loading"
+                    wrapperStyle={{}}
+                    wrapperClass="overlay-spinner"
+                />
                 {!Object.keys(productInfo).length==0?
                 <>
                 <div className="info-prod-sell-now">
                     <img src={productInfo?.images[0]}/>
                     <div className="info-prod-info">
-                        <h1>{productInfo.name}</h1>
-                        <p>{productInfo.description}</p>
+                        <h1>{productInfo.name[lang]}</h1>
+                        <p>{productInfo.description[lang]}</p>
                     </div>
                 </div>
                     <CForm className="row g-3" onSubmit={handleSumbit}>

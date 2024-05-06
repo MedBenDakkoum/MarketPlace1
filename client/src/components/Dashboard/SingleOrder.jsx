@@ -11,95 +11,45 @@ import {
   CTableHead,
   CTableBody,
 } from "@coreui/react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { BsPersonFill } from "react-icons/bs";
+import { getOrder,updateOrderStatus,addOrderMessage } from "../../services/adminService";
+import { useTranslation } from 'react-i18next'
+import { ThreeDots } from 'react-loader-spinner'
+import Swal from 'sweetalert2';
+import moment from 'moment';
 
-const order = {
-  info: {
-    orderId: 1,
-    ref: "IELTSWADE",
-    newClient: true,
-    customerName: "Customer 1",
-    total: 214.99,
-    paymentMethod: "On Delivery",
-    status: "Delivered",
-    date: "01-29-2024",
-  },
-  customer: {
-    id: 1,
-    name: "Customer 1",
-    email: "customer1@gmail.com",
-    registeredOn: "01-01-2024",
-    completedOrders: 3,
-    totalSpent: 140,
-    address: {
-      line1: "Address Line1",
-      line2: "Address Line2",
-      country: "Tunisia",
-      state: "Monastir",
-      city: "Monastir",
-      zipCode: "5000",
-    },
-  },
-  products: [
-    {
-      ref: "01234567",
-      productName: "Shirt",
-      price: 15.6,
-      quantity: 1,
-      total: 15.6,
-    },
-    {
-      ref: "01234567",
-      productName: "Pants",
-      price: 35.5,
-      quantity: 2,
-      total: 71,
-    },
-  ],
-  messages: [
-    {
-      messageSubject: "Delay",
-      messageContent:
-        "Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.Please accept our apologies and rest assured that we are working hard to rectify this.",
-      messageDate: "01-29-2024",
-    },
-    {
-      messageSubject: "Delay",
-      messageContent:
-        "Unfortunately, an item on your order is currently out of stock. This may cause a slight delay in delivery.Please accept our apologies and rest assured that we are working hard to rectify this.",
-      messageDate: "01-29-2024",
-    },
-  ],
-};
-const invoiceData = {
-  date: "01/31/2024",
-  document: "invoice",
-  num: "#IN000003",
-  amount: "40TND",
-  note: "test",
-};
 function SingleOrder() {
+  const lang = localStorage.getItem("lang");
+  const [loading,setLoading] = useState(false);
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const params = useParams();
   const [rows, setRows] = useState([]);
+  const [order, setOrder] = useState({});
   const [inter, setInter] = useState("status");
-  const [invoice, setInvoice] = useState({
-    date: "",
-    document: "",
-    num: "",
-    amount: "",
-    note: "",
-  });
+  const [msgToAdd,setMsgToAdd] = useState({
+    subject:"",
+    content:""
+  })
   const [classes, setClasses] = useState({
     status: "active-bar",
     docs: "",
   });
+  const [refresh,setRefresh] = useState(false);
   useEffect(() => {
-    let rows1 = order.products.map((element, index) => (
+    async function init(){
+      let data = await getOrder(params.id);
+      setOrder(data);
+    }
+    init()
+  }, [refresh,setRefresh]);
+  useEffect(function(){
+    let rows1 = order?.products?.map((element, index) => (
       <CTableRow key={element.id} color="light">
         <CTableDataCell>#</CTableDataCell>
         <CTableDataCell>{element.ref}</CTableDataCell>
-        <CTableDataCell>{element.productName}</CTableDataCell>
+        <CTableDataCell>{element.productName[lang]}</CTableDataCell>
         <CTableDataCell>{element.price}</CTableDataCell>
         <CTableDataCell>{element.quantity}</CTableDataCell>
         <CTableDataCell>{element.total}</CTableDataCell>
@@ -116,7 +66,7 @@ function SingleOrder() {
       </CTableRow>
     ));
     setRows(rows1);
-  }, []);
+  },[order,setOrder])
   const handleChangeStatusDocs = (e) => {
     setInter(e.target.getAttribute("name"));
     setClasses({
@@ -125,11 +75,60 @@ function SingleOrder() {
       [e.target.getAttribute("name")]: "active-bar",
     });
   };
-  const handleGenerateInvoice = (e) => {
-    setInvoice(invoiceData);
+  const handleDownloadInvoice = (e) => {
+    if(order.invoiceUrl){
+      window.open(order.invoiceUrl, "_blank")
+    };
   };
+  const handleUpdateStatus = async (e)=>{
+    e.preventDefault();
+    setLoading(true);
+    await updateOrderStatus(params.id,order.info.status)
+    .then(function(rslt){
+      setLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: "Status updated !",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    });
+  }
+  const handleChangeStatus = async (e)=>{
+    e.preventDefault();
+    setOrder({...order,info:{...order.info,status:e.target.value}});
+  }
+  const handleChangeAddMessage = async (e)=>{
+    e.preventDefault();
+    setMsgToAdd({...msgToAdd,[e.target.name]:e.target.value});
+  }
+  const handleAddMessage = async (e)=>{
+    e.preventDefault();
+    setLoading(true);
+    await addOrderMessage(params.id,msgToAdd)
+    .then(function(rslt){
+      setRefresh(!refresh);
+      setLoading(false);
+      Swal.fire({
+        icon: "success",
+        title: "Message Sent !",
+        showConfirmButton: false,
+        timer: 1500
+      });
+    });
+  }
   return (
     <main className="main-container">
+      <ThreeDots
+            visible={loading}
+            height="100"
+            width="100"
+            color="#4fa94d"
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass="overlay-spinner"
+        />
       <div className="main-title">
         <h3>Orders</h3>
       </div>
@@ -140,52 +139,34 @@ function SingleOrder() {
             <div className="customer-name">
               <div className="customer-name-card">
                 <BsPersonFill />
-                {order.customer.name}
+                <p>{order?.customer?.name}</p>
               </div>
               <CButton type="button">Show details</CButton>
-              <label htmlFor="customer-email">Email:</label>
-              <p name="customer-email">{order.customer.email}</p>
-              <label htmlFor="customer-register">Registered on:</label>
-              <p name="customer-register">{order.customer.registeredOn}</p>
-              <label htmlFor="customer-orders">Validated orders:</label>
-              <p name="customer-orders">{order.customer.completedOrders}</p>
-              <label htmlFor="customer-totalSpent">Validated orders:</label>
-              <p name="customer-totalSpent">{order.customer.totalSpent}TND</p>
-              <label htmlFor="customer-address">Address:</label>
-              <div className="customer-address">
-                <p name="customer-address">
-                  <span>Line 1:</span>
-                  {order.customer.address.line1}
-                </p>
-                <p name="customer-address">
-                  <span>Line 2:</span>
-                  {order.customer.address.line2}
-                </p>
-                <p name="customer-address">
-                  <span>City:</span>
-                  {order.customer.address.city}
-                </p>
-                <p name="customer-address">
-                  <span>State:</span>
-                  {order.customer.address.state}
-                </p>
-                <p name="customer-address">
-                  <span>Country:</span>
-                  {order.customer.address.country}
-                </p>
-                <p name="customer-address">
-                  <span>ZipCode:</span>
-                  {order.customer.address.zipCode}
-                </p>
+              <div className="single-customer-detail">
+                <label htmlFor="customer-email">Email:</label>
+                <p name="customer-email">{order?.customer?.email}</p>
+              </div>
+              <div className="single-customer-detail">
+                <label htmlFor="customer-register">Registered on:</label>
+                <p name="customer-register">{order?.customer?.registeredOn}</p>
+                </div>
+              <div className="single-customer-detail">
+                <label htmlFor="customer-orders">Validated orders:</label>
+                <p name="customer-orders">{order?.customer?.completedOrders}</p>
+              </div>
+              <div className="single-customer-detail">
+                <label htmlFor="customer-totalSpent">Total spent:</label>
+                <p name="customer-totalSpent">{order?.customer?.totalSpent} TND</p>
               </div>
             </div>
           </div>
           <div className="order-messages">
             <h1>Messages</h1>
-            {order.messages.map((e) => (
+            {order?.messages?.map((e) => (
               <div className="single-message">
+                <h4>{e.messageSubject}</h4>
                 <p>{e.messageContent}</p>
-                <span>{e.messageDate}</span>
+                <span>{moment(e.messageDate).format("YYYY-MM-DD")}</span>
               </div>
             ))}
           </div>
@@ -207,46 +188,6 @@ function SingleOrder() {
               </CTableHead>
               <CTableBody>
                 {rows}
-                <CTableRow key="add" color="light">
-                  <CTableDataCell>#</CTableDataCell>
-                  <CTableDataCell colSpan={2}>
-                    <CFormInput
-                      name="ref"
-                      type="text"
-                      id="inputRef"
-                      label="Reference"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell>
-                    <CFormInput
-                      name="quantity"
-                      type="text"
-                      id="inputQuantity"
-                      label="Quantity"
-                    />
-                  </CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell></CTableDataCell>
-                  <CTableDataCell>
-                    <CButton type="button">Add</CButton>
-                  </CTableDataCell>
-                </CTableRow>
-              </CTableBody>
-            </CTable>
-            <CTable>
-              <CTableHead>
-                <CTableRow color="light">
-                  <CTableHeaderCell scope="col">Products</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Taxes</CTableHeaderCell>
-                  <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-                </CTableRow>
-              </CTableHead>
-              <CTableBody>
-                <CTableRow color="light">
-                  <CTableDataCell>86.6 TND</CTableDataCell>
-                  <CTableDataCell>4.33</CTableDataCell>
-                  <CTableDataCell>90.93</CTableDataCell>
-                </CTableRow>
               </CTableBody>
             </CTable>
           </div>
@@ -273,8 +214,8 @@ function SingleOrder() {
                   <CTable>
                     <CTableBody>
                       <CTableRow key="add" color="light">
-                        <CTableDataCell>{order.info.status}</CTableDataCell>
-                        <CTableDataCell>{order.info.date}</CTableDataCell>
+                        <CTableDataCell>{t("OrderStatus."+order?.info?.status)}</CTableDataCell>
+                        <CTableDataCell>{order?.info?.statusUpdatesAt}</CTableDataCell>
                         <CTableDataCell>
                           <a style={{ cursor: "pointer", color: "blue" }}>
                             Resend Email
@@ -284,78 +225,50 @@ function SingleOrder() {
                     </CTableBody>
                   </CTable>
                   <div className="update-status">
-                    <CFormSelect name="status" defaultValue="delievered">
-                      <option value="sellconfirm">
-                        Awaiting Seller Confirmation
-                      </option>
-                      <option value="suppconfirm">
-                        Awaiting Supplier Confirmation
-                      </option>
-                      <option value="canceled">Canceled</option>
-                      <option value="delievered">Delievered</option>
+                    <CFormSelect onChange={handleChangeStatus} name="status" value={order?.info?.status}>
+                      <option value="PENDING">Pending</option>
+                      <option value="AWAITING_PAYMENT">Awaiting Payment</option>
+                      <option value="AWAITING_PICKUP">Awaiting Pickup</option>
+                      <option value="AWAITING_SHIPMENT">Awaiting Shipment</option>
+                      <option value="COMPLETED">Completed</option>
+                      <option value="SHIPPED">Shipped</option>
+                      <option value="REFUNDED">Refunded</option>
+                      <option value="CANCELED">Canceled</option>
+                      <option value="ERROR">Order error</option>
+                      <option value="UNKNOW_STATUS">Unknow order status</option>
                     </CFormSelect>
-                    <CButton type="button">Update status</CButton>
-                  </div>
-                  <div className="order-note">
-                    <CFormTextarea
-                      id="inputOrderNote"
-                      label="Order note"
-                      rows={3}
-                      name="ordernote"
-                    ></CFormTextarea>
-                    <CButton type="button">Save</CButton>
+                    <CButton type="button" onClick={handleUpdateStatus}>Update status</CButton>
                   </div>
                 </>
               ) : inter == "docs" ? (
-                <>
-                  {invoice.date.length !== 0 ? (
-                    <CTable>
-                      <CTableHead>
-                        <CTableRow color="light">
-                          <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-                          <CTableHeaderCell scope="col">
-                            Document
-                          </CTableHeaderCell>
-                          <CTableHeaderCell scope="col">
-                            Number
-                          </CTableHeaderCell>
-                          <CTableHeaderCell scope="col">
-                            Amount
-                          </CTableHeaderCell>
-                        </CTableRow>
-                      </CTableHead>
-                      <CTableBody>
-                        <CTableRow color="light">
-                          <CTableDataCell>{invoice.date}</CTableDataCell>
-                          <CTableDataCell>{invoice.document}</CTableDataCell>
-                          <CTableDataCell>{invoice.num}</CTableDataCell>
-                          <CTableDataCell>{invoice.amount}</CTableDataCell>
-                        </CTableRow>
-                        <CTableRow color="light">
-                          <CTableDataCell colSpan={3}>
-                            <CFormInput
-                              name="quantity"
-                              value={invoice.note}
-                              type="text"
-                              id="inputQuantity"
-                            />
-                          </CTableDataCell>
-                          <CTableDataCell>
-                            <CButton type="button">Edit Note</CButton>
-                          </CTableDataCell>
-                        </CTableRow>
-                      </CTableBody>
-                    </CTable>
-                  ) : (
-                    <CButton onClick={handleGenerateInvoice} type="button">
-                      Generate Invoice
+                  <a href={order.invoiceUrl} target="_blank">
+                    <CButton type="button">
+                      Download Invoice
                     </CButton>
-                  )}
-                </>
+                  </a>
               ) : (
                 <h1>Not found</h1>
               )}
             </div>
+          </div>
+          <div className="add-message-container">
+            <CFormInput
+              id="messageSubject"
+              label="Subject"
+              rows={3}
+              onChange={handleChangeAddMessage}
+              name="subject"
+              value={msgToAdd.subject}
+            ></CFormInput>
+            <CFormTextarea
+              id="messagecontent"
+              label="Message"
+              onChange={handleChangeAddMessage}
+              rows={3}
+              name="content"
+              value={msgToAdd.content}
+            ></CFormTextarea>
+            <CButton type="button" onClick={handleAddMessage}>Add message</CButton>
           </div>
         </div>
       </div>

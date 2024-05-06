@@ -1,8 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
 import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {getSellerById} from '../../../services/sellerData';
-import {updateSeller,uploadImage} from '../../../services/adminService'
+import {updateSeller,uploadImage,getSellerById} from '../../../services/adminService'
 
 function MpSellerEditImages() {
     const [loading, setLoading] = useState(true);

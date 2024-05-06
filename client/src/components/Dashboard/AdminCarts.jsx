@@ -1,83 +1,85 @@
 import React,{useState,useEffect} from 'react'
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
-
-
-const carts = [
-    {
-        id:1,
-        customerName:"Customer 1",
-        total:214.99,
-        nbrProducts:4,
-        lastUpdated:"01-29-2024",
-    },
-    {
-        id:2,
-        customerName:"Customer 2",
-        total:45.99,
-        nbrProducts:1,
-        lastUpdated:"01-29-2024",
-    },
-    {
-        id:3,
-        customerName:"Customer 3",
-        total:140.48,
-        nbrProducts:3,
-        lastUpdated:"01-29-2024",
-    },
-    {
-        id:4,
-        customerName:"Customer 4",
-        total:653.45,
-        nbrProducts:7,
-        lastUpdated:"01-29-2024",
-    },
-    {
-        id:5,
-        customerName:"Customer 5",
-        total:84.5,
-        nbrProducts:2,
-        lastUpdated:"01-29-2024",
-    }
-]
+import { MDBDataTable } from 'mdbreact';
+import {getCarts} from '../../services/adminService';
+import moment from 'moment';
 function AdminCarts() {
     const navigate = useNavigate();
+    const [carts,setCarts] = useState([]);
     const [rows, setRows] = useState([]);
+    const data = {
+        columns: [
+          {
+            label: 'ID',
+            field: 'cartId',
+            sort: 'asc',
+            width: 150
+          },
+          {
+            label: 'Name',
+            field: 'customerName',
+            sort: 'asc',
+            width: 200
+          },
+          {
+            label: 'Total',
+            field: 'total',
+            sort: 'asc',
+            width: 100
+          },
+          {
+            label: 'Products',
+            field: 'nbrProducts',
+            sort: 'asc',
+            width: 100
+          },
+          {
+            label: 'Last Updated',
+            field: 'lastUpdated',
+            sort: 'asc',
+            width: 100
+          }
+        ],
+        rows:rows
+      };
     useEffect(()=> {
-        let rows1 = carts.map((element, index) => (
-            <CTableRow key={element._id} color='light'>
-                <CTableDataCell>#</CTableDataCell>
-                <CTableDataCell>{element.id}</CTableDataCell>
-                <CTableDataCell>{element.customerName}</CTableDataCell>
-                <CTableDataCell>{element.total} TND</CTableDataCell>
-                <CTableDataCell>{element.nbrProducts}</CTableDataCell>
-                <CTableDataCell>{element.lastUpdated}</CTableDataCell>
-                <CTableDataCell><a onClick={()=>{navigate('/admin/carts/'+element.id)}} style={{cursor:"pointer",color:"blue"}}>View</a></CTableDataCell>
-            </CTableRow>
-        ));
-        setRows(rows1);
+        async function init(){
+            let carts = await getCarts();
+            setCarts(carts);
+        }
+        init();
     },[])
+
+    useEffect(()=> {
+        let rows1 = [...carts];
+        rows1.map((item)=>{
+            let t = 0;
+            item.cartId = item.cart.cartId || "#";
+            if(item.items.length>0){
+                item.items.forEach(function(it){
+                    t+=it.info.price-it.quantity;
+                })
+            }
+            item.total=t+ " TND";
+            item.nbrProducts= item.items.length;
+            item.lastUpdated = moment(item.cart.updatedAt).format("YYYY-MM-DD") || "";
+        })
+        setRows(rows1);
+    },[carts,setCarts])
+
     return (
     <main className='main-container'>
         <div className='main-title'>
             <h3>Shopping Carts</h3>
         </div>
-        <CTable>
-        <CTableHead>
-            <CTableRow color='light'>
-            <CTableHeaderCell scope="col">#</CTableHeaderCell>
-            <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Customer</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Products</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Last updated</CTableHeaderCell>
-            <CTableHeaderCell scope="col">--</CTableHeaderCell>
-            </CTableRow>
-        </CTableHead>
-        <CTableBody>
-            {rows}
-        </CTableBody>
-        </CTable>
+        <MDBDataTable
+            striped
+            small
+            noBottomColumns={true}
+            style={{color:"white"}}
+            data={data}
+        />
     </main>
   )
 }

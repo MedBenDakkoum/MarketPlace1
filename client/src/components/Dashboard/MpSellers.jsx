@@ -1,65 +1,133 @@
 import React, { useEffect, useState } from 'react'
 import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
-import {getSellers} from '../../services/sellerData';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
-import { updateSeller } from '../../services/adminService';
+import { updateSeller,getSellers } from '../../services/adminService';
+import { ThreeDots } from 'react-loader-spinner'
+import Swal from 'sweetalert2';
+import { MDBDataTable } from 'mdbreact';
 
 function MpSellers() {
     const navigate = useNavigate();
+    const [loading,setLoading] = useState(false);
+    const [sellers,setSellers] = useState([]);
     const [rows, setRows] = useState([]);
-    const handleActiveChange = (e)=>{
-        console.log(e);
+    const data = {
+        columns: [
+          {
+            label: 'ID',
+            field: 'userId',
+            width: 150
+          },
+          {
+            label: 'Name',
+            field: 'name',
+            width: 150
+          },
+          {
+            label: 'Email',
+            field: 'email',
+            width: 200
+          },
+          {
+            label: 'Store Name',
+            field: 'storeName',
+            width: 100
+          },
+          {
+            label: 'Phone Number',
+            field: 'phoneNumber',
+            width: 100
+          },
+          {
+            label: 'Status',
+            field: 'status',
+            width: 100
+          },
+          {
+            label: 'Created At',
+            field: 'createdAt',
+            width: 100
+          },
+          {
+            label: '--',
+            field: 'seeProfile',
+            width: 100
+          },
+          {
+            label: '--',
+            field: 'editProfile',
+            width: 100
+          }
+        ],
+        rows:rows
+      };
+    const handleActiveChange = async (c,e,id)=>{
+        setLoading(true);
+        await updateSeller(sellers[parseInt(id)]._id, {seller:{isActive:c}})
+        .then((rslt)=>{
+            let newSellers = [...sellers]
+            sellers[parseInt(id)].isActive=c;
+            setSellers(newSellers);
+            setLoading(false);
+            Swal.fire({
+                icon: "success",
+                title: "Settings Updated",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        })
+        .catch((e)=>{
+            setLoading(false);
+            Swal.fire({
+                icon: "error",
+                title: "Oops !",
+                text: e.message,
+            });
+        })
     }
     useEffect(()=> {
         async function sellersGet(){
-            let sellers = await getSellers();
-            let rows1 = sellers.map((element, index) => {
-                let aa= element._id;
-                return (
-                <CTableRow key={element._id} color='light'>
-                    <CTableDataCell>#</CTableDataCell>
-                    <CTableDataCell>{element.userId}</CTableDataCell>
-                    <CTableDataCell>{element.name}</CTableDataCell>
-                    <CTableDataCell>{element.email}</CTableDataCell>
-                    <CTableDataCell>{element.storeName}</CTableDataCell>
-                    <CTableDataCell>{element.phoneNumber}</CTableDataCell>
-                    <CTableDataCell><Switch onChange={handleActiveChange({aa})} idvalue={element._id} checked={element.isActive}/></CTableDataCell>
-                    <CTableDataCell>{moment(element.createdAt).format('YYYY-MM-DD')}</CTableDataCell>
-                    <CTableDataCell><a href={'/seller/'+element._id}>See Profile</a></CTableDataCell>
-                    <CTableDataCell><a onClick={()=>{navigate('/admin/mp/sellers/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a></CTableDataCell>
-                </CTableRow>
-            )});
-            setRows(rows1);
+            let sellersData = await getSellers();
+            setSellers(sellersData);
         }
         sellersGet()
     },[])
-    
+    useEffect(()=>{
+        let rows1 = [...sellers];
+        let i =0;
+        rows1.map((element) => {
+            element.status  =(<Switch onChange={handleActiveChange} id={i} checked={element.isActive}/>);
+            element.createdAt  = moment(element.createdAt).format('YYYY-MM-DD');
+            element.seeProfile = (<a href={'/seller/'+element._id}>See Profile</a>)
+            element.editProfile = (<a onClick={()=>{navigate('/admin/mp/sellers/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a>)
+            i++;
+        });
+        setRows(rows1);
+    },[sellers,setSellers])
     return (
     <main className='main-container'>
+        <ThreeDots
+            visible={loading}
+            height="100"
+            width="100"
+            color="#4fa94d"
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass="overlay-spinner"
+        />
         <div className='main-title'>
             <h3>Sellers</h3><CButton onClick={()=>{navigate('/admin/mp/seller/add')}} type="button">Add Seller</CButton>
         </div>
-        <CTable>
-        <CTableHead>
-            <CTableRow color='light'>
-            <CTableHeaderCell scope="col">#</CTableHeaderCell>
-            <CTableHeaderCell scope="col">User ID</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Name</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Email</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Store Name</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Phone Number</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-            <CTableHeaderCell scope="col">Created At</CTableHeaderCell>
-            <CTableHeaderCell scope="col">--</CTableHeaderCell>
-            <CTableHeaderCell scope="col">--</CTableHeaderCell>
-            </CTableRow>
-        </CTableHead>
-        <CTableBody>
-            {rows}
-        </CTableBody>
-        </CTable>
+        <MDBDataTable
+            striped
+            small
+            noBottomColumns={true}
+            style={{color:"white"}}
+            data={data}
+        />
     </main>
   )
 }

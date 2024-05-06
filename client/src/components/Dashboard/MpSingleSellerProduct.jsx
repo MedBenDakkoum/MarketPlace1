@@ -40,10 +40,10 @@ function MpSingleSellerProduct() {
   const [newPrice,setNewPrice] = useState(0);
   const params = useParams();
   const handleChangeAddedPrice = (e)=>{
-    if(isNaN(parseInt(e.target.value))){
+    if(isNaN(parseFloat(e.target.value))){
       setAddedPrice(0);
     }else{
-      setAddedPrice(parseInt(e.target.value));
+      setAddedPrice(parseFloat(e.target.value));
     }
   }
   const handleChangeType = (e)=>{

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { ContextStore } from './ContextStore';
@@ -12,9 +12,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 
 root.render(
       <BrowserRouter>
-         <ContextStore>
-            <App />
-         </ContextStore>
+         <Suspense fallback={<div>Loading....</div>}>
+            <ContextStore>
+               <App />
+            </ContextStore>
+         </Suspense>
       </BrowserRouter>
 );
 

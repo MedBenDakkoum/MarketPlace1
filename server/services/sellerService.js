@@ -1,5 +1,8 @@
 const User = require("../models/User");
 const Store = require("../models/Store");
+const Order = require("../models/Store");
+const Product = require("../models/Store");
+
 const {getStoreById} = require("./storeService");
 
 async function getStoreNameById(id) {
@@ -181,6 +184,7 @@ module.exports = {
     getSellers,
     getSellerById,
     updateSeller,
+    getSellerStoreById,
     addSeller,
     getDashboardHome
 };

@@ -15,56 +15,56 @@ function AdminHome() {
     }
     init();
   },[])
-    const data = [
-        {
-          name: 'Page A',
-          sales: 4000,
-          revenue: 2400,
-          amt: 2400,
-        },
-        {
-          name: 'Page B',
-          sales: 3000,
-          revenue: 1398,
-          amt: 2210,
-        },
-        {
-          name: 'Page C',
-          sales: 2000,
-          revenue: 9800,
-          amt: 2290,
-        },
-        {
-          name: 'Page D',
-          sales: 2780,
-          revenue: 3908,
-          amt: 2000,
-        },
-        {
-          name: 'Page E',
-          sales: 1890,
-          revenue: 4800,
-          amt: 2181,
-        },
-        {
-          name: 'Page F',
-          sales: 2390,
-          revenue: 3800,
-          amt: 2500,
-        },
-        {
-          name: 'Page G',
-          sales: 3490,
-          revenue: 4300,
-          amt: 2100,
-        },
-      ];
+    // const data = [
+    //     {
+    //       name: 'Page A',
+    //       sales: 4000,
+    //       revenue: 2400,
+    //       amt: 2400,
+    //     },
+    //     {
+    //       name: 'Page B',
+    //       sales: 3000,
+    //       revenue: 1398,
+    //       amt: 2210,
+    //     },
+    //     {
+    //       name: 'Page C',
+    //       sales: 2000,
+    //       revenue: 9800,
+    //       amt: 2290,
+    //     },
+    //     {
+    //       name: 'Page D',
+    //       sales: 2780,
+    //       revenue: 3908,
+    //       amt: 2000,
+    //     },
+    //     {
+    //       name: 'Page E',
+    //       sales: 1890,
+    //       revenue: 4800,
+    //       amt: 2181,
+    //     },
+    //     {
+    //       name: 'Page F',
+    //       sales: 2390,
+    //       revenue: 3800,
+    //       amt: 2500,
+    //     },
+    //     {
+    //       name: 'Page G',
+    //       sales: 3490,
+    //       revenue: 4300,
+    //       amt: 2100,
+    //     },
+    //   ];
      
 
   return (
     <main className='main-container'>
         <div className='main-title'>
-            <h3>DASHBOARD</h3>
+            <h3>Dashboard</h3>
         </div>
 
         <div className='main-cards'>
@@ -103,7 +103,7 @@ function AdminHome() {
             <BarChart
             width={500}
             height={300}
-            data={data}
+            data={basicInfo?.data}
             margin={{
                 top: 5,
                 right: 30,
@@ -116,7 +116,6 @@ function AdminHome() {
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="revenue" fill="#8884d8" />
                 <Bar dataKey="sales" fill="#82ca9d" />
                 </BarChart>
             </ResponsiveContainer>
@@ -125,7 +124,7 @@ function AdminHome() {
                 <LineChart
                 width={500}
                 height={300}
-                data={data}
+                data={basicInfo?.data}
                 margin={{
                     top: 5,
                     right: 30,
@@ -139,7 +138,6 @@ function AdminHome() {
                 <Tooltip />
                 <Legend />
                 <Line type="monotone" dataKey="revenue" stroke="#8884d8" activeDot={{ r: 8 }} />
-                <Line type="monotone" dataKey="sales" stroke="#82ca9d" />
                 </LineChart>
             </ResponsiveContainer>
 

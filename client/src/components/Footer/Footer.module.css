@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@600&family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@600&family=Inter:wght@100..900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+*{
+    font-family: "Rubik", sans-serif;
+}
+.footer-container{
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    margin: 0;
+}
+.footer-top{
+    display: flex;
+    width: 100%;
+    padding: 30px 10%;
+}
+.footer-info{
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    align-items: start;
+    gap: 10px;
+}
+.footer-info p{
+    text-align: start;
+    font-weight: 300;
+}
+.footer-info img{
+    height: 45px;
+}
+.footer-socials{
+    display: flex;
+    gap: 15px;
+}
+.footer-socials svg{
+    font-size: 30px;
+    color:#1C1C1C;
+    opacity: 0.6;
+}
+.footer-links{
+    display: flex;
+    justify-content: end;
+    gap: 50px;
+    width: 100%;
+    flex-grow: 1;
+}
+.single-footer-links li{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.single-footer-links li ul{
+    padding: 0;
+    margin: 0;
+    font-size: 18px;
+    font-weight: 300;
+    text-align: start;
+    cursor: pointer;
+}
+.single-footer-links h1{
+    color: #1C1C1C;
+    margin-bottom: 16px;
+    opacity: 0.9;
+    font-size: 18px;
+    text-align: start;
+}
+
+footer {
+    border-top: 1px solid #DEE2E7;
+    padding: 1rem;
+    background-color: white;
+    position: relative;
+}
+.footer-bottom{
+    border-top: 1px solid #DEE2E7;
+    background-color: #EFF2F4;
+    height: 60px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.footer-bottom p {
+    margin: 0;
+    padding: 0;
+    color: #1C1C1C;
+    opacity: 0.5;
+}

@@ -2,14 +2,16 @@ import { useState, useRef } from "react"
 import { default as ReactSelect, components } from "react-select"
 
 const MultiSelect = props => {
+  const lang = localStorage.getItem("lang");
   const [selectInput, setSelectInput] = useState("")
   const isAllSelected = useRef(false)
   const selectAllLabel = useRef("Select all")
   const allOption = { value: "*", label: selectAllLabel.current }
 
   const filterOptions = (options, input) =>
-    options?.filter(({ label }) =>
-      label.toLowerCase().includes(input.toLowerCase())
+    options?.filter(({ label }) =>{
+      label?.toLowerCase().includes(input.toLowerCase())
+      }
     )
 
   const comparator = (v1, v2) => v1.value - v2.value
@@ -58,7 +60,7 @@ const MultiSelect = props => {
   )
 
   const customFilterOption = ({ value, label }, input) =>
-    (value !== "*" && label.toLowerCase().includes(input.toLowerCase())) ||
+    (value !== "*" && label?.toLowerCase().includes(input.toLowerCase())) ||
     (value === "*" && filteredOptions?.length > 0)
 
   const onInputChange = (inputValue, event) => {

@@ -1,10 +1,11 @@
 const { Router } = require('express');
 const router = Router();
-const { writeFileSync } = require('fs');
+const fs = require('fs');
 const path = '../config/settings.json';
 const User = require('../models/User');
 const parseString = require('xml2js').parseString;
 const axios = require('axios'); 
+const settingsService = require("../services/settingsService");
 router.get('/test', async (req, res) => {
     try {
         axios.get('https://ettajer.com.tn/api/products?ws_key=CZ2LXXFDRAZPFP3AU8J5EC5QDKQRQKJ9')
@@ -35,7 +36,8 @@ router.get('/test', async (req, res) => {
 })
 router.get('/', async (req, res) => {
     try {
-        res.status(200).json(global.settings);
+        var settings = await settingsService.getSettings();
+        res.status(200).json(settings);
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
@@ -78,12 +80,17 @@ router.get('/location/states/:state', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         let changes = req.body.data;
-        let config = global.settings;
+        let config = require('../config/settings.json');
         for (const [keyy, value] of Object.entries(changes)) {
-            config={...config,[`${keyy}`]:value};
+            config[keyy] = value
         }
-        writeFileSync("/home/yami/projects/Marketplace-ReactJS-Project/server/config/settings.json", JSON.stringify(config, null, 2), 'utf8');
-        res.status(200).json(config);
+        fs.writeFile('/home/yami/projects/Marketplace-ReactJS-Project/server/config/settings.json', JSON.stringify(config, null, 2), function writeJSON(err) {
+            if (err) return console.log(err);
+            res.status(200).json(config);
+          });
+          
+        // writeFileSync("/home/yami/projects/Marketplace-ReactJS-Project/server/config/settings.json", JSON.stringify(config, null, 2), 'utf8');
+        
     } catch (error) {
         res.status(500).json({ message: error.message })
     }

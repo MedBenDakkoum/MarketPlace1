@@ -6,7 +6,7 @@ const CategorieSchema = new mongoose.Schema({
         type:String
     },
     name:{
-        type:String
+        type:Object
     },
     parent: {
         type:String,
@@ -15,10 +15,10 @@ const CategorieSchema = new mongoose.Schema({
         type:Number,
     },
     description:{
-        type:String
+        type:Object
     },
     link_rewrite:{
-        type:String
+        type:Object
     }
 
 });
