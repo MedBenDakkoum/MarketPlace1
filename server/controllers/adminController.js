@@ -218,20 +218,24 @@ router.get("/mp/orders", async (req, res) => {
     await sellerService.getSellers().then(async function(sellers){
       let rslt = []
       let i = 0;
-      for(let seller of sellers){
-        let orderCount = await orderService.getOrdersById(seller.idStore);
-        rslt.push({
-          _id: seller._id,
-          userId:seller.userId,
-          storeName:seller.storeName,
-          sellerName:seller.name,
-          sellerEmail:seller.email,
-          totalOrders: orderCount.length,
-        })
-        if(i==sellers.length-1){
-          res.status(200).json(rslt);
+      if(sellers.length>0){
+        for(let seller of sellers){
+          let orderCount = await orderService.getOrdersById(seller.idStore);
+          rslt.push({
+            _id: seller._id,
+            userId:seller.userId,
+            storeName:seller.storeName,
+            sellerName:seller.name,
+            sellerEmail:seller.email,
+            totalOrders: orderCount.length,
+          })
+          if(i==sellers.length-1){
+            res.status(200).json(rslt);
+          }
+          i++;
         }
-        i++;
+      }else{
+        res.status(200).json([]);
       }
     });
     
