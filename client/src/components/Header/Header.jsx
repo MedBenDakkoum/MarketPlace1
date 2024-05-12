@@ -211,11 +211,15 @@ function Header() {
             </div>
             <div style={{height:allCatsHeight}}  className={styles["all-cats-dropdown-container"]}>
                 <div className={styles["all-cats-dropdown"]}>
-                    {allCats.map((cat)=>(
-                    <div key={cat.value} className={styles["single-cat"]}>
-                        <p>{cat.label}</p>
-                    </div>  
-                    ))}
+                    {allCats?
+                    <> 
+                        {allCats.map((cat)=>(
+                        <div key={cat.value} className={styles["single-cat"]}>
+                            <p>{cat.label}</p>
+                        </div>  
+                        ))}
+                    </>
+                    : ""}
                 </div>
                 <div className="single-cat-dropdown-container">
 
