@@ -53,7 +53,7 @@ async function registerUser(userData) {
         if (password !== repeatPassword) errors.push("Passwords should match; " );
         if (password.length < 8) errors.push("Password should be at least 8 characters long; " );
         if (password.length > 20) errors.push("Password should be at max 20 characters long; " );
-        if (errors.length >= 1) throw {message: [errors]}
+        if (errors.length >= 1) {throw {message: errors}}
         let newData = {};
         if(isSeller){
             let store = new Store({"title":storeName,"categories":categories});
@@ -105,8 +105,7 @@ async function registerUser(userData) {
         let user = new User(newData);
         return await user.save();
     }catch(err){
-        console.error(err);
-        return "error";
+        throw err.message;
     }
 }
 

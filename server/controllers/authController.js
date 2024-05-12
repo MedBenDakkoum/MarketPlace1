@@ -17,12 +17,15 @@ router.post('/register', async (req, res) => {
         if(req.body.isSeller && !settings.AllowNewSellers){
             res.status(400).json({msg:"Cant register new users"})
         }else{
-            let createdUser = await authService.registerUser(req.body);
-            res.status(201).json({ _id: createdUser._id });
+            await authService.registerUser(req.body)
+            .then((createdUser)=>{
+                res.status(201).json({ _id: createdUser._id });
+            }).catch((err)=>{
+                res.status(409).json({errors:err});
+            })
         }
     } catch (error) {
-        console.log(error)
-        res.status(404).json({ error: error.message })
+        res.status(404).json({ errors: error.message })
     }
 });
 

@@ -11,6 +11,7 @@ import {getLocationCountry,getLocationStates,getStateCities,emailInUse} from '..
 import Select from 'react-select'
 import Alert from '../components/Alert/Alert';
 import { getSettings } from '../services/settingsService';
+import Swal from 'sweetalert2';
 
 function Register({ navigate }) {
     const lang = localStorage.getItem("lang");
@@ -301,13 +302,24 @@ function Register({ navigate }) {
         sellerFormData["country"] = locationCountry;
         registerUser(sellerFormData)
             .then(res => {
-                if (!res.error) {
-                    navigate('/auth/login')
-                } else {
+                if(res.errors){
                     setLoading(false);
-                    setError(res.error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Oops !",
+                        html: res.errors.map((msg)=>(msg+"<br>")),
+                    });
+                }else{
+                    navigate('/auth/login')
                 }
-            }).catch(err => console.error('error from register: ', err))
+            }).catch(err => {
+                setLoading(false);
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    html: err.errors.map((msg)=>(msg+"<br>")),
+                });
+            })
       };
       const toggleForm = (e) => {
         e.preventDefault();
