@@ -32,11 +32,7 @@ function Register({ navigate }) {
     const [errors, setErrors] = useState({});
     const [isClientFormVisible, setClientFormVisible] = useState(true);
     const { userData } = useContext(Context);
-    const [categoriesList,setCategories]= useState([
-        { value: "shoes", label: "Shoes" },
-        { value: "electronics", label: "Electronics" },
-        { value: "shirts", label: "Shirts" }
-    ]);
+    const [categoriesList,setCategories]= useState([]);
     const [selectedCategories,setSelectedCategories]= useState([]);
     const handleAcceptTerms = (e)=>{
         setTermsAccepted(!termsAccepted);
