@@ -11,7 +11,7 @@ const ClientDashLayout = () => {
   const { userData, setUserData } = useContext(Context);
   return (
     <>
-    {!(userData?.isSeller) ? (
+    {userData? (
     <div className='client-dash-layout'>
       <div className="client-dash">
         <CDNavBar/>

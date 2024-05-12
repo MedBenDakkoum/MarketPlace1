@@ -132,7 +132,6 @@ function Header() {
         async function init(){
             let cats = await getCategories();
             setAllCats(formatCategories(cats));
-            console.log(formatCategories(cats))
         }
         init();
     },[])

@@ -24,7 +24,7 @@ function Search() {
     const [sortByDorpDown,setSortByDorpDown] = useState("none");
     const [allCats,setAllCats] = useState({});
     const [allFeatures,setAllFeatures] = useState([]);
-    const [paginationLevel,setPaginationLevel] = useState([]);
+    const [paginationLevel,setPaginationLevel] = useState(1);
     const priceRangeSelector = (e, newPriceRange) => { 
         setPriceRange(newPriceRange); 
     }; 
@@ -114,7 +114,11 @@ function Search() {
                 }
                 setAllProds(aa);
                 let bb = [...aa];
+                console.log("bb init");
+                console.log(bb);
                 bb.splice(0, 5);
+                console.log("bb splice");
+                console.log(bb);
                 setSearchProds(bb);
                 setPaginationLevel(1);
                 setLoading(false);
@@ -124,11 +128,14 @@ function Search() {
         init()
     },[queryParameters])
     useEffect(function(){
-        console.log(paginationLevel);
         setLoading(true)
-        let aa = allProds.slice((paginationLevel-1)*5, (paginationLevel)*5)
+        console.log("paginationLevel");
+        console.log(paginationLevel);
+        console.log(allProds);
+        let aa = allProds.slice((paginationLevel-1)*5, (paginationLevel)*5);
+        console.log(aa);
         setSearchProds(aa);
-        setLoading(false)
+        setLoading(false);
     },[paginationLevel,setPaginationLevel])
     const handleChangePaginationLevel = (e)=>{
         if(paginationLevel!==parseInt(e.target.outerText)){
@@ -400,15 +407,19 @@ function Search() {
                         <div className={styles["prods-pagination"]}>
                             <p>Show {searchProds.length}</p>
                             <div className={styles["paginator"]}>
+                                {paginationLevel-1>0? 
                                 <div onClick={(e)=>{if((paginationLevel-1)>0){setPaginationLevel(paginationLevel-1)}}} className={styles["chevron-paginate"]} style={{borderRight:"none",borderTopLeftRadius:"10px",borderBottomLeftRadius:"10px"}}>
                                     <BsChevronLeft />
                                 </div>
+                                : ""}
                                 {[...Array(Math.ceil(allProds.length/5)+1).keys()].splice(1).map((num)=>(
-                                    <span onClick={handleChangePaginationLevel}>{num}</span>
+                                    <span key={num} onClick={handleChangePaginationLevel}>{num}</span>
                                 ))}
+                                {(paginationLevel+1)<(Math.ceil(allProds.length/5)+1)? 
                                 <div onClick={(e)=>{if((paginationLevel+1)<(Math.ceil(allProds.length/5)+1)){setPaginationLevel(paginationLevel+1)}}} className={styles["chevron-paginate"]} style={{borderTopRightRadius:"10px",borderBottomRightRadius:"10px"}}>
                                     <BsChevronRight/>
                                 </div>
+                                :""}
                             </div>
                         </div>
                     </div>
