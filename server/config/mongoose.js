@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const { DB_CONNECTION } = require('./config');
-const ModelTest = require('../models/ModelTest'); // Import your Mongoose model
+const ModelTest = require('../models/ModelTest'); 
 
 mongoose.connect(DB_CONNECTION, { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false, useCreateIndex: true });
 
