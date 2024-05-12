@@ -122,6 +122,9 @@ function Header() {
         }
   
         const rootCategories = categoryDict[''];
+        if(!rootCategories){
+            return [];
+        }
         const formattedCategories = rootCategories.map(rootCategory => formatCategory(rootCategory));
         return formattedCategories;
       }
