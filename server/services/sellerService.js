@@ -1,7 +1,10 @@
 const User = require("../models/User");
 const Store = require("../models/Store");
-const Order = require("../models/Store");
-const Product = require("../models/Store");
+const Order = require("../models/Order");
+const Product = require("../models/Product");
+const Transaction = require("../models/Transaction");
+const emailService = require("../services/emailService")
+const settingsService = require("../services/settingsService")
 
 const {getStoreById} = require("./storeService");
 
@@ -22,7 +25,15 @@ async function getStoreNameById(id) {
     }
     return sellers;
   }
-  
+  async function getUnVerifiedSellers() {
+    var sellers = await User.find({ isSeller: true ,isVerified:false}).select("-password");
+    for (let i = 0; i < sellers.length; i++) {
+      sellers[i] = sellers[i].toJSON();
+      let store = await getStoreNameById(sellers[i].idStore);
+      sellers[i]["storeName"] = store;
+    }
+    return sellers;
+  }
   async function addSeller(userData) {
     try {
       let {
@@ -124,17 +135,12 @@ async function getDashboardHome(sellerId) {
         Cancelled: 0,
         Refunded: 0,
     }
-    let productCount = {
-        Live: 0,
-        Offline: 0,
-        Pending: 0,
-    }
     let orders = await Order.find({sellerId:sellerId});
     let products = await Product.find({seller:sellerId});
     let t =0;
     let sales = 0;
     let earnings = 0;
-    orders.forEach(async (element) => {
+    orders.forEach((element) => {
         t++;
         sales=sales+element.totalPrice;
         earnings=earnings+element.sellerEarnings;
@@ -160,25 +166,90 @@ async function getDashboardHome(sellerId) {
     });
     orderCount.Total=t;
     let pt=0;
-    // fix this later
-    // products.forEach(async (element) => {
-    //     pt++;
-    //     switch(element.status){
-    //         case "Pending":
-    //             productCount.Pending++;
-    //             break;
-    //         case "Live":
-    //             productCount.Live++;
-    //             break;
-    //         case "Offline":
-    //             productCount.Offline++;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // });
+    let productCount = {
+      Live: 0,
+      Offline: 0,
+  }
+    products.forEach((element) => {
+        pt++;
+        console.log(element);
+        if(element.isActive){
+          productCount.Live++;
+        }else{
+          productCount.Offline++;
+        }
+    });
     productCount.Total=pt;
     return {orders:orderCount,products:productCount,info:{earnings:earnings,sales:sales}};
+}
+async function verifySeller(id) {
+  try{
+    return new Promise(async (resolve,reject)=>{
+      const seller = await User.findById(id);
+      if(!seller) throw "No such user found";
+      
+      let verified = await seller.update({isVerified:true});
+      if(verified){
+            await emailService.sendEmail(seller.email, "Account is verified !", "Your account is verified.<br><br>You can now start selling on Adghal !<br><br>Login <a href='http://localhost:3000/auth/login' target='_blank'>Here</a>")
+            .then((t)=>{
+                resolve({sent:"true"});
+            })
+            .catch((f)=>{
+                reject({sent:"false"});
+            })
+        }
+    })
+  }catch(e){
+      console.log("Error in verifying seller");
+      throw e;
+  }
+}
+async function isSellerVerified(id) {
+  try{
+    return new Promise(async (resolve,reject)=>{
+      const seller = await User.findById(id);
+      if(!seller) throw "No such user found";
+      
+      resolve({status:seller.isVerified});
+    })
+  }catch(e){
+      console.log("Error in verifying seller");
+      throw e;
+  }
+}
+async function deleteSeller(id) {
+  return new Promise(async (resolve, reject) => {
+    await User.findOneAndDelete({_id:id,isSeller:true})
+        .then(async(user)=>{
+            if(user){
+                await Store.findOneAndDelete({_id:user.idStore})
+                .then(async (store)=>{
+                  if(store){
+                    await Cart.findOne({user:id}).then(async (cart)=>{
+                      if(cart){
+                          await cart.delete().then((delCart)=>{
+                              resolve({msg:"Deleted"})
+                          }).catch((err)=>{
+                              resolve(err.message)
+                          })
+                      }else{
+                          resolve({msg:"Deleted"})
+                      }
+                  })
+                  }else{
+                    reject({msg:"Store not deleted !"})
+                  }
+                }).catch((err)=>{
+                  reject(err.message)
+                })
+            }else{
+                reject({msg:"Invalid Seller!"});
+            }
+        })
+        .catch((err)=>{
+            reject(err.message);
+        })
+  })
 }
 module.exports = {
     getSellers,
@@ -186,6 +257,10 @@ module.exports = {
     updateSeller,
     getSellerStoreById,
     addSeller,
-    getDashboardHome
+    getDashboardHome,
+    getUnVerifiedSellers,
+    verifySeller,
+    isSellerVerified,
+    deleteSeller
 };
   

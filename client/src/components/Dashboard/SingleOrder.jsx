@@ -13,7 +13,7 @@ import {
 } from "@coreui/react";
 import { useNavigate,useParams } from "react-router-dom";
 import { BsPersonFill } from "react-icons/bs";
-import { getOrder,updateOrderStatus,addOrderMessage } from "../../services/adminService";
+import { getOrder,updateOrderStatus,addOrderMessage,verifyOrder } from "../../services/adminService";
 import { useTranslation } from 'react-i18next'
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
@@ -47,13 +47,13 @@ function SingleOrder() {
   useEffect(function(){
     let rows1 = order?.products?.map((element, index) => (
       <CTableRow key={element.id} color="light">
-        <CTableDataCell>#</CTableDataCell>
         <CTableDataCell>{element.ref}</CTableDataCell>
-        <CTableDataCell>{element.productName[lang]}</CTableDataCell>
-        <CTableDataCell>{element.price}</CTableDataCell>
+        <CTableDataCell>{element.price=="#"? "DELETED" : element.productName[lang]}</CTableDataCell>
+        <CTableDataCell>{element.price=="#"? "DELETED" : element.price}</CTableDataCell>
         <CTableDataCell>{element.quantity}</CTableDataCell>
-        <CTableDataCell>{element.total}</CTableDataCell>
+        <CTableDataCell>{element.price=="#"? "DELETED" : element.total}</CTableDataCell>
         <CTableDataCell>
+          {element.price=="#"? "DELETED" : 
           <a
             onClick={() => {
               navigate("/admin/products/" + element.ref);
@@ -62,6 +62,7 @@ function SingleOrder() {
           >
             View Product
           </a>
+        }
         </CTableDataCell>
       </CTableRow>
     ));
@@ -75,11 +76,37 @@ function SingleOrder() {
       [e.target.getAttribute("name")]: "active-bar",
     });
   };
-  const handleDownloadInvoice = (e) => {
-    if(order.invoiceUrl){
-      window.open(order.invoiceUrl, "_blank")
-    };
-  };
+  const handleVerifyOrder = (e)=>{
+    e.preventDefault();
+    Swal.fire({
+        title: "Are you sure you want to verify the order?",
+        text:"Client need to be called first !",
+        showCancelButton: true,
+        confirmButtonText: "Verify",
+      }).then(async (result) => {
+        setLoading(true);
+        if (result.isConfirmed) {
+            await verifyOrder(params.id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Order Verified !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setOrder({...order,isVerified:true});
+                setLoading(false);
+            }).catch(function(err){
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: "Error while verifing the order!",
+                });
+                setLoading(false);
+                });
+        }
+      });
+  }
   const handleUpdateStatus = async (e)=>{
     e.preventDefault();
     setLoading(true);
@@ -141,10 +168,13 @@ function SingleOrder() {
                 <BsPersonFill />
                 <p>{order?.customer?.name}</p>
               </div>
-              <CButton type="button">Show details</CButton>
               <div className="single-customer-detail">
                 <label htmlFor="customer-email">Email:</label>
                 <p name="customer-email">{order?.customer?.email}</p>
+              </div>
+              <div className="single-customer-detail">
+                <label htmlFor="customer-phoneNumber">Tel:</label>
+                <p name="customer-phoneNumber">{order?.customer?.phoneNumber}</p>
               </div>
               <div className="single-customer-detail">
                 <label htmlFor="customer-register">Registered on:</label>
@@ -177,7 +207,6 @@ function SingleOrder() {
             <CTable>
               <CTableHead>
                 <CTableRow color="light">
-                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Ref</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Product Name</CTableHeaderCell>
                   <CTableHeaderCell scope="col">Price</CTableHeaderCell>
@@ -222,6 +251,15 @@ function SingleOrder() {
                           </a>
                         </CTableDataCell>
                       </CTableRow>
+                      <CTableRow key="add" color="light">
+                        <CTableDataCell>{order?.isVerified? <p style={{color:"#4CAF50"}}>Verified</p> : <p style={{color:"red"}}>inVerified</p>}</CTableDataCell>
+                        {!order?.isVerified? 
+                            <CTableDataCell colSpan={2}>
+                                <CButton onClick={handleVerifyOrder} style={{width:"100%",height:"100%"}}>Verify</CButton>
+                            </CTableDataCell>
+                        : ""}
+                      </CTableRow>
+
                     </CTableBody>
                   </CTable>
                   <div className="update-status">

@@ -85,3 +85,32 @@ export async function getLocationCountry() {
       throw error;
     }
   }
+  export async function searchKeyword(q){
+    try {
+      const response = await axios.post(`${baseUrl}/api/public/search`, {keyword:q},{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error getting categories:", error);
+      throw error;
+    }
+  }
+  export async function getCategoriesFromRefs(refs){
+    try {
+      const response = await axios.post(`${baseUrl}/api/public/categories`, {refs:refs},{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error getting categories:", error);
+      throw error;
+    }
+  }
+  

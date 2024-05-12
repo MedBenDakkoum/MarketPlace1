@@ -2,6 +2,7 @@ const initialProduct = require('../models/initialProduct');
 const Product = require('../models/Product');
 const User = require('../models/User');
 const Store = require('../models/Store');
+const Fuse = require('fuse.js')
 
 async function getAll() {
     return await Product.find({});
@@ -47,47 +48,41 @@ async function updateProductImages(pid,data){
     }
 }
 async function getProdsBySellerId(sellerId){
-    try{
-        return new Promise(async (resolve, reject) => {
-            let products =  new Promise(async (resolve2, reject) => {
-                resolve2(await Product.find({seller:sellerId}))
-            })
-            var getingProds = new Promise((resolve1, reject) => {
-                products.then((p)=>{
-                    let prods = [...p] 
-                    let newProds = []
-                    let i=0;
-                    prods.forEach(async (p) => {
-                        await initialProduct.findOne({_id: p.initialProduct}).then((e)=>{
-                            newProds.push({product:p,initialProd:e});
-                        })
-                        if(i==prods.length-1){
-                            resolve1(newProds)
-                        }
-                        i++;
+    return new Promise(async (resolve, reject) => {
+        try{
+            let products = await Product.find({seller:sellerId});
+            let newProds = []
+            let i=0;
+            if(products.length>0){
+                products.forEach(async (product) => {
+                    await initialProduct.findOne({_id: product.initialProduct}).then((e)=>{
+                        newProds.push({product:product,initialProd:e});
                     })
+                    if(i==products.length-1){
+                        resolve(newProds)
+                    }
+                    i++;
                 })
-            });
-            getingProds.then((NP)=>{
-                resolve(NP);
-            })
-        })
-    }catch(err){
-        console.error(err);
-    }
+            }else{
+                resolve([]);
+            }
+        }catch(err){
+            reject(err);
+        }
+    })
 }
 async function getProductPriceByProductId(pid){
     try{
         return new Promise(async (resolve, reject) => {
-            let product =  new Promise(async (resolve2, reject) => {
-                resolve2(await Product.findById({_id:pid}))
-            })
-            product.then(function(p){
+            console.log(pid);
+            await Product.findById(pid)
+            .then(function(p){
+                console.log(p);
                 resolve({
-                    "initialPrice":p.price,
-                    "price":p.newPrice,
-                    "priceAddType":p.priceAddType || "percentage",
-                    "priceAddAmount":p.priceAddAmount || 0,
+                    "initialPrice":p?.price || "#",
+                    "price":p?.newPrice || "#",
+                    "priceAddType":p?.priceAddType || "percentage",
+                    "priceAddAmount":p?.priceAddAmount || 0,
                 });
             })
         })
@@ -225,6 +220,70 @@ async function updateProductSeo(pid,data){
         console.error(err);
     }
 }
+function getInitProdFromIdList(id,arr){
+    return new Promise(async (resolve, reject) => {
+        resolve(arr.filter(a=>a.item._id==id.toString())[0]);
+    })
+}
+function escapeRegex(text) {
+    return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+};
+async function searchByKeyword(keyword){
+    try{
+        return new Promise(async (resolve, reject) => {
+            await initialProduct.find({},{
+                category:1,
+                additional_categories:1,
+                ref:1,
+                description:1,
+                description_short:1,
+                isAvailable:1,
+                name:1,
+                features:1
+            }).then(async (allInitProds)=>{
+                const options = {
+                    includeScore: true,
+                    keys: ['name.fr', 'name.ar', 'description.fr','description.ar','description_short.fr','description_short.ar']
+                }
+                const fuse = new Fuse(allInitProds, options)
+                const result = fuse.search(keyword);
+                let initialProductIds = result.map(product => product.item._id);
+                await Product.find({
+                    initialProduct: { $in: initialProductIds } },
+                    {
+                        images:1,
+                        isActive:1,
+                        seller:1,
+                        newPrice:1,
+                        initialProduct:1,
+                        review:1,
+                        verifiedOrders:1
+                    }
+                ).then(async (products)=>{
+                        console.log(products.length)
+                        let newProds = []
+                        let i =0;
+                        products.forEach(async (product)=> {
+                            let ob = JSON.stringify(product);
+                            let aa = await getInitProdFromIdList(product.initialProduct,result);
+                            let newAa = JSON.stringify(aa.item)
+                            newProds.push({...JSON.parse(ob),initData:{...JSON.parse(newAa)}});
+                            if(i==products.length-1){
+                                resolve(newProds);
+                            }
+                            i++;
+                        })
+                    })
+                    .catch((err)=>{
+                        console.log(err);
+                        reject("Error in Searching");
+                    })
+            })
+        })
+    }catch(err){
+        console.error(err);
+    }
+}
 
 module.exports = {
     getAll,
@@ -241,5 +300,6 @@ module.exports = {
     toggleActive,
     updateProductSeo,
     getProductAttributes,
-    getFullProd
+    getFullProd,
+    searchByKeyword
 }

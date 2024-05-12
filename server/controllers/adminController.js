@@ -10,6 +10,7 @@ const cartService = require("../services/cartService");
 const userService = require("../services/userService");
 const employeeService = require("../services/employeeService");
 const reviewService = require("../services/reviewService");
+const transactionService = require("../services/transactionService");
 const Product = require("../models/Product");
 // const isAuth = require('../middlewares/isAuth');
 // const isGuest = require('../middlewares/isGuest');
@@ -76,6 +77,36 @@ router.post("/sellers", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
+router.get("/sellers/:id/verify", async (req, res) => {
+  try {
+    let status = await sellerService.isSellerVerified(req.params.id);
+    res.status(200).json(status);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/sellers/:id/verify", async (req, res) => {
+  try {
+    let seller = await sellerService.verifySeller(req.params.id);
+    res.status(200).json(seller);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.delete('/sellers/:id/delete', async (req, res) => {
+  try {
+      await sellerService.deleteSeller(req.params.id)
+      .then((rslt)=>{
+        res.status(200).json(rslt)
+      }).catch((e)=>{
+        throw e.message;
+      })
+  } catch (error) {
+      res.status(500).json(error)
+  }
+})
 router.get("/sellers/:id", async (req, res) => {
   try {
     let seller = await sellerService.getSellerById(req.params.id);
@@ -112,6 +143,30 @@ router.get("/categories", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
+router.get("/transactions", async (req, res) => {
+  try {
+    let transactions = await transactionService.getTransactionsBySeller();
+    res.status(200).json(transactions);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/transactions/:id/confirm", async (req, res) => {
+  try {
+    await transactionService.confirmWithdrawl(req.params.id)
+    .then((transaction)=>{
+      res.status(200).json(transaction);
+    })
+    .catch((err)=>{
+      res.status(400).json(err.message);
+    })
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+
 router.get("/orders", async (req, res) => {
   try {
     let orders = await orderService.getAll();
@@ -249,7 +304,15 @@ router.post("/orders/:id/messages", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
-
+router.post("/orders/:id/verify", async (req, res) => {
+  try {
+    let rslt = await orderService.verifyOrder(req.params.id);
+    res.status(200).json(rslt);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
 router.get('/order/:id/invoice', async (req, res) => {
   try {
       let orin = await orderService.generateInvoice(req.params.id,req.query.lang);
@@ -286,9 +349,37 @@ router.get('/customers', async (req, res) => {
       res.status(500).json({ message: error.message })
   }
 })
+router.get('/customers/:id', async (req, res) => {
+  try {
+      let customer = await userService.getUserById(req.params.id);
+      res.status(200).json(customer);
+  } catch (error) {
+      res.status(500).json({ message: error.message })
+  }
+})
+router.put('/customers/:id', async (req, res) => {
+  try {
+      let customer = await userService.updateProfile(req.params.id,req.body.data);
+      res.status(200).json(customer);
+  } catch (error) {
+      res.status(500).json({ message: error.message })
+  }
+})
 router.post('/customers/:id/active', async (req, res) => {
   try {
       await userService.changeUserActive(req.params.id)
+      .then((rslt)=>{
+        res.status(200).json(rslt)
+      }).catch((e)=>{
+        throw e.message;
+      })
+  } catch (error) {
+      res.status(500).json(error)
+  }
+})
+router.delete('/customers/:id/delete', async (req, res) => {
+  try {
+      await userService.deleteCustomer(req.params.id)
       .then((rslt)=>{
         res.status(200).json(rslt)
       }).catch((e)=>{
@@ -315,6 +406,18 @@ router.get('/employees/:id', async (req, res) => {
       })
   } catch (error) {
       res.status(500).json({ message: error.message })
+  }
+})
+router.delete('/employees/:id/delete', async (req, res) => {
+  try {
+      await employeeService.deleteEmployee(req.params.id)
+      .then((rslt)=>{
+        res.status(200).json(rslt)
+      }).catch((e)=>{
+        throw e.message;
+      })
+  } catch (error) {
+      res.status(500).json(error)
   }
 })
 router.post('/employees/:id', async (req, res) => {

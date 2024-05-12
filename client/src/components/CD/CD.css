@@ -1,3 +1,9 @@
+.table-cd-sd thead tr th{
+    color: white;
+}
+.table-cd-sd tbody tr td{
+    color: white;
+}
 .client-dash-layout{
     width: 100%;
     display: flex;

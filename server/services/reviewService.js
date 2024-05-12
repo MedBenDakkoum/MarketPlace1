@@ -1,5 +1,7 @@
 const Review = require("../models/Review");
 const User = require("../models/User");
+const Product = require("../models/Product");
+
 const productService = require("../services/productService");
 
 async function getReviewsByProductId(productId) {
@@ -34,6 +36,18 @@ async function getReviewsByUserId(userId) {
       throw err.message;
     }
 }
+async function calculateProductReviews(productId){
+    return new Promise(async(resolve,reject)=>{
+        await Review.find({productId:productId})
+        .then((reviews)=>{
+            let reviewSum = 0;
+            reviews.map((review)=>{
+                reviewSum+=review.stars;
+            })
+            resolve((reviewSum/reviews.length).toFixed(2))
+        })
+    })
+}
 async function addReview(userId,productId,review) {
     try {
         return new Promise(async(resolve,reject)=>{
@@ -46,8 +60,14 @@ async function addReview(userId,productId,review) {
             let user = await User.findById(userId);
             await nR.save().then(async (rslt)=>{
                 await User.findOneAndUpdate({_id:userId},{nbrReviews:user.nbrReviews+1})
-                .then((rslt2)=>{
-                    resolve(rslt);
+                .then(async (rslt2)=>{
+                    await Product.findOneAndUpdate({_id:productId},{review:await calculateProductReviews(productId)})
+                    .then((rslt3)=>{
+                        resolve(rslt);
+                    })
+                    .catch((err)=>{
+                        reject(err.message);
+                    })
                 })
             }).catch((err)=>{
                 reject(err.message);
@@ -64,8 +84,14 @@ async function removeReviewById(reviewId) {
             await Review.findByIdAndDelete(reviewId).then(async (rslt)=>{
                 let user = await User.findById(rslt.userId);
                 await User.findOneAndUpdate({_id:rslt.userId},{nbrReviews:user.nbrReviews-1})
-                .then((rslt2)=>{
-                    resolve(rslt);
+                .then(async (rslt2)=>{
+                    await Product.findOneAndUpdate({_id:rslt.productId},{review:await calculateProductReviews(rslt.productId)})
+                    .then((rslt3)=>{
+                        resolve(rslt);
+                    })
+                    .catch((err)=>{
+                        reject(err.message);
+                    })
                 })
             }).catch((err)=>{
                 reject(err.message);

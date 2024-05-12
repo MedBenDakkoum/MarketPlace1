@@ -5,10 +5,12 @@ import { CButton} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill, BsEye, BsImage, BsEyeFill, BsPencilFill, BsXSquareFill, BsTrashFill, BsViewList } from "react-icons/bs";
 import Switch from "react-switch";
 import { MDBDataTable } from 'mdbreact';
-import {getProducts,getInitialProducts,toggleActive} from "../../services/dashboardService"
+import {getProducts,getInitialProducts,toggleActive,removeProduct} from "../../services/dashboardService"
 import { Spinner } from 'react-bootstrap';
 import Alert from '../Alert/Alert';
-import SellNowProd from './SDProduct/SellNowProd'
+import SellNowProd from './SDProduct/SellNowProd';
+import Swal from 'sweetalert2';
+
 function SDProducts() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
@@ -24,28 +26,8 @@ function SDProducts() {
     const [refresh, setRefresh] = useState(true);
     const [addProdPop, setAddProdPop] = useState(false);
     const [prodRows,setProdRows] = useState([]);
-      const [prods, setProds] = useState([
-      {
-        _id:"",
-        ref:"",
-        img: "",
-        name:"",
-        price:0,
-        quantity:0,
-        enabled:false
-    },
-  ]);
-  const [initialProds, setInitialProds] = useState([
-    {
-      _id:"",
-      ref:"",
-      img: "",
-      name:"",
-      price:0,
-      quantity:0,
-      used:false
-  },
-]);
+      const [prods, setProds] = useState([]);
+  const [initialProds, setInitialProds] = useState([]);
 const [initialProdRows,setInitialProdRows] = useState([]);
   const data = {
     columns: [
@@ -136,18 +118,16 @@ const [initialProdRows,setInitialProdRows] = useState([]);
       setLoading(false)
   }
   const isInitialProductUsed = (ipID)=>{
-    return new Promise(async (resolve, reject) => {
-      let i=0;
-      prods.forEach(function(prod){
-        if(prod.iP==ipID){
-          resolve(true);
-        }
-        if(i==prods.length-1){
-          resolve(false)
-        }
-        i++;
-      })
-  })
+    for (let i = 0; i < prods.length; i++) {
+      const prod = prods[i];
+      if(prod.iP==ipID){
+        return true;
+      }
+      if(i==prods.length-1){
+        return false;
+      }
+    }
+    return false;
   }
   const handleSellNow = (e) =>{
     setAddNewSellProd({
@@ -162,13 +142,50 @@ const [initialProdRows,setInitialProdRows] = useState([]);
       setAddProdPop(true);
     }
   }
+  const handleDeleteProduct = (e)=>{
+    let id=""
+      if(e.target==e.currentTarget){
+        id = e.target.getAttribute("id");
+      }else{
+        id = e.target.parentNode.getAttribute("id");
+      }
+      Swal.fire({
+        title: "Do you want to stop this product?",
+        showCancelButton: true,
+        confirmButtonText: "Stop selling",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+            await removeProduct(id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Product Removed !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setRefresh(!refresh);
+                setLoading(false);
+            }).catch(function(err){
+              
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: err.response.data.msg,
+                });
+                setLoading(false);
+                });
+        }
+      });
+  }
   useEffect(function(){
     async function init(){
-      let iP = await getInitialProducts();
-      let newiP = []
-      iP.forEach((element) => {
-        isInitialProductUsed(element._id).then(function(aa){
-            newiP.push({
+      await getInitialProducts()
+      .then(async (iP)=>{
+        let newiP = []
+        let i=0;
+        iP.forEach(async (element) => {
+          let aa = isInitialProductUsed(element._id)
+          newiP.push({
               _id:element._id,
               ref:element.ref,
               img:element.images[0] || "",
@@ -176,10 +193,13 @@ const [initialProdRows,setInitialProdRows] = useState([]);
               price:element.price || 0,
               quantity:element.quantity || 0,
               used:aa,
-            });
-        })
-      });
-      setInitialProds(newiP);
+            }); 
+          if(i==iP.length-1){
+            setInitialProds(newiP);
+          }
+          i++;
+        });
+    })
     }
     if(addProdPop==true){
       init()
@@ -234,7 +254,11 @@ const [initialProdRows,setInitialProdRows] = useState([]);
             <img src={item.img} width="40px"/>
           )
           item.actions = (
-            <div className="prods-actions"><BsPencilFill onClick={(e)=>{navigate('/dashboard/products/'+item._id)}}/><BsTrashFill/><BsEyeFill/></div>
+            <div className="prods-actions">
+              <BsPencilFill onClick={(e)=>{navigate('/dashboard/products/'+item._id)}}/>
+              <BsTrashFill id={item._id} onClick={handleDeleteProduct}/>
+              <BsEyeFill onClick={(e)=>{navigate("/products/"+item._id)}}/>
+            </div>
           )
           item.enabled = (
             <Switch id={item._id} onChange={handleChangeActive} checked={item.enabled}></Switch>
@@ -242,7 +266,14 @@ const [initialProdRows,setInitialProdRows] = useState([]);
         })
         setProdRows([...newProds])
     },[prods,setProds]);
-    
+    const handleCancel = (e)=>{
+      setAddNewSellProd({active:false,id:''});
+    }
+    const handleAddedNewProd = (e)=>{
+      setRefresh(!refresh);
+      handleCancel();
+      setAddProdPop(false);
+    }
     return (
       <main className="sd-container">
         <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
@@ -254,7 +285,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
               addProdPop? 
               <div className="addprod-pop-container">
                 {addNewSellProd.active?
-                  <SellNowProd id={addNewSellProd.id} />
+                  <SellNowProd refreshing={handleAddedNewProd} cancel={handleCancel} id={addNewSellProd.id} />
                 :
                 <div className="addprod-pop-main">
                   <BsXSquareFill onClick={handleToggleProductPop} className="exit-fullscreen"/>

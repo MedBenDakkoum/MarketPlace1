@@ -460,7 +460,7 @@ tbody tr td{
   top: 0;
   left: 0;
   position: fixed;
-  z-index: 1;
+  z-index: 98;
   left: 50%;
   transform: translate(-50%, 0);
   background-color: rgb(241, 241, 241);

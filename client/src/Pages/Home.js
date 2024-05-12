@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
-import DealsOffers from "../components/Home/DealsOffers";
+import CustomSlider from "../components/Home/customer.slider";
 import CategoriePriceFromSection from "../components/Home/CategoriePriceFromSection";
 import './Home.css';
+
 const homeProds=[
   {
     "title":"Soft Chairs",
@@ -97,6 +98,28 @@ const recommendedItems = [
   },
 ]
 function Home({ match }) {
+  const images = [
+    {
+      imgURL:
+        "https://images.pexels.com/photos/461198/pexels-photo-461198.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      imgAlt: "img-1"
+    },
+    {
+      imgURL:
+        "https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      imgAlt: "img-2"
+    },
+    {
+      imgURL:
+        "https://images.pexels.com/photos/1128678/pexels-photo-1128678.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      imgAlt: "img-3"
+    },
+    {
+      imgURL:
+        "https://images.pexels.com/photos/54455/cook-food-kitchen-eat-54455.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260",
+      imgAlt: "img-4"
+    }
+  ];
   const [products, setProduct] = useState([]);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
@@ -110,7 +133,11 @@ function Home({ match }) {
 
   return (
     <>
-      <DealsOffers/>
+      <CustomSlider>
+        {images.map((image, index) => {
+          return <img key={index} src={image.imgURL} alt={image.imgAlt} />;
+        })}
+      </CustomSlider>
       <CategoriePriceFromSection title="Home and outdoor" prods={homeProds}/>
       <CategoriePriceFromSection title="Consumer electronics" prods={homeProds}/>
       <h1 className="home-section-title" style={{color:"#1c1c1c"}}>

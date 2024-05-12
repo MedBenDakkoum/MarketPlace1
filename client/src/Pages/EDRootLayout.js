@@ -21,23 +21,26 @@ const EDRootLayout = () => {
         let u=await getEmployee();
         setEmployeeData(u.user);
         setLoading(false);
-
+        
       }
       fetchData();
     
   },[]);
-  
+  useEffect(()=>{
+    console.log(employeeData);
+  },[employeeData,setEmployeeData])
   return (
     
     <>
     {!loading? <>
-      { employeeData?
+      { employeeData?.isActive?
       <div className='grid-container'>
         <EDHeader OpenSidebar={OpenSidebar}/>
         <EDSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
         <Outlet />
       </div>
-      : <Error404 />}
+      : <Error404 />
+      }
       </>
         : <div className="spinner">
             <Spinner animation="border" />

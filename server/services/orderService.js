@@ -2,6 +2,7 @@ const productService = require("./productService")
 const initialProduct = require('../models/initialProduct');
 const Product = require('../models/Product');
 const cartService = require("./cartService")
+const smsService = require('../services/smsService');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Cart = require('../models/Cart');
@@ -65,7 +66,6 @@ const getTotal = async (cart)=> {
   }
 async function getSellerEarnings(prods){
     return new Promise(async (resolve,reject)=>{
-        console.log("hereeeeeeeze");
         let earnings = 0;
         for(let prod of prods){
             console.log(prod);
@@ -79,6 +79,40 @@ async function getOrdersById(storeId) {
     try {
         const orders = await Order.find({
             "products.storeId": storeId
+        });
+
+        const newOrders = await Promise.all(orders.map(async (order) => {
+            const newProducts = order.products
+                .filter(product => product.storeId.toString() === storeId.toString())
+                .map(product => ({
+                    productId: product.productId,
+                    quantity: product.quantity,
+                    attributes: product.attributes
+                }));
+
+            const prices = await getTotalPrices(newProducts);
+
+            return {
+                prices: prices,
+                products: newProducts,
+                date: order.date,
+                status: order.status,
+                clientId: order.clientId,
+                orderId: order.orderId,
+                paymentMethod: order.paymentMethod || ""
+            };
+        }));
+
+        return newOrders;
+    } catch (err) {
+        throw err;
+    }
+}
+async function getVerifiedOrdersByStoreId(storeId) {
+    try {
+        const orders = await Order.find({
+            "products.storeId": storeId,
+            "isVerified":true
         });
 
         const newOrders = await Promise.all(orders.map(async (order) => {
@@ -434,16 +468,29 @@ async function getSingleOrder(OrderId) {
                     let prods = [];
                     for (let i = 0; i < productsIds.length; i++) {
                         let product = await Product.findOne({ _id: productsIds[i] },{"initialProduct":1,"newPrice":1});
-                        prods.push(product);
+                        if(product){
+                            prods.push(product);
+                        }else{
+                            prods.push({})
+                        }
+                        
                     }
                     let ipProdsIds = [];
                     prods.forEach(function(prod){
-                        ipProdsIds.push(prod.initialProduct)
+                        if(prod.hasOwnProperty(initialProduct)){
+                            ipProdsIds.push(prod.initialProduct)
+                        }else{
+                            ipProdsIds.push("#");
+                        }
                     })
                     let iProds = [];
                     for (let i = 0; i < ipProdsIds.length; i++) {
-                        let product = await initialProduct.findOne({_id : ipProdsIds[i] },{"ref":1,"name":1})
-                        iProds.push(product);
+                        if(ipProdsIds[i]!=="#"){
+                            let product = await initialProduct.findOne({_id : ipProdsIds[i] },{"ref":1,"name":1})
+                            iProds.push(product);
+                        }else{
+                            iProds.push({})
+                        }
                     }
                     await Invoice.findById(order.invoiceId)
                         .then((invoiceUrl)=>{
@@ -451,9 +498,9 @@ async function getSingleOrder(OrderId) {
                         let i=0;
                         iProds.forEach(function(iProd){
                             rsltProds.push({
-                                ref:iProd.ref,
-                                productName:iProd.name,
-                                price: prods[i].newPrice,
+                                ref:iProd.ref || "#",
+                                productName:iProd.name || "#",
+                                price: prods[i].newPrice || "#",
                                 quantity: order.products[i].quantity,
                                 attributes: order.products[i].attributes,
                                 total: order.products[i].quantity*prods[i].newPrice,
@@ -560,12 +607,42 @@ async function getInvoices(body){
         throw e;
     }
 }
+async function getListOfNumbersFromOrderId(orderId){
+    return new Promise(async (resolve,reject)=>{
+        let order = await Order.findById(orderId);
+        let listStores = [];
+        order.products.forEach((prod)=>{
+            listStores.push(prod.storeId)
+        })
+        let sellers = await User.find({idStore: {$in:listStores}},{phoneNumber:1});
+        let listNum = [];
+        sellers.forEach((seller)=>{
+            listNum.push(seller.phoneNumber);
+        })
+        resolve(listNum);
+    })
+}
 async function verifyOrder(orderId){
     try{
-        const order = await Order.findById(orderId);
-        if(!order) throw "No such order found";
-        
-        return order.update({isVerified:true});
+        return new Promise(async (resolve,reject)=>{
+            const order = await Order.findById(orderId);
+            if(!order) throw "No such order found";
+            
+            let verified = await order.update({isVerified:true});
+            if(verified){
+                let listOfNums = await getListOfNumbersFromOrderId(orderId);
+                await smsService.sendMultipleSms(listOfNums,"You got a new order on Adghal !")
+                .then(async (t)=>{
+                    order.products.map(async (prod)=>{
+                        await Product.findOneAndUpdate({_id:prod.productId},{$inc:{verifiedOrders:1}})
+                    })
+                    resolve({sent:"true"});
+                })
+                .catch((f)=>{
+                    reject({sent:"false"});
+                })
+            }
+        })
     }catch(e){
         console.log("Error in verifying order");
         throw e;
@@ -582,5 +659,7 @@ module.exports = {
     generateInvoice,
     getInvoices,
     getUnVerified,
-    verifyOrder
+    verifyOrder,
+    getListOfNumbersFromOrderId,
+    getVerifiedOrdersByStoreId
 }

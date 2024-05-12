@@ -54,6 +54,14 @@ const productSchema = new mongoose.Schema({
         metaTitle:String,
         metaDescription:String,
         friendlyUrl:String
+    },
+    review:{
+        type:Number,
+        default:2.5
+    },
+    verifiedOrders:{
+        type:Number,
+        default:0
     }
 });
 

@@ -12,7 +12,7 @@ function EDHeader({OpenSidebar}) {
         </div>
         <div className='header-right'>
             <BsFillBellFill className='icon'/>
-            <BsBoxArrowRight onClick={(e)=>{navigate("/admin/logout")}} style={{cursor:"pointer"}} className='icon'/>
+            <BsBoxArrowRight onClick={(e)=>{navigate("/employee/logout")}} style={{cursor:"pointer"}} className='icon'/>
         </div>
     </header>
   )

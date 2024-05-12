@@ -8,7 +8,7 @@ const productService = require('../services/productService');
 router.get('/orders', async (req, res) => {
     try {
         let storeId = await User.findById(req.user._id,{"idStore":1});
-        let orders = await orderService.getOrdersById(storeId.idStore);
+        let orders = await orderService.getVerifiedOrdersByStoreId(storeId.idStore);
         res.status(200).json(orders);
     } catch (error) {
         console.log(error)

@@ -29,6 +29,10 @@ function AdminOrders() {
             field: 'status',
           },
           {
+            label: 'Verified',
+            field: 'verified',
+          },
+          {
             label: 'Date',
             field: 'date',
           },
@@ -51,6 +55,7 @@ function AdminOrders() {
             item.actions = (<a onClick={()=>{navigate('/admin/orders/'+item._id)}} style={{cursor:"pointer",color:"blue"}}>View Order</a>)
             item.ref = item.reference || "#";
             item.totalPrice = item.totalPrice + " TND";
+            item.verified = item.isVerified? <p style={{color:"green"}}>Yes</p> : <p style={{color:"red"}}>No</p>;
         })
     },[rows,setRows])
     return (
@@ -58,25 +63,6 @@ function AdminOrders() {
         <div className='main-title'>
             <h3>Orders</h3>
         </div>
-        {/* <CTable>
-        <CTableHead>
-            <CTableRow color='light'>
-              <CTableHeaderCell scope="col">#</CTableHeaderCell>
-              <CTableHeaderCell scope="col">ID</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Ref</CTableHeaderCell>
-              <CTableHeaderCell scope="col">New Client</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Customer</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Total</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Payment</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Status</CTableHeaderCell>
-              <CTableHeaderCell scope="col">Date</CTableHeaderCell>
-              <CTableHeaderCell scope="col">--</CTableHeaderCell>
-            </CTableRow>
-        </CTableHead>
-        <CTableBody>
-            {rows}
-        </CTableBody>
-        </CTable> */}
         <MDBDataTable
             striped
             small

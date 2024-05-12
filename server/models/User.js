@@ -67,7 +67,7 @@ const userSchema = new mongoose.Schema({
     },
     balance: {
         type: Number,
-        default:0
+        default:0.0
     },
     paymentMethod: {
         method:{type:String,default:""},
@@ -81,6 +81,10 @@ const userSchema = new mongoose.Schema({
         endDate:{type:Date},
     },
     isActive:{
+        type:Boolean,
+        default:true
+    },
+    isVerified:{
         type:Boolean,
         default:true
     },
@@ -109,6 +113,10 @@ const userSchema = new mongoose.Schema({
     nbrReviews:{
         type:Number,
         default:0
+    },
+    isSuspended:{
+        type:Boolean,
+        default:false
     }
 },{timestamps:true});
 

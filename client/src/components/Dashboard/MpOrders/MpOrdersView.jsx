@@ -4,51 +4,6 @@ import { useNavigate ,useParams } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
 import {getSingleSellerOrders,getSellerById} from '../../../services/adminService'
 
-const sellerOrders = [
-    {
-        id: 1,
-        customerName:"Customer 1",
-        totalPrice:45.6,
-        adminCommission:3,
-        supplierTax:2.6,
-        sellerAmount:40,
-        status:"Validated",
-        orderdOn:"01-26-2023"
-    },
-    {
-        id: 2,
-        customerName:"Customer 2",
-        totalPrice:78.4,
-        adminCommission:5,
-        supplierTax:3.4,
-        sellerAmount:70,
-        status:"Not Validated",
-        orderdOn:"01-28-2023"
-    },
-    {
-        id: 3,
-        customerName:"Customer 3",
-        totalPrice:78.4,
-        adminCommission:5,
-        supplierTax:3.4,
-        sellerAmount:70,
-        status:"Shipped",
-        orderdOn:"01-20-2024"
-    },
-    {
-        id: 4,
-        customerName:"Customer 4",
-        totalPrice:78.4,
-        adminCommission:5,
-        supplierTax:3.4,
-        sellerAmount:70,
-        status:"Received",
-        orderdOn:"02-11-2023",
-        products:[{
-            productRef:"",
-        }]
-    }
-]
 
 function MpOrdersView() {
     const navigate = useNavigate();

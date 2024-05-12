@@ -29,17 +29,21 @@ router.post('/register', async (req, res) => {
 router.post('/login', (req, res) => {
     authService.loginUser(req.body)
         .then(token => {
-            jwt.verify(token, SECRET, (err, decoded) => {
-                if (err) {
-                    res.clearCookie(COOKIE_NAME);
-                } else {
-                    req.user = decoded;
-                    res
-                        .status(200)
-                        .cookie(COOKIE_NAME, token, { sameSite: 'none', secure: true, httpOnly: true })
-                        .json({ user: decoded })
-                }
-            })
+            if(token=="notActive"){
+                res.status(200).json({isActive:false});
+            }else{
+                jwt.verify(token, SECRET, (err, decoded) => {
+                    if (err) {
+                        res.clearCookie(COOKIE_NAME);
+                    } else {
+                        req.user = decoded;
+                        res
+                            .status(200)
+                            .cookie(COOKIE_NAME, token, { sameSite: 'none', secure: true, httpOnly: true })
+                            .json({ user: decoded })
+                    }
+                })
+            }
         })
         .catch(error => {
             console.error(error);
@@ -88,8 +92,12 @@ router.get('/getUser', async (req, res) => {
                 if(user.isAdmin){
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
                 }else{
-                    res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, 
-                        phoneNumber: user.phoneNumber, isSeller:user.isSeller, avatar: user.avatar}})
+                    res.status(200).json({user: 
+                        {_id: user._id, name: user.name, email: user.email, 
+                        phoneNumber: user.phoneNumber, isSeller:user.isSeller,
+                        avatar: user.avatar,
+                        balance: user.balance
+                        }})
                 }
         } else {
             res.status(200).json({message: "Not loged in"});

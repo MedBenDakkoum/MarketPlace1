@@ -89,7 +89,7 @@ import { Context } from '../../ContextStore';
 import { BsFillPersonFill, BsGrid1X2Fill, BsCart, BsCartFill, BsPerson, BsCart3, BsBackpack, BsBagCheckFill, BsList, BsCaretRight, BsCaretRightFill } from 'react-icons/bs';
 import { IoLogOut } from 'react-icons/io5'
 import LanguageSelector from '../LanguageSelector';
-import {CButton} from '@coreui/react'
+import {CButton,CForm} from '@coreui/react'
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
 import {getCategories} from "../../services/publicData";
@@ -99,6 +99,7 @@ function Header() {
     const navigate = useNavigate();
     const [allCats,setAllCats] = useState([]);
     const [allCatsHeight,setAllCatsHeight] = useState("")
+    const [searchValue,setSearchValue] = useState("")
     const formatCategories = (categories)=> {
         const categoryDict = {};
         categories.forEach(category => {
@@ -139,6 +140,9 @@ function Header() {
             setAllCatsHeight("0")
         }
     }
+    const handleChangeSearchValue = (e)=>{
+        setSearchValue(e.target.value)
+    }
     return (
         <>
         <header className={styles['header-container']}>
@@ -149,14 +153,16 @@ function Header() {
                         src="/assets/images/logo.png"
                         height="140"
                     />
-                    <div className={styles["header-search"]}>
+                    <CForm className={styles["header-search"]} onSubmit={(e)=>{e.preventDefault();navigate("/search?q="+searchValue)}}>
                         <input
                             type="text"
                             placeholder="Search..."
                             name="search"
+                            value={searchValue}
+                            onChange={handleChangeSearchValue}
                         />
-                        <CButton className={styles["search-button"]}> Search</CButton>
-                    </div>
+                        <CButton type='submit' className={styles["search-button"]}> Search</CButton>
+                    </CForm>
                 </div>
                 <div className={styles['cart-login']}>
                     {userData?
@@ -206,7 +212,7 @@ function Header() {
             <div style={{height:allCatsHeight}}  className={styles["all-cats-dropdown-container"]}>
                 <div className={styles["all-cats-dropdown"]}>
                     {allCats.map((cat)=>(
-                    <div className={styles["single-cat"]}>
+                    <div key={cat.value} className={styles["single-cat"]}>
                         <p>{cat.label}</p>
                     </div>  
                     ))}

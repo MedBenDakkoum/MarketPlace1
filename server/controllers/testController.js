@@ -6,6 +6,7 @@ const Categorie = require('../models/Categorie');
 const initialProduct = require('../models/initialProduct');
 const categorieService = require('../services/categorieService');
 const orderService = require('../services/orderService');
+const smsService = require('../services/smsService');
 const moment = require('moment');
 const EntityDecoder = require('html-entities');
 const url = require('url');
@@ -338,4 +339,30 @@ router.get('/runAfter', async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 })
+
+router.get('/sendSMS', async (req, res) => {
+    try {
+        await smsService.sendMultipleSms(["+21627552973","+21626856241"],"test sms 2")
+        .then((t)=>{
+            res.status(200).json({sent:"true"});
+        })
+        .catch((f)=>{
+            res.status(200).json({sent:"false"});
+        })
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+
+router.get('/listnum', async (req, res) => {
+    try {
+        let list = await orderService.getListOfNumbersFromOrderId("662d6b6314fa3b786e7a57c0");
+        res.status(200).json(list)
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+// Example usage:
 module.exports = router;

@@ -4,6 +4,7 @@ import { loginUser } from '../services/userData'
 import { Form, Button, Spinner, Alert } from 'react-bootstrap';
 import { Link, Navigate } from 'react-router-dom';
 import SimpleSider from '../components/Siders/SimpleSider';
+import Swal from 'sweetalert2';
 
 function Login({navigate}) {
     const [loading, setLoading] = useState(false);
@@ -26,11 +27,16 @@ function Login({navigate}) {
         loginUser(user)
             .then(res => {
                 if (!res.error) {
-                    setUserData(res.user);
-                    if(res.user.isAdmin){
-                        navigate('/admin');
+                    if(res.isActive==false){
+                        setLoading(false);
+                        Swal.fire({
+                            icon: "warning",
+                            title: "UnVerified account!",
+                            text: "An email will be sent to you when you're account is verified by one of our employees !",
+                        });
                     }else{
-                        navigate('/');
+                        setUserData(res.user);
+                        navigate("/")
                     }
                 } else {
                     setLoading(false);

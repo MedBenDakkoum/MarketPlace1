@@ -2,10 +2,13 @@ const { Router } = require('express');
 const router = Router();
 const employeeService = require("../services/employeeService")
 const orderService = require("../services/orderService")
+const sellerService = require("../services/sellerService")
+const categorieService = require("../services/categorieService")
 const { EMPLOYEE_COOKIE_NAME } = require("../config/config");
 
 router.get("/", async (req, res) => {
     try {
+      console.log(req.employeeUser)
       if (req.employeeUser) {
         let employeeUser = await employeeService.getEmployeeById(req.employeeUser._id);
         res.status(200).json({
@@ -60,6 +63,33 @@ router.post("/orders/:id/verify", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
+router.get("/sellers", async (req, res) => {
+  try {
+    let sellers = await sellerService.getUnVerifiedSellers();
+    res.status(200).json(sellers);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.get("/sellers/:id", async (req, res) => {
+  try {
+    let seller = await sellerService.getSellerById(req.params.id);
+    res.status(200).json(seller);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/sellers/:id/verify", async (req, res) => {
+  try {
+    let seller = await sellerService.verifySeller(req.params.id);
+    res.status(200).json(seller);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
 router.get("/basicInfo", async (req, res) => {
     try {
         if (req.adminUser) {
@@ -81,5 +111,14 @@ try {
     console.log(err);
     res.status(404).json({ message: "Not Found" });
 }
+});
+router.get("/categories", async (req, res) => {
+  try {
+    let cats = await categorieService.getAll();
+    res.status(200).json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
 });
 module.exports = router;

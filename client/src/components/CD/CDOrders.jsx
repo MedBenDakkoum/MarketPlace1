@@ -107,6 +107,7 @@ function CDOrders() {
                 noBottomColumns={true}
                 style={{color:"white"}}
                 data={data}
+                className="table-cd-sd"
               />
               :
               <div className="spinner">

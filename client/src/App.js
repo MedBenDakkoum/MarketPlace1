@@ -37,17 +37,23 @@ import { MpConfig } from "./components/Dashboard/MpConfig";
 import MpProductComboEdit from "./components/Dashboard/MpProductCombo/MpProductComboEdit";
 import MpOrdersView from "./components/Dashboard/MpOrders/MpOrdersView";
 import MpSingleOrderView from "./components/Dashboard/MpOrders/MpSingleOrderView";
+import MpTransactions from "./components/Dashboard/MpTransactions";
 import AdminOrders from "./components/Dashboard/AdminOrders";
 import AdminInvoices from "./components/Dashboard/AdminInvoices";
 import AdminCarts from "./components/Dashboard/AdminCarts";
 import AdminCategories from "./components/Dashboard/AdminCategories";
 import AdminCustomers from "./components/Dashboard/AdminCustomers";
+import CustomerEdit from "./components/Dashboard/CustomerEdit/CustomerEdit";
 import AdminSettings from "./components/Dashboard/AdminSettings";
 import SingleOrder from './components/Dashboard/SingleOrder';
 import MpSingleSellerProduct from  './components/Dashboard/MpSingleSellerProduct';
 import EDRootLayout from './Pages/EDRootLayout'
 import EDOrders from './components/ED/EDOrders'
+import EDSellers from './components/ED/EDSellers'
+import EDSeller from './components/ED/EDSeller/EDSeller'
 import EDSingleOrder from './components/ED/EDSingleOrder'
+import EmployeeLogOut from './Pages/EmployeeLogOut'
+import Search from './Pages/Search'
 import SellerDashLayout from './Pages/SellerDashLayout'
 import SDHome from './components/SD/SDHome'
 import SDProfile from './components/SD/SDProfile'
@@ -99,6 +105,7 @@ export default function App() {
         <Route path="/seller/:id" element={<SellerProfile />}/>
         <Route path="/products/:id" element={<SingleProduct/>}/>
         <Route path="/cart" element={<Cart/>}/>
+        <Route path="/search" element={<Search/>}/>
       </Route>
       <Route path="/auth" element={<RootLayout />}>
         <Route index element={<Login />} />
@@ -111,6 +118,9 @@ export default function App() {
       <Route path="/employee" element={<EDRootLayout />}>
         <Route index element={<EDOrders />} />
         <Route path="orders/:id" element={<EDSingleOrder />} />
+        <Route path="sellers" element={<EDSellers />} />
+        <Route path="sellers/:id" element={<EDSeller />} />
+        <Route path="logout" exact element={<EmployeeLogOut navigate={navigate}/>} />
       </Route>
       <Route path="/admin" element={<AdminRootLayout />}>
         <Route index element={<AdminHome />} />
@@ -130,8 +140,10 @@ export default function App() {
         <Route path="mp/employees/:id" element={<MpEmployeeEdit />} />
         <Route path="mp/s/:sid/p/:pid" element={<MpSingleSellerProduct />} />
         <Route path="mp/seller/add" element={<AddSeller />} />
+        <Route path="mp/transactions" element={<MpTransactions />} />
         <Route path="orders" element={<AdminOrders />} />
         <Route path="customers" element={<AdminCustomers />} />
+        <Route path="customers/:id" element={<CustomerEdit />} />
         <Route path="categories" element={<AdminCategories />} />
         <Route path="orders/:id" element={<SingleOrder />} />
         <Route path="invoices" element={<AdminInvoices />} />

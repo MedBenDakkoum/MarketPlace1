@@ -145,6 +145,32 @@ const changeUserActive = async (userId) =>{
             })
     })
 }
+const deleteCustomer = async (userId) =>{
+    return new Promise(async (resolve, reject) => {
+        await User.findOneAndDelete({_id:userId})
+            .then(async(user)=>{
+                if(user){
+                    await Cart.findOne({user:userId}).then(async (cart)=>{
+                        if(cart){
+                            await cart.delete().then((delCart)=>{
+                                resolve({msg:"Deleted"})
+                            }).catch((err)=>{
+                                resolve(err.message)
+                            })
+                        }else{
+                            resolve({msg:"Deleted"})
+                        }
+                    })
+                    
+                }else{
+                    reject({msg:"Invalid User!"});
+                }
+            })
+            .catch((err)=>{
+                reject(err.message);
+            })
+    })
+}
 module.exports = {
     edit,
     getUserById,
@@ -152,5 +178,6 @@ module.exports = {
     updatePassword,
     getAddress,
     getCustomers,
-    changeUserActive
+    changeUserActive,
+    deleteCustomer
 }

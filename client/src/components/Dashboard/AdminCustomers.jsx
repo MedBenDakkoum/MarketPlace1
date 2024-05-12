@@ -1,17 +1,20 @@
 import React, {useEffect,useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
-import {getCustomers,changeUserActive} from '../../services/adminService';
+import {getCustomers,changeUserActive,removeCustomer} from '../../services/adminService';
 import moment from 'moment';
 import Switch from 'react-switch';
 import Swal from 'sweetalert2';
 import { ThreeDots } from 'react-loader-spinner'
+import { CButton } from '@coreui/react';
+import { BsEyeFill, BsPencilFill,BsTrashFill} from "react-icons/bs";
 
 function AdminCustomers() {
     const navigate = useNavigate();
     const [customers,setCustomers] = useState([]);
     const [loading,setLoading] = useState(false);
     const [rows, setRows] = useState([]);
+    const [refresh,setRefresh] = useState(false);
     const data = {
         columns: [
           {
@@ -43,7 +46,12 @@ function AdminCustomers() {
             label: 'Active',
             field: 'activeSwitch',
             width: 100
-          }
+          },
+          {
+            label: 'Actions',
+            field: 'actions',
+            width: 100
+          },
         ],
         rows:rows
       };
@@ -53,8 +61,42 @@ function AdminCustomers() {
             setCustomers(customers);
         }
         init();
-    },[])
-
+    },[refresh,setRefresh])
+    const handleDeleteCustomer = (e)=>{
+        let id=""
+      if(e.target==e.currentTarget){
+        id = e.target.getAttribute("id");
+      }else{
+        id = e.target.parentNode.getAttribute("id");
+      }
+      Swal.fire({
+        title: "Do you want to delete this client?",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+            await removeCustomer(id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Client Removed !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setRefresh(!refresh);
+                setLoading(false);
+            }).catch(function(err){
+              
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: err.response.data.msg,
+                });
+                setLoading(false);
+                });
+        }
+      });
+    }
     useEffect(()=> {
         let rows1 = [...customers];
         let i=0;
@@ -75,6 +117,13 @@ function AdminCustomers() {
             }else{
                 item.lastOrderAt="#"
             }
+            item.actions = (
+                <div className="prods-actions">
+                  <BsPencilFill onClick={(e)=>{navigate('/admin/customers/'+item._id)}}/>
+                  <BsTrashFill style={{color:"rgb(255, 88, 88)"}} id={item._id} onClick={handleDeleteCustomer}/>
+                </div>
+              )
+            // item.actions = <BsTrashFill style={{color:"rgb(255, 88, 88)",fontSize:"20px",cursor:"pointer"}} id={item._id} onClick={handleDeleteCustomer}/>
             i++;
             // item.total=t+ " TND";
             // item.nbrProducts= item.items.length;

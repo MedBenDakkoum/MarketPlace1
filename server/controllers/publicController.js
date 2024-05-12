@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const categorieService = require( '../services/categorieService');
 const reviewService = require('../services/reviewService');
+const productService = require('../services/productService');
 
 router.get("/categories", async (req, res) => {
     try {
@@ -10,6 +11,26 @@ router.get("/categories", async (req, res) => {
       console.error(err);
       res.status(404).json({ message: "Not Found" });
     }
+});
+router.post("/categories", async (req, res) => {
+  try {
+    let cats = await categorieService.getCatsFromRefs(req.body.refs);
+    res.status(200).json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/search", async (req, res) => {
+  try {
+    await productService.searchByKeyword(req.body.keyword).then((rslt)=>{
+      console.log(rslt.length);
+      res.status(200).json(rslt);
+    })
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
 });
 router.get('/reviews/:pId', async (req, res) => {
   try {

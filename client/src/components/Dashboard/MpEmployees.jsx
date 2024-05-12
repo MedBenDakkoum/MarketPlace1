@@ -3,16 +3,18 @@ import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CT
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
-import { updateEmployee,getEmployees } from '../../services/adminService';
+import { updateEmployee,getEmployees,removeEmployee } from '../../services/adminService';
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
 import { MDBDataTable } from 'mdbreact';
+import { BsPencilFill,BsTrashFill} from "react-icons/bs";
 
 function MpEmployees() {
     const navigate = useNavigate();
     const [loading,setLoading] = useState(false);
     const [employees,setEmployees] = useState([]);
     const [rows, setRows] = useState([]);
+    const [refresh,setRefresh] =useState(false);
     const data = {
         columns: [
           {
@@ -46,13 +48,48 @@ function MpEmployees() {
             width: 100
           },
           {
-            label: '--',
-            field: 'editProfile',
+            label: 'Actions',
+            field: 'actions',
             width: 100
           }
         ],
         rows:rows
       };
+      const handleDeleteEmployee = (e)=>{
+        let id=""
+      if(e.target==e.currentTarget){
+        id = e.target.getAttribute("id");
+      }else{
+        id = e.target.parentNode.getAttribute("id");
+      }
+      Swal.fire({
+        title: "Do you want to delete this employee?",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+            await removeEmployee(id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Employee Removed !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setRefresh(!refresh);
+                setLoading(false);
+            }).catch(function(err){
+              
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: err.response.data.msg,
+                });
+                setLoading(false);
+                });
+        }
+      });
+    }
     const handleActiveChange = async (c,e,id)=>{
         setLoading(true);
         await updateEmployee(employees[parseInt(id)]._id, {isActive:c})
@@ -83,14 +120,19 @@ function MpEmployees() {
             setEmployees(employeesData);
         }
         employeesGet()
-    },[])
+    },[refresh,setRefresh])
     useEffect(()=>{
         let rows1 = [...employees];
         let i =0;
         rows1.map((element) => {
             element.status  =(<Switch onChange={handleActiveChange} id={i} checked={element.isActive}/>);
             element.createdAt  = moment(element.createdAt).format('YYYY-MM-DD');
-            element.editProfile = (<a onClick={()=>{navigate('/admin/mp/employees/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a>)
+            element.actions = (
+              <div className="prods-actions">
+                <BsPencilFill onClick={(e)=>{navigate('/admin/mp/employees/'+element._id)}}/>
+                <BsTrashFill id={element._id} onClick={handleDeleteEmployee}/>
+              </div>
+            )
             i++;
         });
         setRows(rows1);

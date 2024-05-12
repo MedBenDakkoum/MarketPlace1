@@ -22,7 +22,6 @@ async function getEmployeeById(id) {
         
     })
 }
-
 async function addEmployee(name,email,password,phoneNumber){
     return new Promise(async (resolve,reject)=>{
         console.log(name);
@@ -40,7 +39,6 @@ async function addEmployee(name,email,password,phoneNumber){
         })
     })
 }
-
 async function updateEmployee(id,data){
     return new Promise(async (resolve,reject)=>{
         let employee = await Employee.findById(id);
@@ -88,11 +86,26 @@ async function updateEmployee(id,data){
     })
     
 }
-
+async function deleteEmployee(id){
+    return new Promise(async (resolve, reject) => {
+        await Employee.findOneAndDelete({_id:id})
+            .then(async(user)=>{
+                if(user){
+                    resolve({msg:"Deleted"})
+                }else{
+                    reject({msg:"Invalid Employee!"});
+                }
+            })
+            .catch((err)=>{
+                reject(err.message);
+            })
+    })
+}
 module.exports = {
     getEmployees,
     addEmployee,
     updateEmployee,
-    getEmployeeById
+    getEmployeeById,
+    deleteEmployee
 };
   

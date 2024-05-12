@@ -59,7 +59,7 @@ async function registerUser(userData) {
             let store = new Store({"title":storeName,"categories":categories});
             console.log(store);
             let storeId = await store.save();
-            let isActiveAttr = !settings.SellerNeedAdminApproval; 
+            let isVerifiedAttr = !settings.SellerNeedAdminApproval;
             newData = {
                 "name":name,
                 "email":email,
@@ -68,8 +68,13 @@ async function registerUser(userData) {
                 "gender":gender,
                 "isSeller":true,
                 "sellerType":userData.sellerType,
-                "isActive":isActiveAttr,
+                "isVerified":isVerifiedAttr,
                 "idStore": storeId._id,
+                "RNE": userData.RNE,
+                "matriculeFiscale": userData.matriculeFiscale,
+                "supplierUsername":userData.supplierUsername,
+                "supplierPassword":userData.supplierPassword,
+                "supplierSecretKey":userData.supplierSecretKey,
                 "address":{
                     "line1": line1,
                     "line2": line2,
@@ -111,11 +116,13 @@ async function loginUser({ email, password }) {
 
     if (!user) throw { message: 'Invalid email or password' };
     let hasValidPass = await bcrypt.compare(password, user.password);
-    console.log("hasValidPass")
-    console.log(hasValidPass)
     if (!hasValidPass) throw { message: "Invalid email or password" }
-    let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller}, SECRET);
-    return token;
+    if(user.isVerified){
+        let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller}, SECRET);
+        return token;
+    }else{
+        return "notActive"
+    }
 }
 
 async function loginAdmin({ email, password }) {

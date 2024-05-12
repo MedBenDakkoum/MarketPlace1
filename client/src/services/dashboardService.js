@@ -186,3 +186,45 @@ export async function toggleActive(id) {
         throw error;
     }
 }
+export async function removeProduct(id) {
+    try {
+        const response = await axios.post(`${baseUrl}/api/seller/products/${id}/remove`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error changing product price:", error);
+        throw error;
+    }
+}
+export async function getTransactions() {
+    try {
+        const response = await axios.get(`${baseUrl}/api/seller/transactions/`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting transactions:", error);
+        throw error;
+    }
+}
+export async function requestTransaction() {
+    try {
+        const response = await axios.post(`${baseUrl}/api/seller/transactions/request`,{} ,{
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error requesting transaction:", error);
+        throw error;
+    }
+}

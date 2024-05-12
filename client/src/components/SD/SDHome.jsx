@@ -164,9 +164,6 @@ function SDHome() {
                         <li>
                             <span>Offline</span><span>{dashInfo.products.Offline}</span>
                         </li>
-                        <li>
-                            <span>Pending</span><span>{dashInfo.products.Pending}</span>
-                        </li>
                     </ul>
                 </div>
             </div>

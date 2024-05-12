@@ -49,6 +49,8 @@
 .sd-section-title{
     background-color: rgb(23, 58, 255);
     padding: 10px 20px;
+    display:flex;
+    justify-content: space-between;
 }
 .sd-section-title h1{
     color: white;

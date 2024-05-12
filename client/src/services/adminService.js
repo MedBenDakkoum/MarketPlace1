@@ -42,6 +42,22 @@ export async function changeUserActive(id) {
     throw error;
   }
 }
+export async function removeCustomer(id) {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/admin/customers/${id}/delete`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error deleting customer:", error);
+    throw error;
+  }
+}
+
 export async function updateSeller(id, data) {
   try {
     const response = await axios.put(`${baseUrl}/api/admin/sellers/${id}`, { data }, {
@@ -57,7 +73,36 @@ export async function updateSeller(id, data) {
     throw error;
   }
 }
-
+export async function updateCustomer(id, data) {
+  try {
+    const response = await axios.put(`${baseUrl}/api/admin/customers/${id}`, { data }, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error updating seller:", error);
+    throw error;
+  }
+}
+export async function removeSeller(id) {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/admin/sellers/${id}/delete`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error deleting seller:", error);
+    throw error;
+  }
+}
 export async function uploadImage(data) {
   try {
     const response = await axios.post(`${baseUrl}/api/admin/image/upload`, { data }, {
@@ -246,6 +291,9 @@ export async function getSellers() {
 export async function getSellerById(id){
   return (await fetch(`${baseUrl}/api/admin/sellers/${id}`, {credentials: 'include'})).json();
 }
+export async function getCustomerById(id){
+  return (await fetch(`${baseUrl}/api/admin/customers/${id}`, {credentials: 'include'})).json();
+}
 export async function getSellersOrders() {
   try {
     const response = await axios.get(`${baseUrl}/api/admin/mp/orders`, {
@@ -321,6 +369,21 @@ export async function addEmployee(data) {
     throw error;
   }
 }
+export async function removeEmployee(id) {
+  try {
+    const response = await axios.delete(`${baseUrl}/api/admin/employees/${id}/delete`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error deleting customer:", error);
+    throw error;
+  }
+}
 export async function getEmployeeById(id) {
   try {
     const response = await axios.get(`${baseUrl}/api/admin/employees/${id}`, {
@@ -364,5 +427,78 @@ export async function removeReview(pId){
   } catch (error) {
       console.error('Error sending reset pass link:', error);
       throw error;
+  }
+}
+export async function getTransactions(){
+  try {
+      const response = await axios.get(`${baseUrl}/api/admin/transactions`, {
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error sending reset pass link:', error);
+      throw error;
+  }
+}
+export async function confirmWithdrawl(id){
+  try {
+      const response = await axios.post(`${baseUrl}/api/admin/transactions/${id}/confirm`, {},{
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+      });
+      return response.data;
+  } catch (error) {
+      console.error('Error sending reset pass link:', error);
+      throw error;
+  }
+}
+export async function verifySeller(id) {
+  try {
+    const response = await axios.post(`${baseUrl}/api/admin/sellers/${id}/verify`,{},{
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error verifying order !", error);
+    throw error;
+  }
+}
+export async function checkIfSellerVerified(id) {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/sellers/${id}/verify`,{
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error verifying order !", error);
+    throw error;
+  }
+}
+export async function verifyOrder(orderId) {
+  try {
+    const response = await axios.post(`${baseUrl}/api/admin/orders/${orderId}/verify`, {},{
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error verifying order !", error);
+    throw error;
   }
 }

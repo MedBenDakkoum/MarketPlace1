@@ -8,7 +8,7 @@ import {addProduct} from '../../../services/dashboardService'
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
 
-function SellNowProd({ id=""}) {
+function SellNowProd({refreshing,cancel, id=""}) {
     const lang = localStorage.getItem("lang");
     const navigate= useNavigate();
     const [priceAddAmount,setPriceAddAmount]=useState(0);
@@ -58,6 +58,7 @@ function SellNowProd({ id=""}) {
                 showConfirmButton: false,
                 timer: 1500
               });
+              refreshing();
           })
           .catch(error => {
             Swal.fire({
@@ -128,13 +129,16 @@ function SellNowProd({ id=""}) {
                                     <CButton type="submit">
                                         Sell product
                                     </CButton>
+                                    <CButton onClick={cancel} style={{marginLeft:"5px",backgroundColor:"grey",border:"none"}} type="button">
+                                        Cancel
+                                    </CButton>
                                 </CCol>
                             </CRow>
                         </CCol>
                     </CForm>
                 </>
                 :
-                    <h1>test</h1>
+                    ""
                 }
             
         </div>

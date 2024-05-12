@@ -3,15 +3,17 @@ import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CT
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
-import { updateSeller,getSellers } from '../../services/adminService';
+import { updateSeller,getSellers ,removeSeller} from '../../services/adminService';
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
 import { MDBDataTable } from 'mdbreact';
+import { BsEyeFill, BsPencilFill,BsTrashFill} from "react-icons/bs";
 
 function MpSellers() {
     const navigate = useNavigate();
     const [loading,setLoading] = useState(false);
     const [sellers,setSellers] = useState([]);
+    const [refresh,setRefresh] = useState([]);
     const [rows, setRows] = useState([]);
     const data = {
         columns: [
@@ -46,20 +48,20 @@ function MpSellers() {
             width: 100
           },
           {
+            label: 'Verified',
+            field: 'verified',
+            width: 100
+          },
+          {
             label: 'Created At',
             field: 'createdAt',
             width: 100
           },
           {
-            label: '--',
-            field: 'seeProfile',
+            label: 'Actions',
+            field: 'actions',
             width: 100
           },
-          {
-            label: '--',
-            field: 'editProfile',
-            width: 100
-          }
         ],
         rows:rows
       };
@@ -93,15 +95,56 @@ function MpSellers() {
             setSellers(sellersData);
         }
         sellersGet()
-    },[])
+    },[refresh,setRefresh])
+    const handleDeleteSeller = (e)=>{
+        let id=""
+      if(e.target==e.currentTarget){
+        id = e.target.getAttribute("id");
+      }else{
+        id = e.target.parentNode.getAttribute("id");
+      }
+      Swal.fire({
+        title: "Do you want to delete this seller?",
+        showCancelButton: true,
+        confirmButtonText: "Delete",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+            await removeSeller(id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Seller Removed !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setRefresh(!refresh);
+                setLoading(false);
+            }).catch(function(err){
+              
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: err.response.data.msg,
+                });
+                setLoading(false);
+                });
+        }
+      });
+  }
     useEffect(()=>{
         let rows1 = [...sellers];
         let i =0;
         rows1.map((element) => {
             element.status  =(<Switch onChange={handleActiveChange} id={i} checked={element.isActive}/>);
             element.createdAt  = moment(element.createdAt).format('YYYY-MM-DD');
-            element.seeProfile = (<a href={'/seller/'+element._id}>See Profile</a>)
-            element.editProfile = (<a onClick={()=>{navigate('/admin/mp/sellers/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a>)
+            element.verified  = element.isVerified? <p style={{color:"green"}}>Yes</p> : <p style={{color:"red"}}>No</p>;
+            element.actions = (
+              <div className="prods-actions">
+                <BsPencilFill onClick={(e)=>{navigate('/admin/mp/sellers/'+element._id)}}/>
+                <BsTrashFill id={element._id} onClick={handleDeleteSeller}/>
+                <BsEyeFill onClick={(e)=>{navigate('/seller/'+element._id)}}/>
+              </div>
+            )
             i++;
         });
         setRows(rows1);

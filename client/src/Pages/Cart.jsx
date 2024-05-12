@@ -168,6 +168,13 @@ const Store = () => {
         setDataRows([]);
         setConfirmOrder(false);
         setAlert({msg:"Order done successfully!",type:"success",refresh:!alert.refresh})
+        Swal.fire({
+          icon: "success",
+          title: "Order done successfully",
+          text:"You will be called to verify the order !",
+          showConfirmButton: true,
+      });
+      setRefresh(!refresh);
       }).catch(function(e){
         setLoading(false);
         setAlert({msg:"Error passing order!",type:"fail",refresh:!alert.refresh});
@@ -218,7 +225,7 @@ const Store = () => {
   //     setDataRows([...newRows])
       getTotal().then((total)=>{
         setSubTotalPrice(parseFloat(total).toFixed(2));
-        setTotalPrice(parseFloat(total).toFixed(2))
+        setTotalPrice((parseFloat(total)+7).toFixed(2))
       })
   },[data,setData]);
 

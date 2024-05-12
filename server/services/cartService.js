@@ -96,43 +96,48 @@ function removeFromCart(userId, cartItemId) {
 async function getCart(id){
     try{
         return new Promise(async (resolve, reject) => {
-            let c = await Cart.find({user:id});
-            if(c){
-                let cartData = [...c[0].products];
-                let prodCartInfo =  new Promise(async (resolve1, reject) => {
-                    let newData = [];
-                    let i =0;
-                    cartData.forEach(async function(prod){
-                        let pr = await Product.findById(prod.id,{"initialProduct":1,"images":1,"newPrice":1});
-                        let prName = await initialProduct.findById(pr.initialProduct,{"name":1});
-                        newData.push(
-                            {
-                                itemId: prod._id,
-                                id: prod.id,
-                                info:{
-                                    img: pr.images[0],
-                                    name: prName.name,
-                                    price: pr.newPrice
-                                },
-                                attributes:prod.attributes,
-                                quantity: prod.quantity
-                            }
-                        );
-                        if(i==cartData.length-1){
-                            resolve1(newData);
-                        }
-                        i++;
-                    })
-                })
-                if(cartData.length>0){
-                    prodCartInfo.then((rslt)=>{
-                        resolve(rslt);
-                    })
-                }else{
-                    resolve([]);
-                }
+            let user = await User.findById(id);
+            if(!user){
+                reject({notLoggedIn:true})
             }else{
-                resolve({notLoggedIn:false})
+                let c = await Cart.findOne({user:id});
+                if(c){
+                    let cartData = [...c.products];
+                    let prodCartInfo =  new Promise(async (resolve1, reject) => {
+                        let newData = [];
+                        let i =0;
+                        cartData.forEach(async function(prod){
+                            let pr = await Product.findById(prod.id,{"initialProduct":1,"images":1,"newPrice":1});
+                            let prName = await initialProduct.findById(pr.initialProduct,{"name":1});
+                            newData.push(
+                                {
+                                    itemId: prod._id,
+                                    id: prod.id,
+                                    info:{
+                                        img: pr.images[0],
+                                        name: prName.name,
+                                        price: pr.newPrice
+                                    },
+                                    attributes:prod.attributes,
+                                    quantity: prod.quantity
+                                }
+                            );
+                            if(i==cartData.length-1){
+                                resolve1(newData);
+                            }
+                            i++;
+                        })
+                    })
+                    if(cartData.length>0){
+                        prodCartInfo.then((rslt)=>{
+                            resolve(rslt);
+                        })
+                    }else{
+                        resolve([]);
+                    }
+                }else{
+                    resolve([])
+                }
             }
         })
     }catch(err){

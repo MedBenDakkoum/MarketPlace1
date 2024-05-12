@@ -3,14 +3,13 @@ import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CT
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
-import { getUnVerifiedSellers } from '../../services/employeeService';
+import { getUnVerifiedSellers} from '../../services/employeeService';
 import { ThreeDots } from 'react-loader-spinner'
-import Swal from 'sweetalert2';
 import { MDBDataTable } from 'mdbreact';
 
 function EDSellers() {
-    const navigate = useNavigate();
     const [loading,setLoading] = useState(false);
+    const navigate = useNavigate();
     const [sellers,setSellers] = useState([]);
     const [rows, setRows] = useState([]);
     const data = {
@@ -41,8 +40,8 @@ function EDSellers() {
             width: 100
           },
           {
-            label: 'Status',
-            field: 'status',
+            label: 'Verified',
+            field: 'verified',
             width: 100
           },
           {
@@ -52,44 +51,15 @@ function EDSellers() {
           },
           {
             label: '--',
-            field: 'seeProfile',
-            width: 100
-          },
-          {
-            label: '--',
-            field: 'editProfile',
+            field: 'verifyProfile',
             width: 100
           }
         ],
         rows:rows
       };
-    const handleActiveChange = async (c,e,id)=>{
-        setLoading(true);
-        await updateSeller(sellers[parseInt(id)]._id, {seller:{isActive:c}})
-        .then((rslt)=>{
-            let newSellers = [...sellers]
-            sellers[parseInt(id)].isActive=c;
-            setSellers(newSellers);
-            setLoading(false);
-            Swal.fire({
-                icon: "success",
-                title: "Settings Updated",
-                showConfirmButton: false,
-                timer: 1500
-            });
-        })
-        .catch((e)=>{
-            setLoading(false);
-            Swal.fire({
-                icon: "error",
-                title: "Oops !",
-                text: e.message,
-            });
-        })
-    }
     useEffect(()=> {
         async function sellersGet(){
-            let sellersData = await getSellers();
+            let sellersData = await getUnVerifiedSellers();
             setSellers(sellersData);
         }
         sellersGet()
@@ -98,10 +68,9 @@ function EDSellers() {
         let rows1 = [...sellers];
         let i =0;
         rows1.map((element) => {
-            element.status  =(<Switch onChange={handleActiveChange} id={i} checked={element.isActive}/>);
+            element.verified  =(<Switch id={i} checked={element.isVerified} disabled/>);
             element.createdAt  = moment(element.createdAt).format('YYYY-MM-DD');
-            element.seeProfile = (<a href={'/seller/'+element._id}>See Profile</a>)
-            element.editProfile = (<a onClick={()=>{navigate('/admin/mp/sellers/'+element._id)}} style={{cursor:"pointer",color:"blue"}}>Edit Profile</a>)
+            element.verifyProfile = (<a onClick={(e)=>navigate('/employee/sellers/'+element._id)} style={{cursor:"pointer",color:"blue"}}>Verify Profile</a>)
             i++;
         });
         setRows(rows1);
@@ -119,7 +88,7 @@ function EDSellers() {
             wrapperClass="overlay-spinner"
         />
         <div className='main-title'>
-            <h3>Sellers</h3><CButton onClick={()=>{navigate('/admin/mp/seller/add')}} type="button">Add Seller</CButton>
+            <h3>Sellers</h3>
         </div>
         <MDBDataTable
             striped

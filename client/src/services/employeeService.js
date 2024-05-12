@@ -87,4 +87,48 @@ export async function getBasicInfo() {
       throw error;
     }
   }
-  
+  export async function getSellerById(id) {
+    try {
+      const response = await axios.get(`${baseUrl}/api/employee/sellers/${id}`,{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      // Handle error
+      console.error("Error verifying order !", error);
+      throw error;
+    }
+  }
+export async function verifySeller(id) {
+  try {
+    const response = await axios.post(`${baseUrl}/api/employee/sellers/${id}/verify`,{},{
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error verifying order !", error);
+    throw error;
+  }
+}
+export async function getCategories() {
+  try {
+    const response = await axios.get(`${baseUrl}/api/employee/categories`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error getting Categories:", error);
+    throw error;
+  }
+}

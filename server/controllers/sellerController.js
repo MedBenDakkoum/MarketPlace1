@@ -1,6 +1,8 @@
 const { Router } = require('express');
 const router = Router();
 const User = require('../models/User');
+const Order = require('../models/Order');
+
 // const isAuth = require('../middlewares/isAuth')
 const userService = require('../services/userService');
 const storeService = require('../services/storeService');
@@ -9,6 +11,7 @@ const imageService = require('../services/imageService');
 const productService = require('../services/productService');
 const initProdsService = require('../services/initProdsService');
 const settingsService = require('../services/settingsService');
+const transactionService = require('../services/transactionService');
 
 const Product = require('../models/Product');
 const Store = require('../models/Store');
@@ -124,9 +127,11 @@ router.post('/image/upload', async (req,res) => {
 
 router.get('/products', async (req,res) => {
     try{
-        productService.getProdsBySellerId(req.user._id).then((rslt)=>{
+        await productService.getProdsBySellerId(req.user._id).then((rslt)=>{
             res.status(200).json(rslt); 
-        });
+        }).catch((err)=>{
+            res.status(400).json(err.message)
+        })
     }catch(err){
         console.error(err);
         res.status(404).json({message: "Not Found"});
@@ -163,6 +168,33 @@ router.get('/products/:id/init', async (req,res) => {
         initProdsService.getInitProdById(initProdId.initialProduct).then((rslt)=>{
             res.status(200).json(rslt); 
         });
+    }catch(err){
+        console.error(err);
+        res.status(404).json({message: "Not Found"});
+    }
+});
+router.post('/products/:id/remove', async (req,res) => {
+    try{
+        let product = await Product.findById(req.params.id);
+        if(!product){
+            res.status(400).json({msg:"Not found"})
+        }else{
+            await Order.find({
+                "products.productId": req.params.id,
+                "status": { $ne: "COMPLETED" }
+            }).then(async (orders)=>{
+                if(orders.length>0){
+                    res.status(400).json({msg:"You have orders with this Product"});
+                }else{
+                    await product.delete().then((rslt)=>{
+                        res.status(200).json({msg:"Removed"})
+                    }).catch((err)=>{
+                        res.status(400).json({msg:"Error removing product"})
+                    })
+                }
+            })
+        }
+
     }catch(err){
         console.error(err);
         res.status(404).json({message: "Not Found"});
@@ -254,10 +286,33 @@ router.post('/products/:id/toggle', async (req,res) => {
         res.status(404).json({message: "Not Found"});
     }
 })
+router.get('/transactions', async (req, res) => {
+    try {
+        let transactions = await transactionService.getTransactions(req.user._id);
+        res.status(200).json(transactions);
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error :error});
+    }
+})
+router.post('/transactions/request', async (req, res) => {
+    try {
+        console.log(req.user);
+        await transactionService.requestTransaction(req.user._id)
+        .then((rslt)=>{
+            res.status(200).json(rslt);
+        })
+        .catch((err)=>{
+            res.status(400).json(err);
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json({ error :error});
+    }
+})
 router.get('/:id', async (req, res) => {
     try {
         let user = await sellerService.getSellerById(req.params.id);
-        console.log(req.user);
         let jsonRes = {
             _id: user._id, name: user.name, email: user.email, phoneNumber: user.phoneNumber,
              avatar: user.avatar,

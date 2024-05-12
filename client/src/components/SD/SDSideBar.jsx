@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from "react";
+import React,{useState,useEffect,useContext} from "react";
 
 import {
   BsCart3,
@@ -12,9 +12,12 @@ import {
   BsArrowCounterclockwise,
   BsFillJournalBookmarkFill,
   BsGlobe,
+  BsWallet2,
 } from "react-icons/bs";
 import { useNavigate ,useLocation} from "react-router-dom";
 import { useTranslation } from 'react-i18next'
+import { Context } from "../../ContextStore";
+
 import {getSettings} from '../../services/settingsService.js'
 
 function SDSidebar() {
@@ -22,6 +25,8 @@ function SDSidebar() {
     const {pathname} = useLocation();
     const { t } = useTranslation();
     const [settings, setSettings] = useState({});
+    const { userData } = useContext(Context);
+
     useEffect(function(){
         async function initData(){
             await getSettings().then((s)=>{
@@ -34,7 +39,7 @@ function SDSidebar() {
     <aside className="SDsidebar">
       <div className="SDsidebar-title">
         <div className="SDsidebar-brand">
-          <BsCart3 className="icon_header" /> SHOP
+          <BsWallet2 className="icon" /> {userData?.balance} TND
         </div>
       </div>
 

@@ -31,9 +31,15 @@ function SDOrders() {
       let newOrders =[...orderData]
       newOrders.map((item)=>{
         item.ref = item.ref || <p style={{color:"rgb(255, 71, 71)"}}>#</p>;
-        item.sellerTotalPrice = item.prices.sellerTotalPrice+" TND";
-        item.clientTotalPrice = item.prices.clientTotalPrice+" TND";
-        item.sellerEarnings = item.prices.sellerEarnings+" TND";
+        if(item.prices.sellerTotalPrice == "0#"){
+          item.sellerTotalPrice = "DELETED"
+          item.clientTotalPrice = "DELETED"
+          item.sellerEarnings = "DELETED"
+        }else{
+          item.sellerTotalPrice = item.prices.sellerTotalPrice+" TND";
+          item.clientTotalPrice = item.prices.clientTotalPrice+" TND";
+          item.sellerEarnings = item.prices.sellerEarnings+" TND";
+        }
         if(item.status=="Completed"){
           item.actions = "No actions";
         }else if(item.status=="Pending"){
