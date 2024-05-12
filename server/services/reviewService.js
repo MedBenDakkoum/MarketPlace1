@@ -119,13 +119,17 @@ async function getAllProdsReviews() {
                     if (err) throw err;
                     let i = 0;
                     let newResult = [];
-                    results.forEach(async (prod)=>{
-                        let prod1 = await productService.getFullProd(prod.productId);
-                        newResult.push({...prod,prod:prod1})
-                        if(i==results.length-1){
-                            resolve(newResult);
-                        }
-                    })
+                    if(results.length>0){
+                        results.forEach(async (prod)=>{
+                            let prod1 = await productService.getFullProd(prod.productId);
+                            newResult.push({...prod,prod:prod1})
+                            if(i==results.length-1){
+                                resolve(newResult);
+                            }
+                        })
+                    }else{
+                        resolve(newResult)
+                    }
                     // resolve(results)
                 }
             )

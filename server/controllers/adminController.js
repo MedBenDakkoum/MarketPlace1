@@ -182,6 +182,7 @@ router.get("/mp/products", async (req, res) => {
     let ret = [];
     let products = await initProdsService.getAll();
     let i=0;
+    if(products.length>0){
     products.forEach(async function(prod){
       await Product.aggregate([
         { $match: { initialProduct:prod._id }},
@@ -206,7 +207,10 @@ router.get("/mp/products", async (req, res) => {
         res.status(200).json(ret);
       }
       i++;
-    })     
+    })
+    }else{
+      res.status(200).json([]);
+    }     
   } catch (err) {
     console.error(err);
     res.status(404).json({ message: "Not Found" });
