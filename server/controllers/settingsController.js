@@ -6,6 +6,9 @@ const User = require('../models/User');
 const parseString = require('xml2js').parseString;
 const axios = require('axios'); 
 const settingsService = require("../services/settingsService");
+const { dirname } = require('path');
+const appDir = dirname(require.main.filename);
+
 router.get('/test', async (req, res) => {
     try {
         axios.get('https://ettajer.com.tn/api/products?ws_key=CZ2LXXFDRAZPFP3AU8J5EC5QDKQRQKJ9')
@@ -84,13 +87,10 @@ router.post('/', async (req, res) => {
         for (const [keyy, value] of Object.entries(changes)) {
             config[keyy] = value
         }
-        fs.writeFile('/home/yami/projects/Marketplace-ReactJS-Project/server/config/settings.json', JSON.stringify(config, null, 2), function writeJSON(err) {
+        fs.writeFile(`${appDir}/config/settings.json`, JSON.stringify(config, null, 2), function writeJSON(err) {
             if (err) return console.log(err);
             res.status(200).json(config);
-          });
-          
-        // writeFileSync("/home/yami/projects/Marketplace-ReactJS-Project/server/config/settings.json", JSON.stringify(config, null, 2), 'utf8');
-        
+          });        
     } catch (error) {
         res.status(500).json({ message: error.message })
     }
