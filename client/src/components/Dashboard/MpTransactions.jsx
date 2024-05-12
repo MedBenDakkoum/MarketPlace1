@@ -115,7 +115,7 @@ function MpTransactions() {
             id:id,
             active:true,
             isPending:newRows[0].hasPending,
-            payment:newRows[0].user.paymentMethod
+            payment:newRows[0]?.user?.paymentMethod || "DELETED"
         })
         setPopUpRows(newRows[0].transactions);
     }
@@ -123,8 +123,8 @@ function MpTransactions() {
         let rows1 = [...transactions];
         let i =0;
         rows1.map((element) => {
-            element.name = element.user.name;
-            element.balance = element.user.balance;
+            element.name = element?.user?.name || "DELETED";
+            element.balance = element?.user?.balance || 0;
             if(element.hasPending){
                 element.awaiting = <p style={{color:'red'}}>Yes</p>;
             }else{
