@@ -245,6 +245,7 @@ async function searchByKeyword(keyword){
                     includeScore: true,
                     keys: ['name.fr', 'name.ar', 'description.fr','description.ar','description_short.fr','description_short.ar']
                 }
+                console.log("here1");
                 const fuse = new Fuse(allInitProds, options)
                 const result = fuse.search(keyword);
                 let initialProductIds = result.map(product => product.item._id);
@@ -260,19 +261,24 @@ async function searchByKeyword(keyword){
                         verifiedOrders:1
                     }
                 ).then(async (products)=>{
-                        console.log(products.length)
+                    console.log("here2");
                         let newProds = []
                         let i =0;
-                        products.forEach(async (product)=> {
-                            let ob = JSON.stringify(product);
-                            let aa = await getInitProdFromIdList(product.initialProduct,result);
-                            let newAa = JSON.stringify(aa.item)
-                            newProds.push({...JSON.parse(ob),initData:{...JSON.parse(newAa)}});
-                            if(i==products.length-1){
-                                resolve(newProds);
-                            }
-                            i++;
-                        })
+                        if(products.length>0){
+                            products.forEach(async (product)=> {
+                                let ob = JSON.stringify(product);
+                                let aa = await getInitProdFromIdList(product.initialProduct,result);
+                                let newAa = JSON.stringify(aa.item)
+                                newProds.push({...JSON.parse(ob),initData:{...JSON.parse(newAa)}});
+                                if(i==products.length-1){
+                                    console.log("here3");
+                                    resolve(newProds);
+                                }
+                                i++;
+                            })
+                        }else{
+                            resolve([])
+                        }
                     })
                     .catch((err)=>{
                         console.log(err);
