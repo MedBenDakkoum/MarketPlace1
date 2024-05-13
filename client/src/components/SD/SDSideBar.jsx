@@ -76,11 +76,6 @@ function SDSidebar() {
                     <BsBagCheckFill className='icon'/> {t("sd_sidebar.Orders")}
                 </a>
             </li>
-            <li style={{cursor:"pointer"}} onClick={(e)=>{navigate('/dashboard/returns')}} className={(pathname === '/dashboard/returns') ? 'SDsidebar-list-item active' : 'SDsidebar-list-item'}>
-                <a style={{color:"white",opacity:"0.8"}}>
-                    <BsArrowCounterclockwise className='icon'/> {t("sd_sidebar.Returns")}
-                </a>
-            </li>
             <li style={{cursor:"pointer"}} onClick={(e)=>{navigate('/dashboard/transactions')}} className={(pathname === '/dashboard/transactions') ? 'SDsidebar-list-item active' : 'SDsidebar-list-item'}>
                 <a style={{color:"white",opacity:"0.8"}}>
                     <BsArrowDownUp className='icon'/> {t("sd_sidebar.Transactions")}
