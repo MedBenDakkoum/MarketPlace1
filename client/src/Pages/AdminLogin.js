@@ -11,7 +11,7 @@ function AdminLogin() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [show, setShow] = useState(false)
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const handleClick = (e) => {
     e.preventDefault()
     setShow(!show)
@@ -26,7 +26,7 @@ function AdminLogin() {
                     if(res.user.isAdmin){
                         navigate('/admin');
                     }else{
-                        navigate('/');
+                        navigate('/employee');
                     }
             } else {
                 Swal.fire({

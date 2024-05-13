@@ -9,7 +9,6 @@ import {
   BsCreditCardFill,
   BsPersonFill,
   BsShop,
-  BsArrowCounterclockwise,
   BsFillJournalBookmarkFill,
   BsGlobe,
   BsWallet2,
