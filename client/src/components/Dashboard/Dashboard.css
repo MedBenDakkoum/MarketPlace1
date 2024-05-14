@@ -472,6 +472,11 @@ tbody tr td{
 .exit-popup{
   margin: 10px;
 }
+.select-prods-list{
+  padding: 40px;
+  background-color: white;
+  overflow-y: scroll;
+}
 /* End Main  */
 
 /* Medium <= 992px */

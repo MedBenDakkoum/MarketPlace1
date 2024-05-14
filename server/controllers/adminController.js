@@ -8,6 +8,7 @@ const initProdsService = require("../services/initProdsService");
 const productService = require("../services/productService");
 const cartService = require("../services/cartService");
 const userService = require("../services/userService");
+const layoutService = require("../services/layoutService");
 const employeeService = require("../services/employeeService");
 const reviewService = require("../services/reviewService");
 const transactionService = require("../services/transactionService");
@@ -127,7 +128,7 @@ router.put("/sellers/:id", async (req, res) => {
 });
 router.post("/image/upload", async (req, res) => {
   try {
-    let rslt = await imageService.uploadImage(req.body.data);
+    let rslt = await imageService.uploadImage(req.body.data,req.body.width);
     res.status(200).json({ url: rslt });
   } catch (err) {
     console.error(err);
@@ -176,7 +177,6 @@ router.get("/orders", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
-
 router.get("/mp/products", async (req, res) => {
   try {
     let ret = [];
@@ -211,6 +211,62 @@ router.get("/mp/products", async (req, res) => {
     }else{
       res.status(200).json([]);
     }     
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.get("/products", async (req, res) => {
+  try {
+    let products = await productService.getAll();
+    let fullProds = [];
+    let i=0;
+    
+    if(products.length>0){
+      products.forEach(async (prod)=>{
+        let fullProd = await productService.getFullProd(prod._id)
+        fullProds.push(fullProd);
+        if(i==products.length-1){
+          res.status(200).json(fullProds);
+        }
+        i++;
+      })
+    }else{
+      res.status(200).json([]);
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/layout/recommended", async (req, res) => {
+  try {
+    await layoutService.updateSingleProductRecommended(req.body)
+    .then((rslt)=>{
+      console.log("done");
+      console.log(rslt);
+      res.status(200).json(rslt);
+    })
+    .catch((err)=>{
+      res.status(404).json(err.message);
+    })
+
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/layout/topbannerimgs", async (req, res) => {
+  try {
+    await layoutService.updateTopBannerImages(req.body)
+    .then((rslt)=>{
+      res.status(200).json(rslt);
+    })
+    .catch((err)=>{
+      console.error(err);
+      res.status(404).json(err.message);
+    })
+
   } catch (err) {
     console.error(err);
     res.status(404).json({ message: "Not Found" });

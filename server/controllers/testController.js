@@ -12,32 +12,38 @@ const EntityDecoder = require('html-entities');
 const url = require('url');
 const nodemailer = require('nodemailer');
 const ModelTest = require("../models/ModelTest")
+const ETTAJERUSER = "allseller@gmail.com"
+const ETTAJERPASSWORD = "123456789"
+const ETTAJERKEY = "oeyp7q1e8rfvaimfv6o1wsg01ecgdxjj"
+
 router.get('/getCategories', async (req, res) => {
     try {
-        axios.get('https://ettajer.com.tn/ws?action=getCategories&u=admin@ettajer.com&p=123456789&s=crrjqukql6np42i710aii22woyxga89n')
+        axios.get(`https://ettajer.com.tn/ws?action=getCategories&u=${ETTAJERUSER}&p=${ETTAJERPASSWORD}&s=${ETTAJERKEY}`)
         .then(function (response) {
-            parseString(response.data, function (err, result) {
-                let i=0;
-                let cats = [];
-                res.status(200).json(result);
-                result.categories.category.forEach((cat)=>{
-                    cats.push({
-                        reference:cat.reference[0],
-                        name:cat.name[0]._,
-                        parent:cat.parent[0],
-                        level: parseInt(cat.level[0]),
-                        description:cat.description[0]._,
-                        link_rewrite:cat.link_rewrite[0]._
-                    })
-                    if(i==result.categories.category.length-1){
-                        //res.status(200).json(cats);
-                    }
-                    i++;
-                })
+            res.status(200).json(response);
+            // parseString(response.data, function (err, result) {
+            //     let i=0;
+            //     let cats = [];
+            //     res.status(200).json(result);
+            //     result.categories.category.forEach((cat)=>{
+            //         cats.push({
+            //             reference:cat.reference[0],
+            //             name:cat.name[0]._,
+            //             parent:cat.parent[0],
+            //             level: parseInt(cat.level[0]),
+            //             description:cat.description[0]._,
+            //             link_rewrite:cat.link_rewrite[0]._
+            //         })
+            //         if(i==result.categories.category.length-1){
+            //             // res.status(200).json(cats);
+            //         }
+            //         i++;
+            //     })
                 
-            });
+            // });
         })
         .catch(function (error) {
+            console.log(error)
             res.status(200).json({err:error});
         })
     } catch (error) {
@@ -47,11 +53,12 @@ router.get('/getCategories', async (req, res) => {
 
 router.get('/setCategories', async (req, res) => {
     try {
-        axios.get('https://ettajer.com.tn/ws?action=getCategories&u=admin@ettajer.com&p=123456789&s=crrjqukql6np42i710aii22woyxga89n')
+        axios.get(`https://ettajer.com.tn/ws?action=getCategories&u=${ETTAJERUSER}&p=${ETTAJERPASSWORD}&s=${ETTAJERKEY}`)
         .then(function (response) {
             parseString(response.data, function (err, result) {
                 let i=0;
                 let cats = [];
+                // res.status(200).json(result);
                 result.categories.category.forEach(async(cat)=>{
                     cats.push({
                         reference:cat.reference[0],
@@ -141,7 +148,7 @@ router.get('/sendEmail', async (req, res) => {
 })
 router.get('/getCategories', async (req, res) => {
     try {
-        axios.get('https://ettajer.com.tn/ws?action=getCategories&u=admin@ettajer.com&p=123456789&s=crrjqukql6np42i710aii22woyxga89n')
+        axios.get(`https://ettajer.com.tn/ws?action=getCategories&u=${ETTAJERUSER}&p=${ETTAJERPASSWORD}&s=${ETTAJERKEY}`)
         .then(function (response) {
             parseString(response.data, function (err, result) {
                 let i=0;
@@ -202,10 +209,11 @@ router.get('/getProducts', async (req, res) => {
         let prods = [];
         let i = 0;
         catsObjects.forEach(async function(catObject){
-            await axios.get('https://ettajer.com.tn/ws?action=getProducts&u=admin@ettajer.com&p=123456789&s=crrjqukql6np42i710aii22woyxga89n&categoryid='+catObject.reference)
+            await axios.get(`https://ettajer.com.tn/ws?action=getProducts&u=${ETTAJERUSER}&p=${ETTAJERPASSWORD}&s=${ETTAJERKEY}&categoryid=${catObject.reference}`)
             .then(function (response) {
                 parseString(response.data, function (err, result) {
                     let j = 0;
+                    console.log(result);
                     if(result.products!==undefined){
                         if(result.products.product!==undefined){
                             result.products.product.forEach(async function(singleProduct){

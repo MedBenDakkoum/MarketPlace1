@@ -21,6 +21,7 @@ body{
     padding: 20px;
     border: 1px solid #DEE2E7;
     border-radius: 10px;
+    cursor: pointer;
 }
 .hri-item img{
     width: 100%;

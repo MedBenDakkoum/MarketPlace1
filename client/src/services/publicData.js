@@ -113,4 +113,18 @@ export async function getLocationCountry() {
       throw error;
     }
   }
+export async function getAllLayouts(){
+  try {
+    const response = await axios.get(`${baseUrl}/api/public/home/layout`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting categories:", error);
+    throw error;
+  }
+}
   

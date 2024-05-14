@@ -103,9 +103,9 @@ export async function removeSeller(id) {
     throw error;
   }
 }
-export async function uploadImage(data) {
+export async function uploadImage(data,width=800) {
   try {
-    const response = await axios.post(`${baseUrl}/api/admin/image/upload`, { data }, {
+    const response = await axios.post(`${baseUrl}/api/admin/image/upload`, { data, width }, {
       headers: {
         "Content-Type": "application/json",
       },
@@ -191,6 +191,48 @@ export async function getOrder(id) {
   } catch (error) {
     // Handle error
     console.error("Error getting Orders:", error);
+    throw error;
+  }
+}
+export async function getAllProducts(){
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/products`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting Products:", error);
+    throw error;
+  }
+}
+export async function selectNewRecommandedProduct(ob){
+  try {
+    const response = await axios.post(`${baseUrl}/api/admin/layout/recommended`, ob, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting Products:", error);
+    throw error;
+  }
+}
+export async function updateTopBannerImages(ob){
+  try {
+    const response = await axios.post(`${baseUrl}/api/admin/layout/topbannerimgs`, ob, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting Products:", error);
     throw error;
   }
 }

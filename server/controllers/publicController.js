@@ -2,11 +2,21 @@ const router = require('express').Router();
 const categorieService = require( '../services/categorieService');
 const reviewService = require('../services/reviewService');
 const productService = require('../services/productService');
+const layoutService = require("../services/layoutService");
 
 router.get("/categories", async (req, res) => {
     try {
       let cats = await categorieService.getAll();
       res.status(200).json(cats);
+    } catch (err) {
+      console.error(err);
+      res.status(404).json({ message: "Not Found" });
+    }
+});
+router.get("/home/layout", async (req, res) => {
+    try {
+      let layouts = await layoutService.getAllLayouts();
+      res.status(200).json(layouts);
     } catch (err) {
       console.error(err);
       res.status(404).json({ message: "Not Found" });

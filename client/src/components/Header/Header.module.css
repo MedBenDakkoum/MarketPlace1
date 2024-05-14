@@ -116,6 +116,7 @@
     top: 45px;
     height: 0;
     overflow: hidden;
+    z-index:999
 }
 .all-cats-dropdown{
     background-color: white;
