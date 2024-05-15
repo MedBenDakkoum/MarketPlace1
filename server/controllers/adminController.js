@@ -144,6 +144,16 @@ router.get("/categories", async (req, res) => {
     res.status(404).json({ message: "Not Found" });
   }
 });
+router.get("/categories/:ref", async (req, res) => {
+  try {
+    let cats = await categorieService.getProdsByCatRef(req.params.ref);
+    res.status(200).json(cats);
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+
 router.get("/transactions", async (req, res) => {
   try {
     let transactions = await transactionService.getTransactionsBySeller();
@@ -245,6 +255,21 @@ router.post("/layout/recommended", async (req, res) => {
     .then((rslt)=>{
       console.log("done");
       console.log(rslt);
+      res.status(200).json(rslt);
+    })
+    .catch((err)=>{
+      res.status(404).json(err.message);
+    })
+
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.post("/layout/section", async (req, res) => {
+  try {
+    await layoutService.updateSingleSectionCat(req.body)
+    .then((rslt)=>{
       res.status(200).json(rslt);
     })
     .catch((err)=>{

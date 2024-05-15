@@ -41,9 +41,27 @@ async function updateTopBannerImages(ob){
         })
     })
 }
-
+async function updateSingleSectionCat(ob){
+    return new Promise(async (resolve,reject)=>{
+        console.log("=============ob============  ",ob)
+        await Layout.updateOne({"sectionRef":"single_cat_prods"},{ $pull: { data: { index: ob.index } } })
+        .then(async (rslt)=>{
+            await Layout.updateOne({"sectionRef":"single_cat_prods"},{ $push: { data: ob } })
+            .then((rslt1)=>{
+                resolve(rslt1);
+            })
+            .catch((err)=>{
+                reject(err.message);
+            })
+        })
+        .catch((err)=>{
+            reject(err.message);
+        })
+    })
+}
 module.exports = {
     getAllLayouts,
     updateSingleProductRecommended,
-    updateTopBannerImages
+    updateTopBannerImages,
+    updateSingleSectionCat
 }

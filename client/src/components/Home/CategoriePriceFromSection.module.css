@@ -6,16 +6,33 @@
     border-radius: 10px;
     background-color: white;
     display: flex;
+    position: relative;
 }
 .cpf-info{
     padding: 20px;
     position: relative;
     overflow: hidden;
     min-width: 260px;
+    object-fit: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    z-index: 1
+}
+.shadow-cat{
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(15, 16, 37, 0.5);
+    z-index: 2
 }
 .cpf-info h1{
     font-size: 20px;
-    color: #1c1c1c;
+    position: relative;
+    z-index: 3;
+    color: white;
 }
 .cpf-info img{
     position: absolute;
@@ -35,6 +52,7 @@
     position: relative;
     justify-content: space-between;
     width: 100%;
+    cursor: pointer;
 }
 .cpf-single-item img{
     max-width: 80px;
@@ -50,6 +68,6 @@
 }
 .cpf-single-item p {
     font-size: 14px;
-    font-weight: 300;
-    opacity: 0.4;
+    font-weight: 400;
+    opacity: 0.5;
 }

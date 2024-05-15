@@ -1,20 +1,24 @@
 import React from 'react'
 import styles from './CategoriePriceFromSection.module.css'
-import Countdown from 'react-countdown';
+import { useNavigate } from 'react-router-dom';
+
 function CategoriePriceFromSection(props) {
+  const lang = localStorage.getItem("lang");
+  const navigate = useNavigate();
+
   return (
     <section className={styles["categorie-price-from-section"]}>
         <div className={styles["categorie-price-from-section-container"]}>
-            <div  style={{backgroundImage:"url('https://cdn.builder.io/api/v1/image/assets/TEMP/ce4952251bf5a704e59199dd26357e23eafac893b94772cc530dc70ddee1d5ce?placeholderIfAbsent=true')"}} className={styles["cpf-info"]}>
-                <img src="" alt="" />
-                <h1>{props.title}</h1>
+            <div  style={{backgroundImage:"url('"+props.img+"')"}} className={styles["cpf-info"]}>
+              <div className={styles["shadow-cat"]}></div>
+                <h1>{props.title[lang]}</h1>
             </div>
             <div className={styles["cpf-items"]}>
               {props.prods.map((prod)=>(
-                <div className={styles["cpf-single-item"]}>
-                  <div className="cpf-item-info">
-                    <h3>{prod.title}</h3>
-                    <p>From <br/><span>{prod.priceFrom} TND</span></p>
+                <div onClick={(e)=>{navigate(prod.link)}} className={styles["cpf-single-item"]}>
+                  <div className="cpf-item-info" style={{display:"flex",flexDirection:"column",justifyContent:"space-between"}}>
+                    <h3>{prod.title[lang]}</h3>
+                    <p><br/><span>{prod.price.toFixed(2)} TND</span></p>
                   </div>
                   <img src={prod.img} alt="" />
                 </div>

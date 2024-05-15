@@ -54,9 +54,9 @@ function TopBanner() {
     const handleChanges = (e)=>{
         let id=""
         if(e.target==e.currentTarget){
-          id = e.target.getAttribute("imgIdAlt");
+          id = e.target.getAttribute("id");
         }else{
-          id = e.target.parentNode.getAttribute("imgIdAlt");
+          id = e.target.parentNode.getAttribute("id");
         }
         let poped = topBannerImages.filter(a=>a.imgAlt==id);
         let aa = topBannerImages.filter(a=>a.imgAlt!==id);
@@ -158,7 +158,7 @@ function TopBanner() {
                                 <div key={index} style={{display:"flex",gap:"10px"}}>
                                     <img style={{width:"200px",objectFit:"cover"}}src={oneImageBanner.imgURL}/>
                                     <div>
-                                        <CFormInput imgIdAlt={oneImageBanner.imgAlt} onChange={handleChanges} value={oneImageBanner.link} name="link" type="text" id="inputLinkId" label="Link:" />
+                                        <CFormInput id={oneImageBanner.imgAlt} onChange={handleChanges} value={oneImageBanner.link} name="link" type="text" label="Link:" />
                                         <Button
                                             style={{backgroundColor:"#3A5BFF",margin:"10px 0"}}
                                             component="label"

@@ -1,15 +1,44 @@
 import React,{useEffect,useRef,useState} from 'react'
 import {CButton} from '@coreui/react';
 import { MDBDataTable } from 'mdbreact';
-import {getAllProducts} from '../../../services/adminService';
+import {getCategories} from '../../../services/publicData';
+import {getProdsByCatRef} from '../../../services/adminService';
 import { BsXCircleFill } from "react-icons/bs";
 
-export default function CategorySelector({index,passSelectedProduct}) {
+export default function CategorySelector(props) {
   const lang = localStorage.getItem("lang");
   const [rows, setRows] = useState([]);
-  const [prods, setProds] = useState([]);
-  const [visibleProds, setVisibleProds] = useState(false);
+  const [cats, setCats] = useState([]);
+  const [visibleCats, setVisibleCats] = useState(false);
   const hasPageBeenRendered = useRef(false);
+  const formatCategories = (categories)=> {
+    const categoryDict = {};
+    categories.forEach(category => {
+        const parent = category.parent;
+        if (!categoryDict[parent]) {
+            categoryDict[parent] = [];
+        }
+        categoryDict[parent].push(category);
+    });
+    function formatCategory(category) {
+        const formattedCategory = {
+            value: category.reference,
+            label: category.name[lang]
+        };
+        if (categoryDict[category.reference]) {
+            formattedCategory.children = categoryDict[category.reference].map(child => formatCategory(child));
+        }
+  
+        return formattedCategory;
+    }
+
+    const rootCategories = categoryDict[''];
+    if(!rootCategories){
+        return [];
+    }
+    const formattedCategories = rootCategories.map(rootCategory => formatCategory(rootCategory));
+    return formattedCategories;
+  }
     const data = {
         columns: [
           {
@@ -18,19 +47,9 @@ export default function CategorySelector({index,passSelectedProduct}) {
             width: 150
           },
           {
-            label: 'Image',
-            field: 'img',
-            width: 100
-          },
-          {
-            label: 'Product Name',
-            field: 'name',
+            label: 'Category Name',
+            field: 'nameText',
             width: 150
-          },
-          {
-            label: 'Price',
-            field: 'price',
-            width: 100
           },
           {
             label: 'Actions',
@@ -41,58 +60,65 @@ export default function CategorySelector({index,passSelectedProduct}) {
         rows:rows
       };
       const handleSelectProduct = (e)=>{
-        setVisibleProds(true);
+        setVisibleCats(true);
       }
       const getObjectById = (id)=>{
-        let aa=[...prods];
-        return aa.filter(a=> a.product._id==id)
+        let aa=[...cats];
+        return aa.filter(a=> a._id==id)
       }
-      const handleSelectProductToAdd = (e)=>{
+      const handleSelectCatToAdd = async (e)=>{
         let id=""
         if(e.target==e.currentTarget){
           id = e.target.getAttribute("id");
         }else{
           id = e.target.parentNode.getAttribute("id");
         }
-        let theSelectedProd = getObjectById(id)[0]
-        passSelectedProduct({
-          name:theSelectedProd.initialProduct.name[lang],
-          price:theSelectedProd.product.newPrice,
-          img:theSelectedProd.product.images[0],
-          link:"/products/"+id.toString(),
-          index:index
+        let theSelectedCat = getObjectById(id)[0];
+        let prods = await getProdsByCatRef(theSelectedCat.reference);
+        let newProds = [];
+        prods.map((prod)=>{
+          newProds.push({
+            title:prod.initData.name,
+            price:prod.newPrice,
+            img:prod.images[0],
+            link:"/products/"+prod._id
+          });
+        })
+        props.passSelectedCat({
+          title:theSelectedCat.name,
+          ref:theSelectedCat.reference,
+          prods:newProds,
+          index:props.index
         })
         handleExitPopUp();
       }
       useEffect(function(){
-        let rows1 = [...prods];
-        prods.map((element)=>{
-          element.reference = element?.initialProduct?.ref;
-          element.name = element?.initialProduct?.name[lang];
-          element.img = (<img width="50" src={element.product.images[0]}/>)
-          element.price = element.product.newPrice;
-          element.actions = (<CButton id={element.product._id} onClick={handleSelectProductToAdd}>Select</CButton>)
+        console.log(cats);
+        let rows1 = [...cats];
+        cats.map((element)=>{
+          element.actions = (<CButton id={element._id} onClick={handleSelectCatToAdd}>Select</CButton>)
+          element.nameText = element?.name[lang];
         })
         setRows(rows1)
-      },[prods,setProds])
+      },[cats,setCats])
       useEffect(function(){
         async function init(){
-          await getAllProducts()
-          .then((prods)=>{
-            setProds(prods);
+          await getCategories()
+          .then((cats)=>{
+            setCats(cats);
           })
         }
-        if(hasPageBeenRendered.current && visibleProds==true){
+        if(hasPageBeenRendered.current && visibleCats==true){
           init()
         }
         hasPageBeenRendered.current = true;
-      },[visibleProds,setVisibleProds])
+      },[visibleCats,setVisibleCats])
       const handleExitPopUp = (e)=>{
-        setVisibleProds(false);
+        setVisibleCats(false);
       }
   return (
     <>
-      {visibleProds?
+      {visibleCats?
         <div style={{display:"flex",justifyContent:"center",position:"fixed",zIndex:99,height:"100vh",top:0,left:0,width:"100%",overflowY:"scroll"}}>
             <div onClick={handleExitPopUp}  className="exit-popup" style={{zIndex:100,cursor:"pointer",position:"absolute",top:"20px"}}>
               <BsXCircleFill style={{position:"relative",color:"red",fontSize:"24px"}}/>

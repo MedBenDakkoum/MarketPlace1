@@ -241,13 +241,21 @@ async function searchByKeyword(keyword){
                 name:1,
                 features:1
             }).then(async (allInitProds)=>{
-                const options = {
+                let options = {
                     includeScore: true,
                     keys: ['name.fr', 'name.ar', 'description.fr','description.ar','description_short.fr','description_short.ar']
                 }
-                console.log("here1");
-                const fuse = new Fuse(allInitProds, options)
-                const result = fuse.search(keyword);
+                let result =[]
+                if(keyword==""){
+                    result = allInitProds.map(val => ({
+                        item: Object.assign(val, {}),
+                        matches: [],
+                        score: 1
+                    }));
+                }else{
+                    const fuse = new Fuse(allInitProds, options)
+                    result = fuse.search(keyword);
+                }
                 let initialProductIds = result.map(product => product.item._id);
                 await Product.find({
                     initialProduct: { $in: initialProductIds } },
@@ -261,7 +269,6 @@ async function searchByKeyword(keyword){
                         verifiedOrders:1
                     }
                 ).then(async (products)=>{
-                    console.log("here2");
                         let newProds = []
                         let i =0;
                         if(products.length>0){
@@ -271,7 +278,6 @@ async function searchByKeyword(keyword){
                                 let newAa = JSON.stringify(aa.item)
                                 newProds.push({...JSON.parse(ob),initData:{...JSON.parse(newAa)}});
                                 if(i==products.length-1){
-                                    console.log("here3");
                                     resolve(newProds);
                                 }
                                 i++;

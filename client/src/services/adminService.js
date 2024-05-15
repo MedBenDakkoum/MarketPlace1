@@ -118,6 +118,21 @@ export async function uploadImage(data,width=800) {
     throw error;
   }
 }
+export async function getProdsByCatRef(ref) {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/categories/${ref}`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error uploading image:", error);
+    throw error;
+  }
+}
 
 export async function addSeller(data) {
   try {
@@ -222,6 +237,21 @@ export async function selectNewRecommandedProduct(ob){
     throw error;
   }
 }
+export async function selectNewSectionCat(ob){
+  try {
+    const response = await axios.post(`${baseUrl}/api/admin/layout/section`, ob, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting Products:", error);
+    throw error;
+  }
+}
+
 export async function updateTopBannerImages(ob){
   try {
     const response = await axios.post(`${baseUrl}/api/admin/layout/topbannerimgs`, ob, {

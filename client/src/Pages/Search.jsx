@@ -1,4 +1,4 @@
-import { useState, useContext,useEffect } from 'react';
+import { useState, useRef,useEffect } from 'react';
 import { Context } from '../ContextStore';
 import { loginUser } from '../services/userData'
 import { Form, Button, Spinner, Alert } from 'react-bootstrap';
@@ -16,6 +16,8 @@ import { BsChevronDown, BsChevronLeft, BsChevronRight } from 'react-icons/bs';
 function Search() {
     const lang = localStorage.getItem("lang");
     const navigate = useNavigate();
+    const hasPageBeenRendered = useRef(false);
+
     const [priceRange, setPriceRange] = useState([1,999]); 
     const [loading,setLoading] = useState(false);
     const [queryParameters,setQueryParameters] = useSearchParams()
@@ -114,13 +116,12 @@ function Search() {
                 }
                 setAllProds(aa);
                 let bb = [...aa];
-                console.log("bb init");
-                console.log(bb);
-                bb.splice(0, 5);
-                console.log("bb splice");
-                console.log(bb);
+                bb = bb.splice(0, 5);
                 setSearchProds(bb);
-                setPaginationLevel(1);
+                if(hasPageBeenRendered.current){
+                    setPaginationLevel(1);
+                }
+                hasPageBeenRendered.current = true;
                 setLoading(false);
             })
 
@@ -129,9 +130,6 @@ function Search() {
     },[queryParameters])
     useEffect(function(){
         setLoading(true)
-        console.log("paginationLevel");
-        console.log(paginationLevel);
-        console.log(allProds);
         let aa = allProds.slice((paginationLevel-1)*5, (paginationLevel)*5);
         console.log(aa);
         setSearchProds(aa);
@@ -150,7 +148,10 @@ function Search() {
         }
     }
     const handleChangeSortByOption = (e)=>{
-        navigate("/search?q="+queryParameters.get("q")+"&sort="+e.target.getAttribute("name"))
+        setQueryParameters(params => {
+            params.set("sort", e.target.getAttribute("name"));
+            return params;
+        });
     }
     const handleChangeFeatures = (e)=>{
         let featuresParam = queryParameters.get("features");
@@ -412,9 +413,10 @@ function Search() {
                                     <BsChevronLeft />
                                 </div>
                                 : ""}
-                                {[...Array(Math.ceil(allProds.length/5)+1).keys()].splice(1).map((num)=>(
-                                    <span key={num} onClick={handleChangePaginationLevel}>{num}</span>
-                                ))}
+                                {[...Array(Math.ceil(allProds.length/5)+1).keys()].splice(1).map((num)=>
+                                    (
+                                        <span key={num} style={{backgroundColor:paginationLevel==num? "#dddfe2" : "white"}} onClick={handleChangePaginationLevel}>{num}</span>
+                                    ))}
                                 {(paginationLevel+1)<(Math.ceil(allProds.length/5)+1)? 
                                 <div onClick={(e)=>{if((paginationLevel+1)<(Math.ceil(allProds.length/5)+1)){setPaginationLevel(paginationLevel+1)}}} className={styles["chevron-paginate"]} style={{borderTopRightRadius:"10px",borderBottomRightRadius:"10px"}}>
                                     <BsChevronRight/>

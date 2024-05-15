@@ -6,6 +6,7 @@ import {getAllLayouts} from "../services/publicData"
 import { useNavigate } from 'react-router-dom';
 
 function Home({ match }) {
+  const lang = localStorage.getItem("lang");
   const [products, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
   const [topBannerImages,setTopBannerImages] = useState([])
@@ -34,7 +35,7 @@ function Home({ match }) {
         })}
       </CustomSlider>
       {sections?.map((section)=>(
-        <CategoriePriceFromSection title={section.title} prods={section.prods}/>
+        <CategoriePriceFromSection img={section.img} title={section.title} prods={section.prods}/>
       ))}
       <h1 className="home-section-title" style={{color:"#1c1c1c"}}>
         Recommended items
