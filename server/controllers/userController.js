@@ -167,6 +167,15 @@ router.get('/orders',async (req,res)=>{
         res.status(500).json({ error :error.message });
     }
 })
+router.get('/orders/:id/cancel',async (req,res)=>{
+    try {
+        let orders = await orderService.updateOrderStatus(req.params.id,"CANCELED");
+        res.status(200).json(orders);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error :error.message });
+    }
+})
 router.put('/orders',async (req,res)=>{
     try {
         let cart = await orderService.makeOrder(req.user._id,req.body.paymentMethod,req.query.lang);

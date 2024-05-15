@@ -4,17 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { CForm,CCol,CFormSelect,CRow, CButton} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import { MDBDataTable } from 'mdbreact';
-import {getOrders} from '../../services/userData'
+import {getOrders,cancelOrder} from '../../services/userData'
 import { Spinner } from 'react-bootstrap';
-import Alert from '../Alert/Alert';
+import { ThreeDots } from 'react-loader-spinner'
+import Swal from 'sweetalert2';
 
 function CDOrders() {
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert]= useState({
-    msg:"",
-    type:"",
-    refresh:true
-})
+  const [refresh, setRefresh] = useState(false);
   const [orderData,setOrderData] = useState([]);
   const [orderDataRows,setOrderDataRows] = useState([]);
   const data = {
@@ -76,15 +73,51 @@ function CDOrders() {
       setOrderData(ods);
     }
     init()
-  },[]);
+  },[refresh, setRefresh]);
+  const handleCancelOrder = (e)=>{
+    let id=""
+      if(e.target==e.currentTarget){
+        id = e.target.getAttribute("id");
+      }else{
+        id = e.target.parentNode.getAttribute("id");
+      }
+      Swal.fire({
+        title: "Do you want to cancel this order?",
+        showCancelButton: true,
+        cancelButtonText:"Exit",
+        confirmButtonText: "Cancel",
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+            await cancelOrder(id)
+            .then(function(e){
+                Swal.fire({
+                    icon: "success",
+                    title: "Order Canceled !",
+                    showConfirmButton: false,
+                    timer: 1000
+                });
+                setRefresh(!refresh);
+                setLoading(false);
+            }).catch(function(err){
+              
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops !",
+                    text: err.response.data.msg,
+                });
+                setLoading(false);
+                });
+        }
+      });
+  }
   useEffect(function(){
     let newOrders =[...orderData]
     newOrders.map((item)=>{
       item.ref = item.ref || <p style={{color:"rgb(255, 71, 71)"}}>#</p>;
-      if(item.status=="Completed"){
+      if(item.status=="COMPLETED" || item.status=="CANCELED"){
         item.actions = "No actions";
-      }else if(item.status=="Pending"){
-        item.actions = <CButton>Make Order</CButton>;
+      }else{
+        item.actions = <CButton id={item._id} onClick={handleCancelOrder}>Cancel</CButton>;
       }
       if(item.status=="Pending"){
         item.status = (<p style={{color:"red"}}>{item.status}</p>)
@@ -95,7 +128,16 @@ function CDOrders() {
   },[orderData,setOrderData])
   return (
     <section className='cd-section-container'>
-        <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
+      <ThreeDots
+            visible={loading}
+            height="100"
+            width="100"
+            color="#4fa94d"
+            radius="9"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClass="overlay-spinner"
+        />
         <div className="cd-section-title">
             <h1>Orders</h1>
         </div>

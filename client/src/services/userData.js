@@ -121,6 +121,21 @@ export async function getOrders() {
         throw error;
     }
 }
+export async function cancelOrder(id) {
+    try {
+        const response = await axios.get(`${baseUrl}/api/user/orders/${id}/cancel`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error canceling order:", error);
+        throw error;
+    }
+}
+
 export async function addToCart(data) {
     try {
         const response = await axios.put(`${baseUrl}/api/user/cart`, data, {
