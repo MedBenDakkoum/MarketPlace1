@@ -172,7 +172,7 @@ function Register({ navigate }) {
                 if(value.length!==8){
                     errs.push("Phone number should be 8 digits");
                 }
-                if(/^\d+$/.test(value)){
+                if(value.match(/^[0-9]+$/) == null){
                     errs.push("Phone number must only contain numbers");
                 }
                 break;
@@ -271,13 +271,13 @@ function Register({ navigate }) {
                 }
                 break;
             case "phoneNumber":
-                    if(value.length!==8){
-                        errs.push("Phone number should be 8 digits");
-                    }
-                    if(value.match(/^[0-9]+$/) == null){
-                        errs.push("Phone number must only contain numbers");
-                    }
-                    break;
+                if(value.length!==8){
+                    errs.push("Phone number should be 8 digits");
+                }
+                if(value.match(/^[0-9]+$/) == null){
+                    errs.push("Phone number must only contain numbers");
+                }
+                break;
             default:
                 break;
         }
@@ -627,9 +627,19 @@ function Register({ navigate }) {
                     <Form.Row>
                         <Form.Group className="col-lg-12">
                             <Form.Label>Phone Number *</Form.Label>
-                            <Form.Control type="text" name="phoneNumber" value={clientFormData.phoneNumber} placeholder="+359888888888" onChange={handleClientChange} required />
+                            <InputGroup>
+                                <InputGroup.Text>
+                                    +216
+                                </InputGroup.Text>
+                                <Form.Control type="text" name="phoneNumber"  value={clientFormData.phoneNumber} placeholder="26456789" onChange={handleClientChange} required />
+                            </InputGroup>
+                            <Form.Text className='field-errors'>
+                                {errors?.phoneNumber?.map((e)=>(
+                                    <p style={{color:"red"}}>* {e}</p>
+                                ))}
+                            </Form.Text>
                             <Form.Text muted>
-                                Phone Number should be a valid BG number.
+                                Phone Number should be a valid TN number.
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
