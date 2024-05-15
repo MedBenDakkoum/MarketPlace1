@@ -558,7 +558,7 @@ function Register({ navigate }) {
                     <Form.Row>
                         <Form.Group controlId="formBasicEmail" className="col-lg-12">
                             <Form.Label>Email address *</Form.Label>
-                            <Form.Control type="email" name="email" placeholder="ivan@abv.bg" value={sellerFormData.email} onChange={handleSellerChange} required />
+                            <Form.Control type="email" name="email" placeholder="name@email.com" value={sellerFormData.email} onChange={handleSellerChange} required />
                             <Form.Text className='field-errors'>
                                 {errors?.email?.map((e)=>(
                                     <p style={{color:"red"}}>* {e}</p>
@@ -680,7 +680,7 @@ function Register({ navigate }) {
                     <Form.Row>
                         <Form.Group controlId="formBasicEmail" className="col-lg-12">
                             <Form.Label>Email address *</Form.Label>
-                            <Form.Control type="email" name="email" value={clientFormData.email} placeholder="ivan@abv.bg" onChange={handleClientChange} required />
+                            <Form.Control type="email" name="email" value={clientFormData.email} placeholder="name@email.com" onChange={handleClientChange} required />
                             <Form.Text className='field-errors'>
                                 {errors?.email?.map((e)=>(
                                     <p style={{color:"red"}}>* {e}</p>

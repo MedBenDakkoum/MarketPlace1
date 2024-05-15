@@ -133,6 +133,36 @@ export async function getProdsByCatRef(ref) {
     throw error;
   }
 }
+export async function getNotifications() {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/notifications/`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error uploading image:", error);
+    throw error;
+  }
+}
+export async function setNotificationsToRead() {
+  try {
+    const response = await axios.get(`${baseUrl}/api/admin/notifications/read`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    // Handle error
+    console.error("Error uploading image:", error);
+    throw error;
+  }
+}
 
 export async function addSeller(data) {
   try {

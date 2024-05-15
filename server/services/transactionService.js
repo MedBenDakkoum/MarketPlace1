@@ -1,6 +1,8 @@
 const User = require("../models/User");
 const Transaction = require("../models/Transaction");
 const settingsService = require("../services/settingsService");
+const notificationService = require("../services/notificationService");
+const adminService = require("../services/adminService");
 
 async function getTransactionsBySeller() {
   //return info transaction's schema + info about seller
@@ -122,8 +124,18 @@ async function requestTransaction(id) {
             });
             await transaction
               .save()
-              .then((rslt) => {
-                resolve("done");
+              .then(async (rslt) => {
+                await adminService.getAdmins().
+                then(async (admins)=>{
+                  let listOfAdminIds = admins.map(ad=>ad._id);
+                  await notificationService.sendMultipleNotifications(listOfAdminIds,"Admin","A new withdrawl request has been made!")
+                  .then((rstlNot)=>{
+                    resolve("done");
+                  })
+                  .catch((err)=>{
+                    reject(err.message);
+                  })
+                })
               })
               .catch((err) => {
                 reject(err);
@@ -159,8 +171,14 @@ async function confirmWithdrawl(id) {
                 { userId: id, status: "PENDING" },
                 { status: "ACCEPTED" }
               )
-                .then((r) => {
-                  resolve("done");
+                .then(async (r) => {
+                  await notificationService.sendNotification(id,"User","Your withdrawl request is accepted !")
+                  .then((rsltNot)=>{
+                    resolve("done");
+                  })
+                  .catch((err)=>{
+                    reject(err.message)
+                  })
                 })
                 .catch((e) => {
                   reject(e.message);

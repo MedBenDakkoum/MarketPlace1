@@ -12,6 +12,7 @@ const productService = require('../services/productService');
 const initProdsService = require('../services/initProdsService');
 const settingsService = require('../services/settingsService');
 const transactionService = require('../services/transactionService');
+const notificationService = require('../services/notificationService');
 
 const Product = require('../models/Product');
 const Store = require('../models/Store');
@@ -23,6 +24,35 @@ router.get('/', async (req, res) => {
     } catch (error) {
         console.error(error)
         res.status(500).json({ error :error});
+    }
+})
+router.get('/notifications', async (req, res) => {
+    try {
+        console.log(req.user);
+        await notificationService.getNotificationsById(req.user._id)
+        .then((notifications)=>{
+            res.status(200).json(notifications);
+        })
+        .catch((err)=>{
+            res.status(500).json(err.message);
+        })
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message })
+    }
+})
+router.get('/notifications/read', async (req, res) => {
+    try {
+        await notificationService.setNotificationsToRead(req.user._id)
+        .then((rslt)=>{
+            res.status(200).json({message:"Notifications read"});
+        })
+        .catch((err)=>{
+            res.status(500).json(err.message);
+        })
+        
+    } catch (error) {
+        res.status(500).json({ message: error.message })
     }
 })
 router.put('/', async (req, res) => {

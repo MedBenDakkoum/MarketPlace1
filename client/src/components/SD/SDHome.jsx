@@ -1,16 +1,23 @@
-import React,{useState,useEffect,useContext} from "react";
+import React,{useState,useEffect,useContext,useRef} from "react";
 import { Context } from '../../ContextStore';
 import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate } from "react-router-dom";
 import { CForm,CCol,CFormSelect,CRow} from '@coreui/react';
 import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
-import { getDashboardInfo } from "../../services/dashboardService";
+import { getDashboardInfo,getNotifications,setNotificationsToRead } from "../../services/dashboardService";
 import { Spinner } from 'react-bootstrap';
+import 
+ {BsFillBellFill, BsBoxArrowRight, BsJustify}
+ from 'react-icons/bs';
 
 function SDHome() {
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
-    const { userData, setUserData } = useContext(Context)
+    const { userData, setUserData } = useContext(Context);
+    const notDropMenu = useRef(null)
+    const [notifications,setNotifications] = useState([]);
+    const [notiDropHeight,setNotiDropHeight] = useState({height:"0",marginTop:"35px"});
+    const [heartBeat,setHeartBeat]=useState({color:"white",fill:"white",marginTop:"10px"})
     const [dashInfo, setDashInfo] = useState({
         orders: {
             Pending: 0,
@@ -52,10 +59,30 @@ function SDHome() {
                 products: newDashInfo.products,
                 info: newDashInfo.info
             });
+            await getNotifications()
+            .then((nots)=>{
+                setNotifications(nots);
+                let unReadNots = nots.filter(not=>!not.read);
+                if(unReadNots.length>0){
+                setHeartBeat({animation: "heartbeat 1s infinite",
+                fill: "red",
+                color: "red",
+                opacity: 1,
+                transition: "opacity 500ms",
+                marginTop:"10px"
+                })
+                }
+            })
             setLoading(false)
         }
         initData();
-    },[])
+    },[]);
+    const closeOpenMenus = (e)=>{
+        if(notiDropHeight.height!=="0" && !notDropMenu.current?.contains(e.target)){
+          setNotiDropHeight({height:"0",marginTop:"35px"});
+        }
+      }
+      document.addEventListener('mousedown',closeOpenMenus)
     useEffect(function(){
       switch(chartTime){
           case "week":
@@ -106,10 +133,35 @@ function SDHome() {
     const handleChangeTime = (e)=>{
         setChartTime(e.target.value);
     }
+    const openNotificationDropDown = async (e)=>{
+        if(notiDropHeight.height=="0"){
+          setNotiDropHeight({height:"auto",marginTop:"35px"});
+          setHeartBeat({color:"white",fill:"white",marginTop:"10px"});
+          await setNotificationsToRead()
+        }
+      }
     return (
       <main className="sd-container">
           <div className="sd-section-title">
             <h1>Dashboard</h1>
+            <BsFillBellFill onClick={openNotificationDropDown} className='icon sd' style={{...heartBeat,cursor:"pointer"}} />
+            <div className="notifications-dropdown sd" ref={notDropMenu} style={notiDropHeight}>
+              {notifications.length<=0? 
+                <div className="single-notification-drop">
+                    <p style={{textAlign:"center",color:"blue",cursor:"pointer"}}>No notifications yet</p>
+                </div>
+              : ""}
+              {notifications.map((notification,index)=>(
+                <div key={index} style={{backgroundColor:notification.read? "white" : "#DEE2E7"}} className="single-notification-drop">
+                  <p>{notification.message}</p>
+                </div>  
+              ))}
+              {notifications.length>5?
+                <div className="single-notification-drop">
+                  <p style={{textAlign:"center",color:"blue",cursor:"pointer"}}>See more</p>
+                </div>  
+              :""}
+            </div>
           </div>
           <div className="sd-section-main">
           {!loading? <>

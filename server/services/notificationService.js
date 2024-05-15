@@ -48,6 +48,7 @@ async function getNotificationsById(id,limit=0){
     return new Promise( async(resolve,reject)=>{
         await Notification.find({recipient:id})
         .limit(parseInt(limit))
+        .sort({createdAt:-1})
         .then((nots)=>{
             resolve(nots)
         })

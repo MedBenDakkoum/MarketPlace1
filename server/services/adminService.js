@@ -5,6 +5,14 @@ const Categorie = require("../models/Categorie");
 const Order = require("../models/Order");
 var moment = require('moment'); 
 
+async function getAdmins() {
+  try {
+    let a = await Admin.find().select("-password");
+    return a;
+  } catch {
+    throw { statusCode: 404, message: "No user with this id found" };
+  }
+}
 async function getAdmin(id) {
   try {
     let a = await Admin.findById(id);
@@ -71,6 +79,7 @@ async function getBasicInfo(){
   }
 }
 module.exports = {
+  getAdmins,
   getAdmin,
   getBasicInfo
 };

@@ -228,3 +228,32 @@ export async function requestTransaction() {
         throw error;
     }
 }
+export async function getNotifications() {
+    try {
+        const response = await axios.get(`${baseUrl}/api/seller/notifications/`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error getting notifications:", error);
+        throw error;
+    }
+}
+export async function setNotificationsToRead() {
+    try {
+        const response = await axios.get(`${baseUrl}/api/seller/notifications/read`, {
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error settin notifications to read:", error);
+        throw error;
+    }
+}
+

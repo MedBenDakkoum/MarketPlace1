@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow, CButton} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import { CButton} from '@coreui/react';
 import { MDBDataTable } from 'mdbreact';
 import {getOrders} from '../../services/storeData';
 import SDClientCard from './SDClientCard'
@@ -36,9 +34,9 @@ function SDOrders() {
           item.clientTotalPrice = "DELETED"
           item.sellerEarnings = "DELETED"
         }else{
-          item.sellerTotalPrice = item.prices.sellerTotalPrice+" TND";
-          item.clientTotalPrice = item.prices.clientTotalPrice+" TND";
-          item.sellerEarnings = item.prices.sellerEarnings+" TND";
+          item.sellerTotalPrice = item.prices.sellerTotalPrice.toFixed(2) +" TND";
+          item.clientTotalPrice = item.prices.clientTotalPrice.toFixed(2) +" TND";
+          item.sellerEarnings = item.prices.sellerEarnings.toFixed(2)+" TND";
         }
         if(item.status=="Completed"){
           item.actions = "No actions";

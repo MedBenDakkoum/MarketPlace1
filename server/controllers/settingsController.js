@@ -6,6 +6,7 @@ const User = require('../models/User');
 const parseString = require('xml2js').parseString;
 const axios = require('axios'); 
 const settingsService = require("../services/settingsService");
+const notificationService = require("../services/notificationService");
 const { dirname } = require('path');
 const appDir = dirname(require.main.filename);
 

@@ -16,6 +16,10 @@ tbody tr td{
   line-height: 1px;
   font-size: 20px;
 }
+.icon .sd{
+  color: white;
+  fill: white;
+}
 .icon_header {
   vertical-align: middle;
   line-height: 1px;
@@ -70,6 +74,9 @@ tbody tr td{
 
 .menu-icon {
   display: none;
+}
+.notifications-dropdown .sd{
+  margin-top: 30px;
 }
 .notifications-dropdown{
   margin-top: 5px;

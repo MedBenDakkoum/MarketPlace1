@@ -632,6 +632,21 @@ async function getListOfNumbersFromOrderId(orderId){
         resolve(listNum);
     })
 }
+async function getListOfSellersIdsFromOrderId(orderId){
+    return new Promise(async (resolve,reject)=>{
+        let order = await Order.findById(orderId);
+        let listStores = [];
+        order.products.forEach((prod)=>{
+            listStores.push(prod.storeId)
+        })
+        let sellers = await User.find({idStore: {$in:listStores}},{_id:1});
+        let listIds = [];
+        sellers.forEach((seller)=>{
+            listIds.push(seller._id);
+        })
+        resolve(listIds);
+    })
+}
 async function verifyOrder(orderId){
     try{
         return new Promise(async (resolve,reject)=>{
@@ -643,10 +658,14 @@ async function verifyOrder(orderId){
                 let listOfNums = await getListOfNumbersFromOrderId(orderId);
                 await smsService.sendMultipleSms(listOfNums,"You got a new order on Adghal !")
                 .then(async (t)=>{
-                    order.products.map(async (prod)=>{
-                        await Product.findOneAndUpdate({_id:prod.productId},{$inc:{verifiedOrders:1}})
+                    let listOfIds = await getListOfSellersIdsFromOrderId(orderId);
+                    await notificationService.sendMultipleNotifications(listOfIds,"User","You have a new verified Order !")
+                    .then(async (rsltNot)=>{
+                        order.products.map(async (prod)=>{
+                            await Product.findOneAndUpdate({_id:prod.productId},{$inc:{verifiedOrders:1}})
+                        })
+                        resolve({sent:"true"});
                     })
-                    resolve({sent:"true"});
                 })
                 .catch((f)=>{
                     reject({sent:"false"});
