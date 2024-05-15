@@ -1,7 +1,7 @@
 import { useState,useContext, useEffect } from 'react';
 import { Context } from '../../ContextStore';
-import { BsFillPersonFill, BsGrid1X2Fill, BsCart, BsCartFill, BsPerson, BsCart3, BsBackpack, BsBagCheckFill, BsList, BsCaretRight, BsCaretRightFill } from 'react-icons/bs';
-import { IoLogOut } from 'react-icons/io5'
+import { BsFillPersonFill, BsGrid1X2Fill, BsCart, BsCartFill, BsBoxArrowRight, BsCart3, BsBackpack, BsBagCheckFill, BsList, BsCaretRight, BsCaretRightFill } from 'react-icons/bs';
+import { IoLogOut } from "react-icons/io5";
 import LanguageSelector from '../LanguageSelector';
 import {CButton,CForm} from '@coreui/react'
 import styles from './Header.module.css';
@@ -105,6 +105,13 @@ function Header() {
                         <BsCartFill style={{color:"#8B96A5",width:'24px',height:'24px'}}/>    
                         <p>My cart</p>
                     </div>
+                    {userData?
+                    <div onClick={(e)=>{window.location.href ='/auth/logout'}} className={styles["single-icon"]}>
+                        <IoLogOut style={{color:"#8B96A5",width:'24px',height:'24px'}}/>    
+                        <p>Log out</p>
+                    </div>
+                    : 
+                    ""}
                     
                 </div>
             </div>

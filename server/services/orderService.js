@@ -3,6 +3,8 @@ const initialProduct = require('../models/initialProduct');
 const Product = require('../models/Product');
 const cartService = require("./cartService")
 const smsService = require('../services/smsService');
+const notificationService = require('../services/notificationService');
+const employeeService = require('../services/employeeService');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Cart = require('../models/Cart');
@@ -427,8 +429,16 @@ async function makeOrder(userId,paymentMethod,lang){
                         await generateInvoice(newOrder._id,lang)
                         .then(async function(rslt){
                             await newOrder.update({invoiceId:rslt})
-                            .then(function(rrr){
-                                resolve({message:"Order Placed"})
+                            .then(async function(rrr){
+
+                                await employeeService.getEmployees()
+                                .then(async (employees)=>{
+                                    let listOfEmployeesIds = employees.map(employee=>employee._id);
+                                    await notificationService.sendMultipleNotifications(listOfEmployeesIds,"Employee","A new order has been placed !")
+                                    .then((rsltNots)=>{
+                                        resolve({message:"Order Placed"})
+                                    })
+                                })
                             })
                         })
                     }).catch(function(e){

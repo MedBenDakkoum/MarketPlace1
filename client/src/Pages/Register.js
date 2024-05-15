@@ -453,7 +453,7 @@ function Register({ navigate }) {
                     <Form.Row>
                         <Form.Group className="col-lg-12">
                             <Form.Label>Phone Number *</Form.Label>
-                            <Form.Control type="text" name="phoneNumber"  value={sellerFormData.phoneNumber} placeholder="+359888888888" onChange={handleSellerChange} required />
+                            <Form.Control type="text" name="phoneNumber"  value={sellerFormData.phoneNumber} placeholder="+21626456789" onChange={handleSellerChange} required />
                             <Form.Text muted>
                                 Phone Number should be a valid BG number.
                             </Form.Text>

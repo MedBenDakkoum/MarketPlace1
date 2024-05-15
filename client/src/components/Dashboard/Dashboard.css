@@ -44,6 +44,19 @@ tbody tr td{
 }
 
 /* Header  */
+@keyframes heartbeat {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.25);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
 .header {
   grid-area: header;
   height: 60px;
@@ -58,6 +71,46 @@ tbody tr td{
 .menu-icon {
   display: none;
 }
+.notifications-dropdown{
+  margin-top: 5px;
+  position: absolute;
+  background-color: white;
+  z-index: 999;
+  right: 0;
+  border-bottom: none;
+  width: 300px;
+  overflow: hidden;
+  transition: max-height 0.15s ease-out;
+}
+.single-notification-drop p{
+  margin: 0;
+  font-size: 14px;
+  color: #1c1c1c;
+  opacity: 0.8
+}
+.single-notification-drop{
+  padding: 10px;
+  border: 1px solid #DEE2E7;
+  border-bottom: none;
+  position: relative;
+}
+.single-notification-drop:last-child{
+  border-bottom: 1px solid #DEE2E7;
+}
+.header-right{
+  position: relative;
+}
+/* .unread-num{
+  background-color: red;
+  width: 12px;
+  height: 12px;
+  text-align: center;
+  font-size: 10px;
+  color: white;
+  border-radius: 50px;
+  left: 8px;
+  position: absolute;
+} */
 /* End Header  */
 
 /* Sidebar  */

@@ -14,6 +14,32 @@ export async function getBasicInfo() {
       throw error;
     }
   }
+  export async function getNotifications(limit=0) {
+    try {
+      const response = await axios.get(`${baseUrl}/api/employee/notifications?limit=${limit}`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+  export async function setNotificationsToRead() {
+    try {
+      const response = await axios.get(`${baseUrl}/api/employee/notifications/read`, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
   export async function getOrders() {
     try {
       const response = await axios.get(`${baseUrl}/api/employee/orders`, {

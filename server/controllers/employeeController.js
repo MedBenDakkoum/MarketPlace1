@@ -4,6 +4,7 @@ const employeeService = require("../services/employeeService")
 const orderService = require("../services/orderService")
 const sellerService = require("../services/sellerService")
 const categorieService = require("../services/categorieService")
+const notificationService = require("../services/notificationService")
 const { EMPLOYEE_COOKIE_NAME } = require("../config/config");
 
 router.get("/", async (req, res) => {
@@ -27,6 +28,36 @@ router.get("/", async (req, res) => {
       res.status(404).json({ message: "Not Found" });
     }
   });
+router.get("/notifications", async (req, res) => {
+  try {
+    if (req.employeeUser) {
+      await notificationService.getNotificationsById(req.employeeUser._id,req.query.limit || 0)
+      .then((rslt)=>{
+        res.status(200).json(rslt);  
+      })
+    } else {
+      res.status(200).json({ user: { isActive: false } });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
+router.get("/notifications/read", async (req, res) => {
+  try {
+    if (req.employeeUser) {
+      await notificationService.setNotificationsToRead(req.employeeUser._id)
+      .then((rslt)=>{
+        res.status(200).json(rslt);  
+      })
+    } else {
+      res.status(200).json({ user: { isActive: false } });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(404).json({ message: "Not Found" });
+  }
+});
 router.get("/orders", async (req, res) => {
     try {
         let orders = await orderService.getUnVerified();

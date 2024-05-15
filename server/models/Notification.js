@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const notificationSchema = new mongoose.Schema({
     recipientType: {
         type: String,
-        enum: ['user', 'employee', 'admin']
+        enum: ['User','Employee', 'Admin']
     },
     recipient: {
         type: mongoose.Schema.Types.ObjectId, 
