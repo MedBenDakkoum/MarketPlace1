@@ -12,6 +12,7 @@ function Header() {
     const lang = localStorage.getItem("lang");
     const navigate = useNavigate();
     const [allCats,setAllCats] = useState([]);
+    const [finalCats,setFinalCats] = useState({});
     const [allCatsHeight,setAllCatsHeight] = useState("")
     const [searchValue,setSearchValue] = useState("")
     const formatCategories = (categories)=> {
@@ -31,7 +32,6 @@ function Header() {
             if (categoryDict[category.reference]) {
                 formattedCategory.children = categoryDict[category.reference].map(child => formatCategory(child));
             }
-      
             return formattedCategory;
         }
   
@@ -42,9 +42,22 @@ function Header() {
         const formattedCategories = rootCategories.map(rootCategory => formatCategory(rootCategory));
         return formattedCategories;
       }
+    const formatFinalCategories = (arr)=>{
+        let rslt = {};
+        for (let i = 0; i < arr.length; i++) {
+            const element = arr[i];
+            if(element.children){
+                rslt[element.value] = element.children.map(child=>child.value) ;
+            }else{
+                rslt[element.value] = [element.value];
+            }      
+        }
+        return rslt;
+    }
     useEffect(function(){
         async function init(){
-            let cats = await getCategories();
+            let cats = await getCategories(); 
+            setFinalCats(formatFinalCategories(formatCategories(cats)));
             setAllCats(formatCategories(cats));
         }
         init();
@@ -135,17 +148,14 @@ function Header() {
             <div style={{height:allCatsHeight}}  className={styles["all-cats-dropdown-container"]}>
                 <div className={styles["all-cats-dropdown"]}>
                     {allCats?
-                    <> 
-                        {allCats.map((cat)=>(
-                        <div key={cat.value} className={styles["single-cat"]}>
-                            <p>{cat.label}</p>
-                        </div>  
-                        ))}
-                    </>
+                        <> 
+                            {allCats.map((cat)=>(
+                            <div key={cat.value} onClick={(e)=>{navigate("/search?q=&cats="+finalCats[cat.value].join(","))}} className={styles["single-cat"]}>
+                                <p>{cat.label}</p>
+                            </div>  
+                            ))}
+                        </>
                     : ""}
-                </div>
-                <div className="single-cat-dropdown-container">
-
                 </div>
             </div>
         </div>

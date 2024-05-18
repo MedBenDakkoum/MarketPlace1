@@ -6,6 +6,8 @@ const jwt = require('jsonwebtoken');
 const { SECRET } = require('../config/config');
 const Store = require('../models/Store');
 const settingsService = require("../services/settingsService")
+const employeeService = require("../services/employeeService")
+const notificationService = require("../services/notificationService")
 
 async function registerUser(userData) {
     try{
@@ -103,6 +105,13 @@ async function registerUser(userData) {
             }
         }
         let user = new User(newData);
+        if(!user.isVerified){
+            await employeeService.getEmployees()
+            .then(async (employees)=>{
+                let listOfEmployeesIds = employees.map(employee=>employee._id);
+                await notificationService.sendMultipleNotifications(listOfEmployeesIds,"Employee","A new unverified seller !");
+            })
+        }
         return await user.save();
     }catch(err){
         throw err.message;

@@ -1,0 +1,53 @@
+.container {
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  .container div{
+    display: flex;
+    justify-content: space-between;
+  }
+  .container h2 {
+    font-weight: 400;
+    margin: 0;
+  }
+  .container span{
+    display: block;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    font-size: 12px;
+    font-weight: 300;
+    border-bottom: 1px solid #ccc;
+
+  }
+  .container form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .container label {
+    margin-bottom: 5px;
+  }
+  
+  .container input[type="text"] {
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  .container button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  .container button:hover {
+    background-color: #0056b3;
+  }
+  

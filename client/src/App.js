@@ -73,6 +73,7 @@ import Cart from "./Pages/Cart"
 import ClientDashLayout from "./Pages/ClientDashLayout"
 import CDOrders from "./components/CD/CDOrders"
 import CDProfile from "./components/CD/CDProfile"
+import SellerSubscribe from './Pages/SellerSubscribe'
 //import {Action as logoutAction} from './pages/Logout.js'
 
 // const router = createBrowserRouter(router)
@@ -83,6 +84,7 @@ export default function App() {
     <Routes>
       <Route path="/" context={ContextStore} element={<RootLayout />}>
         <Route index element={<Home />} />
+        <Route path="subscribe" element={<SellerSubscribe />} />
         <Route path="contact-us" element={<ContactUs />} />
         <Route path="s/:link" element={<Store />} />
         <Route path="dashboard" element={<SellerDashLayout />} >
