@@ -96,6 +96,7 @@ router.get('/getUser', async (req, res) => {
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
                 }else{
                     if(user.isSeller){
+                        console.log("Subscription: ",user.subscription)
                     res.status(200).json({user: 
                         {_id: user._id, name: user.name, email: user.email, 
                         phoneNumber: user.phoneNumber, isSeller:user.isSeller,
@@ -113,7 +114,7 @@ router.get('/getUser', async (req, res) => {
                     }
                 }
         } else {
-            res.status(200).json({message: "Not loged in"});
+            res.status(200).json({message: "Not logged in"});
         }
     }catch(err){
         console.error(err);

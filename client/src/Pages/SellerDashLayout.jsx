@@ -14,21 +14,23 @@ const SellerDashLayout = () => {
 
   const { userData, setUserData } = useContext(Context);
   useEffect(function(){
-    if(!userData?.isSubscribed){
-      Swal.fire({
-        title: "Access to Your Dashboard Requires Subscription",
-        text:"To access your dashboard and enjoy our services, please proceed with your subscription payment. Thank you!",
-        showCancelButton: true,
-        confirmButtonText: "Subscribe",
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-            navigate("/subscribe")
-        }else{
-          navigate("/")
-        }
-      });
+    if(userData){
+      if(!userData.isSubscribed){
+        Swal.fire({
+          title: "Access to Your Dashboard Requires Subscription",
+          text:"To access your dashboard and enjoy our services, please proceed with your subscription payment. Thank you!",
+          showCancelButton: true,
+          confirmButtonText: "Subscribe",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+              navigate("/subscribe")
+          }else{
+            navigate("/")
+          }
+        });
+      }
     }
-  },[])
+  },[userData])
   return (
     <>
     {userData?.isSeller && userData?.isSubscribed? (<div className='seller-dash-layout'>

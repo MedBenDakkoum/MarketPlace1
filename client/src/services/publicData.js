@@ -127,4 +127,18 @@ export async function getAllLayouts(){
     throw error;
   }
 }
+export async function getMostSold(){
+  try {
+    const response = await axios.get(`${baseUrl}/api/public/mostsold`, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error getting categories:", error);
+    throw error;
+  }
+}
   

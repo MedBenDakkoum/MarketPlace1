@@ -340,6 +340,19 @@ router.post('/transactions/request', async (req, res) => {
         res.status(500).json({ error :error});
     }
 })
+router.post('/subscribe', async (req, res) => {
+    try {
+        console.log(req.user)
+        await sellerService.subscribe(req.user._id).then((rslt)=>{
+            res.status(200).json(rslt);
+        }).catch((err)=>{
+            res.status(200).json(err);
+        })
+    } catch (error) {
+        console.error(error)
+        res.status(500).json(error);
+    }
+})
 router.get('/:id', async (req, res) => {
     try {
         let user = await sellerService.getSellerById(req.params.id);
@@ -354,4 +367,5 @@ router.get('/:id', async (req, res) => {
         res.status(500).json({ error :error});
     }
 })
+
 module.exports = router;

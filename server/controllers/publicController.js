@@ -54,4 +54,16 @@ router.get('/reviews/:pId', async (req, res) => {
       res.status(500).json({ error :error});
   }
 })
+router.get('/mostsold', async (req, res) => {
+  try {
+      await productService.getMostSold().then((rslt)=>{
+          res.status(200).json(rslt[0]);
+      }).catch((err)=>{
+          res.status(400).json(err.message);
+      })
+  } catch (error) {
+      console.log(error);
+      res.status(500).json({ error :error});
+  }
+})
 module.exports = router;

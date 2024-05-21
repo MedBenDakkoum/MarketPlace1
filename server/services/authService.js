@@ -126,7 +126,7 @@ async function loginUser({ email, password }) {
     let hasValidPass = await bcrypt.compare(password, user.password);
     if (!hasValidPass) throw { message: "Invalid email or password" }
     if(user.isVerified){
-        let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller}, SECRET);
+        let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller, isSubscribed:user.subscription.isSubscribed}, SECRET);
         return token;
     }else{
         return "notActive"

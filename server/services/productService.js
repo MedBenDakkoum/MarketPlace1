@@ -296,7 +296,15 @@ async function searchByKeyword(keyword){
         console.error(err);
     }
 }
-
+async function getMostSold(){
+    try{
+        return new Promise(async (resolve, reject) => {
+            resolve(await Product.find().sort({verifiedOrders:-1}).limit(1))
+        })
+    }catch(err){
+        console.error(err);
+    }
+}
 module.exports = {
     getAll,
     findByCategory,
@@ -313,5 +321,6 @@ module.exports = {
     updateProductSeo,
     getProductAttributes,
     getFullProd,
-    searchByKeyword
+    searchByKeyword,
+    getMostSold
 }

@@ -6,15 +6,16 @@ import LanguageSelector from '../LanguageSelector';
 import {CButton,CForm} from '@coreui/react'
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
-import {getCategories} from "../../services/publicData";
+import {getCategories,getMostSold} from "../../services/publicData";
 function Header() {
     const { userData, setUserData } = useContext(Context);
     const lang = localStorage.getItem("lang");
     const navigate = useNavigate();
     const [allCats,setAllCats] = useState([]);
     const [finalCats,setFinalCats] = useState({});
-    const [allCatsHeight,setAllCatsHeight] = useState("")
-    const [searchValue,setSearchValue] = useState("")
+    const [allCatsHeight,setAllCatsHeight] = useState("");
+    const [searchValue,setSearchValue] = useState("");
+    const [mostSoldProduct,setMostSoldProduct] = useState("");
     const formatCategories = (categories)=> {
         const categoryDict = {};
         categories.forEach(category => {
@@ -59,6 +60,8 @@ function Header() {
             let cats = await getCategories(); 
             setFinalCats(formatFinalCategories(formatCategories(cats)));
             setAllCats(formatCategories(cats));
+            let prod = await getMostSold();
+            setMostSoldProduct(prod._id)
         }
         init();
     },[])
@@ -135,10 +138,8 @@ function Header() {
                     <li>
                         <ul onClick={toggleAllCatsDropDown} style={{position:"relative"}}><BsList style={{fontSize:"25px"}}/>All Categories
                         </ul>
-                        <ul>Clothes</ul>
-                        <ul>Electronics</ul>
-                        <ul>Kitchen</ul>
-                        <ul>Health & Beauty</ul>
+                        <ul onClick={(e)=>{navigate("/contact-us")}}>Contact us</ul>
+                        <ul onClick={(e)=>{navigate("/products/"+mostSoldProduct)}}>Most sold product</ul>
                     </li>
                 </div>
                 <div className={styles["nav-bar-language"]}>

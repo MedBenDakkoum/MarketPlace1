@@ -256,4 +256,17 @@ export async function setNotificationsToRead() {
         throw error;
     }
 }
-
+export async function subscribeToMarketPlace() {
+    try {
+        const response = await axios.post(`${baseUrl}/api/seller/subscribe`, {},{
+        headers: {
+            "Content-Type": "application/json",
+        },
+        withCredentials: true,
+        });
+        return response.data;
+    } catch (error) {
+        console.error("Error settin notifications to read:", error);
+        throw error;
+    }
+}
