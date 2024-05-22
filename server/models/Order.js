@@ -41,7 +41,8 @@ const orderSchema = new mongoose.Schema({
                 ref:"Store"
             },
             attributes:Object,
-            quantity:Number
+            quantity:Number,
+            passedToSupplier:Boolean
         }    
     ],
     clientId:{

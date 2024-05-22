@@ -40,11 +40,9 @@ const SubscriptionPage = () => {
   };
   const luhnCheck = (cardNumber) => {
     const cleaned = cardNumber.replace(/\s+/g, '');
-  
     if (cleaned.length < 13 || cleaned.length > 19) {
       return false;
     }
-  
     let sum = 0;
     let shouldDouble = false;
   

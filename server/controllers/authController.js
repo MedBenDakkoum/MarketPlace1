@@ -34,6 +34,8 @@ router.post('/login', (req, res) => {
         .then(token => {
             if(token=="notActive"){
                 res.status(200).json({isActive:false});
+            }else if(token=="suspended"){
+                res.status(200).json({isSuspended:true});
             }else{
                 jwt.verify(token, SECRET, (err, decoded) => {
                     if (err) {
@@ -96,7 +98,6 @@ router.get('/getUser', async (req, res) => {
                     res.status(200).json({user: {_id: user._id, name: user.name, email: user.email, isAdmin:1}})
                 }else{
                     if(user.isSeller){
-                        console.log("Subscription: ",user.subscription)
                     res.status(200).json({user: 
                         {_id: user._id, name: user.name, email: user.email, 
                         phoneNumber: user.phoneNumber, isSeller:user.isSeller,

@@ -230,7 +230,7 @@ async function subscribe(sellerId) {
         startDate:new Date(),
         endDate:dateAfter30Days,
       }
-      await User.findOneAndUpdate({_id:sellerId},{subscription:newSub}).then((success)=>{
+      await User.findOneAndUpdate({_id:sellerId},{subscription:newSub,nbrNotPassedToSupplier:0}).then((success)=>{
         resolve(success);
       })
       .catch((err)=>{
@@ -277,7 +277,18 @@ async function deleteSeller(id) {
         })
   })
 }
-
+async function getSellerIdByStoreId(storeId) {
+  try{
+    return new Promise(async (resolve,reject)=>{
+      const seller = await User.findOne({idStore:storeId});
+      if(!seller) throw "No such user found";
+      resolve(seller._id);
+    })
+  }catch(e){
+      console.log("Error in verifying seller");
+      throw e;
+  }
+}
 module.exports = {
     getSellers,
     getSellerById,
@@ -289,6 +300,7 @@ module.exports = {
     verifySeller,
     isSellerVerified,
     deleteSeller,
-    subscribe
+    subscribe,
+    getSellerIdByStoreId
 };
   

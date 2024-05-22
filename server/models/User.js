@@ -117,6 +117,10 @@ const userSchema = new mongoose.Schema({
     isSuspended:{
         type:Boolean,
         default:false
+    },
+    nbrNotPassedToSupplier:{
+        type:Number,
+        default:0
     }
 },{timestamps:true});
 

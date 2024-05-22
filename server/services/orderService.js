@@ -5,6 +5,7 @@ const cartService = require("./cartService")
 const smsService = require('../services/smsService');
 const notificationService = require('../services/notificationService');
 const employeeService = require('../services/employeeService');
+const sellerService = require('../services/sellerService');
 const Order = require('../models/Order');
 const User = require('../models/User');
 const Cart = require('../models/Cart');
@@ -13,6 +14,7 @@ var moment = require('moment');
 var pdf = require('html-pdf');
 var fs = require('fs');
 const { cloudinary } = require("../config/cloudinary");
+const schedule = require('node-schedule');
 
 Date.prototype.addDays = function(days) {
     var date = new Date(this.valueOf());
@@ -110,6 +112,25 @@ async function getOrdersById(storeId) {
         throw err;
     }
 }
+function checkIfSentToSupplier(arr,storeId){
+    if(arr.length>0){
+        let i=0;
+        for(let prod of arr){
+            if(prod.storeId.toString()==storeId.toString()){
+                if(!prod.passedToSupplier){
+                    return false;
+                }
+            }
+            if(i==arr.length-1){
+                return true
+            }
+            i++;
+        }
+
+    }else{
+        true;
+    }
+}
 async function getVerifiedOrdersByStoreId(storeId) {
     try {
         const orders = await Order.find({
@@ -118,6 +139,7 @@ async function getVerifiedOrdersByStoreId(storeId) {
         });
 
         const newOrders = await Promise.all(orders.map(async (order) => {
+            let isSentToSupplier = checkIfSentToSupplier(order.products,storeId)
             const newProducts = order.products
                 .filter(product => product.storeId.toString() === storeId.toString())
                 .map(product => ({
@@ -127,7 +149,6 @@ async function getVerifiedOrdersByStoreId(storeId) {
                 }));
 
             const prices = await getTotalPrices(newProducts);
-
             return {
                 prices: prices,
                 products: newProducts,
@@ -135,6 +156,7 @@ async function getVerifiedOrdersByStoreId(storeId) {
                 status: order.status,
                 clientId: order.clientId,
                 orderId: order.orderId,
+                passedToSupplier: isSentToSupplier,
                 paymentMethod: order.paymentMethod || ""
             };
         }));
@@ -647,6 +669,87 @@ async function getListOfSellersIdsFromOrderId(orderId){
         resolve(listIds);
     })
 }
+async function getListOfStoresIdsFromOrderId(orderId){
+    return new Promise(async (resolve,reject)=>{
+        let order = await Order.findById(orderId);
+        let listStores = [];
+        order.products.forEach((prod)=>{
+            listStores.push(prod.storeId)
+        })
+        resolve([...new Set(listStores)]);
+    })
+}
+async function checkOrderSentToSupplier(orderId) {
+    try {
+        const order = await Order.findById(orderId);
+        if (order && order.status=="PENDING") {
+            let sentToStores = [];
+            let prodsToPull = [];
+            order.products.forEach(async (prod)=>{
+                if(!prod.passedToSupplier){
+                    prodsToPull.push(prod._id);
+                    if(!sentToStores.includes(prod.storeId)){
+                        let sellerId = await sellerService.getSellerIdByStoreId(prod.storeId);
+                        await User.findOneAndUpdate({_id:sellerId},{$inc:{nbrNotPassedToSupplier:1}},{new:true})
+                        .then(async (seller)=>{
+                            if(seller.nbrNotPassedToSupplier>=3){
+                                await User.findOneAndUpdate({_id:sellerId},{isSuspended:true})
+                            }
+                        })
+                        // await order.update({$pull:{products:{_id:prod._id}}});
+                        await notificationService.sendNotification(sellerId,"User","You have an order that passed 12 hours hanging so your product is deleted from the order.");
+                        sentToStores.push(prod.storeId);
+                    }
+                }
+            })
+            
+            await Order.findOneAndUpdate({_id:orderId},{$pull:{products:{_id:{$in:prodsToPull}}}},{new:true})
+            .then(async (rslt)=>{
+                if(rslt.products.length==0){
+                    await Order.findOneAndUpdate({_id:orderId},{status:"CANCELED"});
+                }else{
+                    let newTotalPrices = await getTotalPrices(rslt.products);
+                    await Order.findOneAndUpdate({_id:orderId},{totalProductsPrice:newTotalPrices.sellerTotalPrice,totalPrice:newTotalPrices.sellerTotalPrice+rslt.totalShippingPrice});
+                }
+            })
+        }
+    } catch (error) {
+        console.error(`Error checking if order ${orderId} was sent to the supplier: `, error);
+    }
+}
+async function passOrderToSupplier(orderId,sellerId){
+    try{
+        return new Promise(async (resolve,reject)=>{
+            const order = await Order.findOne({orderId:orderId});
+            const seller = await User.findById(sellerId);
+            if(order && seller){
+                let i = 0;
+                if(order.products.length>0){
+                    order.products.map(async (prod)=>{
+                        console.log("seller.idStore: ",prod.storeId==seller.idStore);
+                        if(prod.storeId.toString()==seller.idStore.toString()){
+                            prod.passedToSupplier = true;
+                        }
+                        if(i==order.products.length-1){
+                            console.log("order.products: ",order.products)
+                            await order.save()
+                            .then(async (rslt)=>{
+                                resolve({"success":true});
+                            })
+                        }
+                        i++;
+                    })
+                }else{
+                    resolve({"success":true});
+                }
+            }else{
+                reject("Order or seller are invalid !");
+            }
+        })
+    }catch(err){
+        console.error("Error passing order to supplier : ",err)
+    }
+}
 async function verifyOrder(orderId){
     try{
         return new Promise(async (resolve,reject)=>{
@@ -664,6 +767,9 @@ async function verifyOrder(orderId){
                         order.products.map(async (prod)=>{
                             await Product.findOneAndUpdate({_id:prod.productId},{$inc:{verifiedOrders:1}})
                         })
+                        schedule.scheduleJob(new Date(Date.now() + 12 * 60 * 60 * 1000), () => {
+                            checkOrderSentToSupplier(orderId);
+                        });
                         resolve({sent:"true"});
                     })
                 })
@@ -690,5 +796,6 @@ module.exports = {
     getUnVerified,
     verifyOrder,
     getListOfNumbersFromOrderId,
-    getVerifiedOrdersByStoreId
+    getVerifiedOrdersByStoreId,
+    passOrderToSupplier
 }

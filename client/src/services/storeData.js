@@ -19,3 +19,17 @@ export async function getOrders(){
         throw error;
       }
 }
+export async function passOrderToSupplier(orderId){
+  try {
+      const response = await axios.post(`${baseUrl}/api/store/orders/${orderId}/supplier`,{},{
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error getting order to supplier:", error);
+      throw error;
+    }
+}

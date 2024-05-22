@@ -15,6 +15,21 @@ router.get('/orders', async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 })
+router.post('/orders/:orderId/supplier', async (req, res) => {
+    try {
+        await orderService.passOrderToSupplier(req.params.orderId,req.user._id)
+        .then((rslt)=>{
+            res.status(200).json(rslt);
+        }).catch((err)=>{
+            console.error(err);
+            res.status(500).json(err.message);
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message })
+    }
+})
+
 router.get('/:link', async (req, res) => {
     try {
         let storeInfo = await storeService.getPublicInfoByLink(req.params.link);

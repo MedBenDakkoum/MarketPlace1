@@ -34,6 +34,13 @@ function Login({navigate}) {
                             title: "UnVerified account!",
                             text: "An email will be sent to you when you're account is verified by one of our employees !",
                         });
+                    }else if(res.isSuspended){
+                        setLoading(false);
+                        Swal.fire({
+                            icon: "warning",
+                            title: "Suspended account!",
+                            html: "<p>Your Acount Has been suspended, please contact us <a href='/contact-us'>here</a></p>",
+                        });
                     }else{
                         setUserData(res.user);
                         navigate("/")
