@@ -46,7 +46,8 @@ function AdminLogin() {
   return (
     <div className="login">
       <div className="login-right">
-        <h1>Login</h1>
+        <img className="login-right-lock" src="/assets/images/lock.png"/>
+        <h1>Login Portal</h1>
         <form onSubmit={handleLogin} style={{"margin":0,"padding":0,"width":"100%"}}>
         <div className="login-loginInputEmail">
           <MdAttachEmail />
