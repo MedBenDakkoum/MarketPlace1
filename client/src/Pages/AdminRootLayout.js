@@ -2,15 +2,17 @@
 import React from 'react';
 import '../components/Dashboard/Dashboard.css';
 import { useState, useEffect } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet,useNavigate } from 'react-router-dom';
 import AdminHeader from '../components/Dashboard/AdminHeader';
 import AdminSidebar from '../components/Dashboard/AdminSidebar';
 import AdminHome from '../components/Dashboard/AdminHome';
 import { getInfo } from '../services/userData';
 import Error404 from '../Pages/Error404';
 import { Spinner } from 'react-bootstrap';
+import Retour from '../components/Retour/Retour'
 
 const AdminRootLayout = () => {
+  const navigate = useNavigate();
   const [openSidebarToggle, setOpenSidebarToggle] = useState(false)
   const [adminData, setAdminData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -39,7 +41,7 @@ const AdminRootLayout = () => {
         <AdminSidebar openSidebarToggle={openSidebarToggle} OpenSidebar={OpenSidebar}/>
         <Outlet />
       </div>
-      : <Error404 />}
+      : <div onClick={navigate("/")}></div>}
       </>
         : <div className="spinner">
             <Spinner animation="border" />

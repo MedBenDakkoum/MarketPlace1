@@ -144,7 +144,7 @@ export async function getNotifications() {
     return response.data;
   } catch (error) {
     // Handle error
-    console.error("Error uploading image:", error);
+    console.error("Error getting notifications:", error);
     throw error;
   }
 }

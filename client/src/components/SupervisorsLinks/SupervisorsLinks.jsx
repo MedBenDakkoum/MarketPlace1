@@ -1,21 +1,29 @@
-import { useState,useEffect, React } from "react"
-import {CButton} from '@coreui/react'
+import { useState,useEffect, React } from "react";
+import {CButton} from '@coreui/react';
+import {checkSessions} from "../../services/settingsService";
+import { useNavigate } from 'react-router-dom';
 
 const MultiSelect = props => {
+  const navigate = useNavigate();
   const lang = localStorage.getItem("lang"); 
-  const [adminCookie,setAdminCookie]=useState(0);
-  const [employeeCookie,setEmployeeCookie]=useState(0);
+  const [adminCookie,setAdminCookie]=useState(false);
+  const [employeeCookie,setEmployeeCookie]=useState(false);
   useEffect(function(){
-    setAdminCookie(document.cookie.indexOf('ADMIN_SESSION='));
-    setEmployeeCookie(document.cookie.indexOf('EMPLOYEE_SESSION='));
+    async function init(){
+      await checkSessions().then(rslt=>{
+        setAdminCookie(rslt.aExists);
+        setEmployeeCookie(rslt.eExists);    
+      })
+    }
+    init()
   },[])
   return (
     <div style={{position:"fixed",bottom:"10px",right:"10px",display:"flex",gap:"10px",zIndex:"1"}}>
         {adminCookie? 
-            <CButton style={{fontSize:"14px"}}>Employee Dashboard</CButton>
+            <CButton onClick={(e)=>{navigate('/admin')}} style={{fontSize:"14px"}}>Admin Dashboard</CButton>
         : ""}
         {employeeCookie? 
-            <CButton style={{fontSize:"14px"}}>Admin Dashboard</CButton>
+            <CButton onClick={(e)=>{navigate('/employee')}} style={{fontSize:"14px"}}>Employee Dashboard</CButton>
         : ""}
     </div>
   )

@@ -46,6 +46,11 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: error.message })
     }
 })
+router.get('/check-sessions', (req, res) => {
+    const aCookie = req.cookies['ADMIN_SESSION'];
+    const eCookie = req.cookies['EMPLOYEE_SESSION'];
+    res.send({ aExists: aCookie? true : false,eExists:eCookie? true : false });
+});
 router.get('/email/:email', async (req, res) => {
     try {
         let emailAvail = await User.find({email: req.params.email}).exec()

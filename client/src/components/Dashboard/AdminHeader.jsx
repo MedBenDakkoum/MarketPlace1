@@ -4,7 +4,7 @@ import
  from 'react-icons/bs'
 import { useNavigate } from 'react-router-dom';
 import { getNotifications,setNotificationsToRead } from '../../services/adminService';
-
+import Retour from '../Retour/Retour'
 function AdminHeader({OpenSidebar}) {
   const navigate = useNavigate();
   const notDropMenu = useRef(null)
@@ -25,6 +25,8 @@ function AdminHeader({OpenSidebar}) {
           transition: "opacity 500ms"
         })
         }
+      }).catch((err)=>{
+        // do nothing
       })
     }
     init()
@@ -45,6 +47,7 @@ function AdminHeader({OpenSidebar}) {
   document.addEventListener('mousedown',closeOpenMenus)
   return (
     <header className='header'>
+        <Retour />
         <div className='menu-icon'>
             <BsJustify className='icon' onClick={OpenSidebar}/>
         </div>
@@ -67,7 +70,7 @@ function AdminHeader({OpenSidebar}) {
                 </div>  
               :""}
             </div>
-            <BsBoxArrowRight onClick={(e)=>{navigate("/admin/logout")}} style={{cursor:"pointer"}} className='icon'/>
+            <BsBoxArrowRight onClick={(e)=>{document.location.href= "/admin/logout"}} style={{cursor:"pointer"}} className='icon'/>
         </div>
     </header>
   )
