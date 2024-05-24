@@ -43,8 +43,13 @@ function MpSellers() {
             width: 100
           },
           {
-            label: 'Status',
+            label: 'Public',
             field: 'status',
+            width: 100
+          },
+          {
+            label: 'Suspended',
+            field: 'suspended',
             width: 100
           },
           {
@@ -76,6 +81,30 @@ function MpSellers() {
             Swal.fire({
                 icon: "success",
                 title: "Settings Updated",
+                showConfirmButton: false,
+                timer: 1500
+            });
+        })
+        .catch((e)=>{
+            setLoading(false);
+            Swal.fire({
+                icon: "error",
+                title: "Oops !",
+                text: e.message,
+            });
+        })
+    }
+    const handleSuspendedChange = async (c,e,id)=>{
+      setLoading(true);
+        await updateSeller(sellers[parseInt(id)]._id, {seller:{isSuspended:c}})
+        .then((rslt)=>{
+            let newSellers = [...sellers]
+            sellers[parseInt(id)].isSuspended=c;
+            setSellers(newSellers);
+            setLoading(false);
+            Swal.fire({
+                icon: "success",
+                title: "Data Updated",
                 showConfirmButton: false,
                 timer: 1500
             });
@@ -135,6 +164,7 @@ function MpSellers() {
         let rows1 = [...sellers];
         let i =0;
         rows1.map((element) => {
+            element.suspended  =(<Switch onChange={handleSuspendedChange} id={i} checked={element.isSuspended}/>);
             element.status  =(<Switch onChange={handleActiveChange} id={i} checked={element.isActive}/>);
             element.createdAt  = moment(element.createdAt).format('YYYY-MM-DD');
             element.verified  = element.isVerified? <p style={{color:"green"}}>Yes</p> : <p style={{color:"red"}}>No</p>;

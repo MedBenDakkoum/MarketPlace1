@@ -104,7 +104,7 @@ async function getProductsByStoreLink(storeLink) {
                         prods.forEach(async (p,i) => {
                             if(p.isActive){
                                 await initialProduct.findOne({_id: p.initialProduct}).then((e)=>{
-                                    newProds.push({img:e.images[0] || "",name:e.name,price:p.newPrice});
+                                    newProds.push({_id:p._id,img:e.images[0] || "",name:e.name,price:p.newPrice});
                                 })
                             }
                             if(i==prods.length-1) resolve1()

@@ -6,7 +6,9 @@ import LanguageSelector from '../LanguageSelector';
 import {CButton,CForm} from '@coreui/react'
 import styles from './Header.module.css';
 import { useNavigate } from 'react-router-dom';
+import Retour  from '../Retour/Retour';
 import {getCategories,getMostSold} from "../../services/publicData";
+
 function Header() {
     const { userData, setUserData } = useContext(Context);
     const lang = localStorage.getItem("lang");
@@ -160,6 +162,7 @@ function Header() {
                 </div>
             </div>
         </div>
+        <Retour/>
         </>
     )
 }

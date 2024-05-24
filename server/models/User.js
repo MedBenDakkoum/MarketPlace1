@@ -121,6 +121,10 @@ const userSchema = new mongoose.Schema({
     nbrNotPassedToSupplier:{
         type:Number,
         default:0
+    },
+    nbrNotPassedToSeller:{
+        type:Number,
+        default:0
     }
 },{timestamps:true});
 

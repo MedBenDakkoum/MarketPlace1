@@ -1,0 +1,11 @@
+.go-back-container{
+    margin: 10px 8%;
+}
+
+.go-back-button{
+    padding: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}

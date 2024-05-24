@@ -2,6 +2,7 @@ import React,{useState,useEffect} from "react";
 import { useParams,useNavigate, useNavigationType } from "react-router-dom";
 import {getStoreByLink} from "../services/storeData"
 const Store = () => {
+  const lang = localStorage.getItem("lang");
   const [storeAvailable,setStoreAvailable] = useState(false);
   const [data,setData] = useState({
     info: {
@@ -58,6 +59,7 @@ const [storeProds,setStoreProds] = useState([])
       {storeAvailable?  <>
       <div className="store-header">
         <div className="store-banner">
+          <div className="store-banner-shadow-overlay"></div>
           <img src={data.info.banner} alt="" />
         </div>
         <div className="store-info">
@@ -69,7 +71,15 @@ const [storeProds,setStoreProds] = useState([])
         </div>
       </div>
       <div className="store-products">
-        {storeProds}
+        {data?.products?.map(prod=>(
+          <div onClick={(e)=>{navigate("/products/"+prod._id)}} className="store-single-prod">
+            <img src={prod?.img} alt="" />
+            <div className="store-single-prod-info">
+              <h4>{prod?.name[lang]}</h4>
+              <span>{prod?.price?.toFixed(2)} TND</span>
+              </div>
+          </div>
+        ))}
       </div> </>
       : <h1>Store not found</h1> }
     </main>

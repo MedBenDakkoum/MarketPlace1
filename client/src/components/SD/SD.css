@@ -178,16 +178,22 @@
 .store-banner{
     width: 100%;
     height: 100%;
-    box-shadow: inset 0 0 0 1000px rgba(11, 20, 77, 0.548);
-    background-image: url("https://static.vecteezy.com/system/resources/thumbnails/004/299/835/small/online-shopping-on-phone-buy-sell-business-digital-web-banner-application-money-advertising-payment-ecommerce-illustration-search-free-vector.jpg");
-    background-size: contain;
-    background-repeat: no-repeat;
     position: relative;
-    z-index: -1;
+    background-color: #263043;
+    z-index: 9;
 }
 .store-banner img{
     width: 100%;
-    visibility: hidden;
+    z-index: 8;
+    object-fit: cover;    
+}
+.store-banner-shadow-overlay{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #000d31;
+    opacity: 0.6;
+    z-index: 9;
 }
 .store-info img{
     height: 50%;
@@ -215,19 +221,38 @@
 }
 .store-products{
     display: grid;
-    grid-template-columns: auto auto auto;
-    width: 100%;
-    padding: 50px;
+    grid-template-columns: auto auto auto auto;
+    gap: 20px;
+    margin: 30px 8%;
     position: relative;
 }
-.single-store-product{
+.store-single-prod{
     width: 100%;
     padding: 20px;
-    /* border: 1px solid black; */
     color: white;
+    background-color: white;
+    border: 1px solid #DEE2E7;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: #1c1c1c;
+    cursor: pointer;
 }
-.single-store-product img{
-    width: 100%;
+.store-single-prod-info{
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.store-single-prod-info h4{
+    font-size: 20px;
+}
+.store-single-prod img{
+    border-radius: 10px;
+    object-fit: contain;
+    width: 300px;
+    max-width: 100%;
 }
 .addprod-pop-container{
     position: fixed;
