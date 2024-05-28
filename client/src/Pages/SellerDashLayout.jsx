@@ -3,7 +3,6 @@ import '../components/SD/SD.css'
 import React,{useEffect,useContext} from 'react';
 import { Outlet } from 'react-router-dom';
 import SDSideBar from '../components/SD/SDSideBar'
-import CDNavBar from '../components/CD/CDNavBar'
 import { Context } from '../ContextStore';
 import Error404 from './Error404';
 import Swal from 'sweetalert2';
@@ -11,7 +10,6 @@ import { useNavigate } from "react-router-dom";
 
 const SellerDashLayout = () => {
   const navigate = useNavigate();
-
   const { userData, setUserData } = useContext(Context);
   useEffect(function(){
     if(userData){

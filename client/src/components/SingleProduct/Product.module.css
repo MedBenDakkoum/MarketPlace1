@@ -208,3 +208,38 @@
     cursor: pointer;
     color:red;
 }
+@media screen and (max-width: 992px) {
+    .single-product-info{
+        flex-direction: column;
+    }
+}
+@media screen and (max-width: 800px) {
+    .single-product-container{
+        flex-direction: column;
+    }
+    .single-product-add-to-cart{
+        width: 100%;
+        justify-content: end;
+    }
+}
+@media screen and (max-width: 600px) {
+    .single-product-container{
+        padding: 5px;
+        margin: 5px;
+    }
+    .single-product-add-to-cart{
+        margin: 0;
+    }
+    .single-product-reviews{
+        margin: 10px;
+    }
+}
+@media screen and (max-width: 500px) {
+    .images-navigation-viewer{
+        width: 100%;
+    }
+    .current-image{
+        width: 100%;
+        min-width: 0;
+    }
+}

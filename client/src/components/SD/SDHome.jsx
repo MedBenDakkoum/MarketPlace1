@@ -169,11 +169,11 @@ function SDHome() {
             <div className="analytics">
                 <div className="analytics-info sales">
                     <span>Sales</span>
-                    <p>{dashInfo.info.sales} TND</p> 
+                    <p>{dashInfo.info.sales.toFixed(2)} TND</p> 
                 </div>
                 <div className="analytics-info earnings">
                     <span>Earnings</span>
-                    <p>{dashInfo.info.earnings} TND</p> 
+                    <p>{dashInfo.info.earnings.toFixed(2)} TND</p> 
                 </div>
                 <div className="analytics-info earnings">
                     <span>Orders</span>
@@ -219,56 +219,52 @@ function SDHome() {
                     </ul>
                 </div>
             </div>
-                <CCol md={12}>
-                    <CCol md={12}>
+                <div className="sales-orders">
+                    <div >
                         Show statistics for last:
                         <CFormSelect onChange={handleChangeTime} name="time" value={chartTime}>
                                 <option value="week">Week</option>
                                 <option value="month">Month</option>
                                 <option value="year">Year</option>
                         </CFormSelect>
-                    </CCol>
-                    <CRow>
-                        <CCol md={6}>
+                    </div>
+                    <div className="charts-container">
+                        <div>
                             <label htmlFor="weekly-chart">
                                 Sales per time  
                             </label>
                             <LineChart
-                            name="weekly-chart"
-                            xAxis={[{ scaleType: 'point',
-                                data: chartData.sales.xData
-                            }]}
-                            series={[
-                                {
-                                data: chartData.sales.yData,
-                                },
-                            ]}
-                            width={500}
-                            height={300}
+                                name="weekly-chart"
+                                xAxis={[{ scaleType: 'point',
+                                    data: chartData.sales.xData
+                                }]}
+                                series={[
+                                    {
+                                    data: chartData.sales.yData,
+                                    },
+                                ]}
+                                className="weekly-linechart"
                             />                   
-                        </CCol>
-                    </CRow>
-                    <CRow>
-                        <CCol md={6}>
+                        </div>
+                        <div>
                         <label htmlFor="weekly-chart">
                                 Orders per time  
                             </label>
                             <LineChart
-                            name="weekly-chart"
-                            xAxis={[{ scaleType: 'point',
-                                data: chartData.sales.xData
-                            }]}
-                            series={[
-                                {
-                                data: chartData.sales.yData,
-                                },
-                            ]}
-                            width={500}
-                            height={300}
+                                name="weekly-chart"
+                                xAxis={[{ scaleType: 'point',
+                                    data: chartData.sales.xData
+                                }]}
+                                series={[
+                                    {
+                                    data: chartData.sales.yData,
+                                    },
+                                ]}
+                                className="weekly-linechart"
                             /> 
-                        </CCol>
-                    </CRow>
-                </CCol>
+                        </div>
+                    </div>
+                </div>
                 </>
                 :
                 <div className="spinner">

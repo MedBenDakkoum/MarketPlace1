@@ -353,6 +353,7 @@ tbody tr td{
   padding: 10px;
   border-radius: 10px;
   margin: 10px 0;
+  overflow-x: scroll;
 }
 .products-card h1{
   width: 100%;
@@ -449,6 +450,7 @@ tbody tr td{
   padding: 10px;
   border: 1px solid #DEE2E7;
   border-radius: 0 0 10px 10px;
+  overflow-x: scroll;
 }
 .gen-invoices-container{
   padding: 10px;
@@ -472,6 +474,7 @@ tbody tr td{
 .gen-invoice-dates{
   display: flex;
   gap: 20px;
+  flex-wrap: wrap;
 }
 .gen-invoice-status {
   font-size: 18px;
@@ -481,6 +484,7 @@ tbody tr td{
   flex-direction: column;
   gap: 20px;
 }
+
 .title-invoice {
   font-size: 22px;
   margin-bottom: 10px;
@@ -525,7 +529,6 @@ tbody tr td{
   transform: translate(-50%, 0);
   background-color: rgb(241, 241, 241);
   width: 100vw;
-  min-width: 400px;
   max-width: 800px;
   height: 100vh;
   }
@@ -540,7 +543,18 @@ tbody tr td{
 /* End Main  */
 
 /* Medium <= 992px */
-
+@media screen and (max-width: 1200px) {
+  .customer-card h1{
+    font-size: 18px;
+  }
+  .order-right{
+    flex-grow: 1;
+  }
+  .top-order-container{
+    width: 100%;
+    flex-direction: column-reverse
+  }
+}
 @media screen and (max-width: 992px) {
   .grid-container {
     grid-template-columns: 1fr;
@@ -574,6 +588,10 @@ tbody tr td{
   .charts {
     grid-template-columns: 1fr;
     margin-top: 30px;
+  }
+  .single-customer-detail p {
+    word-break: break-all;
+    font-size: 16px;
   }
 }
 

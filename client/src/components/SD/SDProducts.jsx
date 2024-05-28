@@ -1,8 +1,7 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate } from "react-router-dom";
 import { CButton} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill, BsEye, BsImage, BsEyeFill, BsPencilFill, BsXSquareFill, BsTrashFill, BsViewList } from "react-icons/bs";
+import { BsEyeFill, BsPencilFill, BsXSquareFill, BsTrashFill } from "react-icons/bs";
 import Switch from "react-switch";
 import { MDBDataTable } from 'mdbreact';
 import {getProducts,getInitialProducts,toggleActive,removeProduct} from "../../services/dashboardService"
@@ -295,6 +294,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
                     noBottomColumns={true}
                     style={{color:"white"}}
                     data={initialData}
+                    className="mdbdatatableclass"
                   />
                 </div>
                 }
@@ -314,6 +314,7 @@ const [initialProdRows,setInitialProdRows] = useState([]);
               noBottomColumns={true}
               style={{color:"white"}}
               data={data}
+              className="mdbdatatableclass"
             />
             </>
             : 

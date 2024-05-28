@@ -2,7 +2,6 @@
 import '../components/CD/CD.css'
 import React,{useContext} from 'react';
 import { Outlet } from 'react-router-dom';
-import SDSideBar from '../components/SD/SDSideBar'
 import CDNavBar from '../components/CD/CDNavBar'
 import { Context } from '../ContextStore';
 import Error404 from './Error404';

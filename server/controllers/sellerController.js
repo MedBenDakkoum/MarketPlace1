@@ -327,7 +327,6 @@ router.get('/transactions', async (req, res) => {
 })
 router.post('/transactions/request', async (req, res) => {
     try {
-        console.log(req.user);
         await transactionService.requestTransaction(req.user._id)
         .then((rslt)=>{
             res.status(200).json(rslt);
@@ -342,7 +341,6 @@ router.post('/transactions/request', async (req, res) => {
 })
 router.post('/subscribe', async (req, res) => {
     try {
-        console.log(req.user)
         await sellerService.subscribe(req.user._id).then((rslt)=>{
             res.status(200).json(rslt);
         }).catch((err)=>{

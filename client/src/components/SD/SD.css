@@ -64,6 +64,10 @@
 .sd-section-main table tbody tr td{
     color: white;
 }
+
+.mdbdatatableclass{
+    overflow-x: scroll;
+}
 .sd-section-main{
     color: white;
     padding: 20px;
@@ -128,6 +132,7 @@
 .sd-sections-nav{
     display: flex;
     gap: 50px;
+    overflow-x: scroll;
     /* justify-content: space-between; */
 }
 .single-sd-section{
@@ -165,6 +170,7 @@
     right: 10px;
     font-size: 30px;
     cursor: pointer;
+    z-index: 101;
     color: rgb(255, 69, 69);
 }
 .store-container{
@@ -263,13 +269,13 @@
     top: 0;
     left: 0;
     z-index: 10;
+    z-index: 9999999;
 }
 .addprod-pop-main{
     position: relative;
     width: 600px;
     height: 100%;
     background-color: #263043;
-    z-index: 9999;
     padding: 30px 10px;
     overflow-y: auto;
     overflow-x: hidden;
@@ -363,4 +369,118 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
+}
+.SDsidebarList{
+    position: absolute;
+    display: none;
+    z-index: 9999;
+    font-size: 40px;
+    font-weight: 900;
+    color: white;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.sales-orders{
+    display: flex;
+    flex-direction: column;
+}
+.weekly-linechart{
+    width:100px;
+    height: 100px;
+}
+.charts-container div{
+    width: 100%;
+    height: 400px;
+}
+.charts-container{
+    display: flex;
+}
+
+@media only screen and (max-width: 1100px) {
+    .seller-dash-layout{
+        padding: 40px 10px;
+        display: flex;
+        gap: 20px;
+    }
+}
+@media only screen and (max-width: 880px) {
+    .seller-dash-layout{
+        gap: 0;
+    }
+    .SDsidebar{
+        position: absolute;
+        z-index: 99999;
+        margin-top: 64px;
+        overflow: hidden;
+        max-width: 0;
+        transition: max-width 0.5s ease-out;
+    }
+    .SDsidebarList{
+        display: block;
+    }
+    .sd-section-title h1{
+        margin-left: 40px;
+    }
+    .charts-container div{
+        height: 300px;
+    }
+    .store-single-prod-info h4{
+        font-size: 16px;
+        font-weight: 400;
+    }
+}
+@media only screen and (max-width: 680px) {
+    .orders-prods{
+        flex-direction: column;
+        gap: 0;
+    }
+    .sd-section-main .analytics{
+        padding: 0;
+        justify-content: space-between;
+    }
+    .sd-section-main .analytics .analytics-info{
+        min-width: 0;
+        padding: 10px 30px;
+        font-size: 14px;
+    }
+    .sd-section-main .analytics .analytics-info span{
+        font-size: 20px;
+        font-weight: 600;
+    }
+    .charts-container div{
+        height: 250px;
+    }
+    .store-products{
+        grid-template-columns: auto auto;
+        gap: 10px;
+    }
+    .store-info{
+        padding-top: 10px;
+    }
+    .store-info img{
+        height: 120px;
+    }
+}
+@media only screen and (max-width: 530px) {
+    .charts-container{
+        display: flex;
+        flex-direction: column;
+    }
+    .info-prod-sell-now{
+        display: flex;
+        flex-direction: column;
+    }
+    .store-title-description h1{
+        font-size: 30px;
+    }
+    .store-title-description p{
+        font-size: 16px;
+    }
+    .store-header{
+        height: 200px;
+    }
+    .store-banner img{
+        height: 100%;
+    }
 }

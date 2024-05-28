@@ -1,10 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
+import { CForm,CCol,CFormInput,CFormTextarea} from '@coreui/react';
 import {getSellerById} from '../../../services/employeeService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
 
 
 function EDSellerAddress() {

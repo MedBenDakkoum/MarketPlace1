@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react';
+import React,{useState} from 'react';
 import styles from "./Product.module.css"
 function ImagesViewer({ imgs=[""] }) {
     const [currentImg, setCurrentImg] = useState(imgs[0]);

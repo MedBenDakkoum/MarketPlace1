@@ -179,6 +179,7 @@ function SDOrders() {
                 noBottomColumns={true}
                 style={{color:"white"}}
                 data={data}
+                className="mdbdatatableclass"
               />
           </div>
       </main>

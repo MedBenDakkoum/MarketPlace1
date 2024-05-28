@@ -135,7 +135,8 @@ async function getDashboardHome(sellerId) {
         Cancelled: 0,
         Refunded: 0,
     }
-    let orders = await Order.find({sellerId:sellerId});
+    let idStore = await getSellerStoreById(sellerId);
+    let orders = await Order.find({"products.storeId":idStore});
     let products = await Product.find({seller:sellerId});
     let t =0;
     let sales = 0;
@@ -145,19 +146,19 @@ async function getDashboardHome(sellerId) {
         sales=sales+element.totalPrice;
         earnings=earnings+element.sellerEarnings;
         switch(element.status){
-            case "Pending":
+            case "PENDING":
                 orderCount.Pending++;
                 break;
-            case "Completed":
+            case "COMPLETED":
                 orderCount.Completed++;
                 break;
-            case "Processing":
+            case "PROCESSING":
                 orderCount.Processing++;
                 break;
-            case "Cancelled":
+            case "CANCELED":
                 orderCount.Cancelled++;
                 break;
-            case "Refunded":
+            case "REFUNDED":
                 orderCount.Refunded++;
                 break;
             default:
@@ -165,6 +166,7 @@ async function getDashboardHome(sellerId) {
         }
     });
     orderCount.Total=t;
+    console.log(orderCount);
     let pt=0;
     let productCount = {
       Live: 0,
@@ -172,7 +174,6 @@ async function getDashboardHome(sellerId) {
   }
     products.forEach((element) => {
         pt++;
-        console.log(element);
         if(element.isActive){
           productCount.Live++;
         }else{

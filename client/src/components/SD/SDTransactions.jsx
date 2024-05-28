@@ -1,8 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
-import { useNavigate } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow,CButton} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import { CButton} from '@coreui/react';
 import { MDBDataTable } from 'mdbreact';
 import Swal from 'sweetalert2';
 import {getTransactions,requestTransaction} from "../../services/dashboardService"
@@ -91,6 +88,7 @@ function SDTransactions() {
                 noBottomColumns={true}
                 style={{color:"white"}}
                 data={data}
+                className="mdbdatatableclass"
               />
           </div>
       </main>

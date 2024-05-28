@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody,CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
+import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody,CForm,CCol,CButton} from '@coreui/react';
 import Switch from "react-switch";
 import { useNavigate } from 'react-router-dom';
 const products = [

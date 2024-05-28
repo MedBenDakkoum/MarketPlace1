@@ -1,14 +1,10 @@
 import React, {useEffect,useState} from 'react';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import Switch from "react-switch";
+import { CForm,CCol} from '@coreui/react';
 import {getAllLayouts} from '../../../services/publicData'
 import {selectNewRecommandedProduct} from '../../../services/adminService'
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
 import { styled } from '@mui/material/styles';
-import Button from '@mui/material/Button';
-import CloudUploadIcon from '@mui/icons-material/CloudUpload';
-import CustomSlider from "../../Home/customer.slider";
 import ProductSelector from "./ProductSelector";
 
 const VisuallyHiddenInput = styled('input')({

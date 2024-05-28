@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import {MpProductEditInfo} from './MpProductEdit/MpProductEditInfo';
 import {MpProductEditImages} from './MpProductEdit/MpProductEditImages';
 import {MpProductEditSellers} from './MpProductEdit/MpProductEditSellers';

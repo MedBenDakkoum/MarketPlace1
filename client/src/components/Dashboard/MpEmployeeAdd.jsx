@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
+import { CForm,CCol,CFormInput,CButton} from '@coreui/react';
 import {addEmployee} from '../../services/adminService'
 import Swal from 'sweetalert2';
 

@@ -1,8 +1,5 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate,useParams } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import { MDBDataTable } from 'mdbreact';
 import {getProductAttributes} from "../../../services/dashboardService"
 

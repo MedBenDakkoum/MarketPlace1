@@ -1,7 +1,6 @@
-import React,{useState,useEffect,useContext} from "react";
+import React,{useState,useEffect,useContext,useRef} from "react";
 
 import {
-  BsCart3,
   BsGrid1X2Fill,
   BsBox2Fill,
   BsBagCheckFill,
@@ -12,6 +11,7 @@ import {
   BsFillJournalBookmarkFill,
   BsGlobe,
   BsWallet2,
+  BsList,
 } from "react-icons/bs";
 import { useNavigate ,useLocation} from "react-router-dom";
 import { useTranslation } from 'react-i18next'
@@ -22,10 +22,11 @@ import {getSettings} from '../../services/settingsService.js'
 function SDSidebar() {
     const navigate= useNavigate();
     const {pathname} = useLocation();
+    const sideBarMenu = useRef(null);
     const { t } = useTranslation();
     const [settings, setSettings] = useState({});
     const { userData } = useContext(Context);
-
+    const [styleSideBar,setStyleSideBar] = useState({})
     useEffect(function(){
         async function initData(){
             await getSettings().then((s)=>{
@@ -34,8 +35,20 @@ function SDSidebar() {
         }
         initData()
   },[])
+  const toggleSideBar = ()=>{
+    setStyleSideBar({maxWidth:"500px"});
+  }
+  const closeOpenMenus = (e)=>{
+    if(styleSideBar.maxWidth=="500px" && !sideBarMenu.current?.contains(e.target)){
+        setStyleSideBar({maxWidth:"0"})
+    }
+  }
+  document.addEventListener('mousedown',closeOpenMenus)
+
   return (
-    <aside className="SDsidebar">
+    <>
+    <BsList onClick={toggleSideBar} className="SDsidebarList"></BsList>
+    <aside style={styleSideBar} ref={sideBarMenu} className="SDsidebar">
       <div className="SDsidebar-title">
         <div className="SDsidebar-brand">
           <BsWallet2 className="icon" /> {userData?.balance} TND
@@ -80,18 +93,9 @@ function SDSidebar() {
                     <BsArrowDownUp className='icon'/> {t("sd_sidebar.Transactions")}
                 </a>
             </li>
-            <li style={{cursor:"pointer"}} onClick={(e)=>{navigate('/dashboard/payment')}} className={(pathname === '/dashboard/payment') ? 'SDsidebar-list-item active' : 'SDsidebar-list-item'}>
-                <a style={{color:"white",opacity:"0.8"}}>
-                    <BsCreditCardFill className='icon'/> {t("sd_sidebar.Payment")}
-                </a>
-            </li>
-            <li style={{cursor:"pointer"}} onClick={(e)=>{navigate('/dashboard/subscription')}} className={(pathname === '/dashboard/subscription') ? 'SDsidebar-list-item active' : 'SDsidebar-list-item'}>
-                <a style={{color:"white",opacity:"0.8"}}>
-                    <BsFillJournalBookmarkFill className='icon'/> {t("sd_sidebar.Subscription")}
-                </a>
-            </li>
         </ul>
     </aside>
+    </>
   );
 }
 

@@ -1,13 +1,10 @@
 import "bootstrap/dist/css/bootstrap.min.css";
 import './App.css';
 import {
-  BrowserRouter,
   Routes,
   Route,
-  Link,
   useNavigate,
 } from "react-router-dom";
-import Categories from "./Pages/Categories";
 import Home from "./Pages/Home";
 import Error404 from "./Pages/Error404";
 import RootLayout from "./Pages/RootLayout";
@@ -66,7 +63,6 @@ import SDTransactions from './components/SD/SDTransactions'
 import SDPayment from './components/SD/SDPayment'
 import SDSubscription from "./components/SD/SDSubscription";
 import SDSingleProduct from "./components/SD/SDSingleProduct";
-import SellerProfile from "./components/Profile/SellerProfile"
 import AddSeller from "./components/Dashboard/AddSeller"
 import SingleProduct from "./components/SingleProduct/SingleProduct"
 import Cart from "./Pages/Cart"
@@ -104,7 +100,6 @@ export default function App() {
           <Route index element={<CDProfile />} />
           <Route path="orders" element={<CDOrders />} />
         </Route>
-        <Route path="/seller/:id" element={<SellerProfile />}/>
         <Route path="/products/:id" element={<SingleProduct/>}/>
         <Route path="/cart" element={<Cart/>}/>
         <Route path="/search" element={<Search/>}/>

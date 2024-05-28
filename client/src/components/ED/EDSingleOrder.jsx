@@ -78,23 +78,6 @@ function EDSingleOrder() {
     ));
     setRows(rows1);
   },[order,setOrder])
-  const handleChangeStatusDocs = (e) => {
-    setInter(e.target.getAttribute("name"));
-    setClasses({
-      status: "",
-      docs: "",
-      [e.target.getAttribute("name")]: "active-bar",
-    });
-  };
-  const handleDownloadInvoice = (e) => {
-    if(order.invoiceUrl){
-      window.open(order.invoiceUrl, "_blank")
-    };
-  };
-  const handleChangeStatus = async (e)=>{
-    e.preventDefault();
-    setOrder({...order,info:{...order.info,status:e.target.value}});
-  }
   const handleChangeAddMessage = async (e)=>{
     e.preventDefault();
     setMsgToAdd({...msgToAdd,[e.target.name]:e.target.value});
@@ -186,7 +169,7 @@ function EDSingleOrder() {
               </div>
               <div className="single-customer-detail">
                 <label htmlFor="customer-totalSpent">Total spent:</label>
-                <p name="customer-totalSpent">{order?.customer?.totalSpent} TND</p>
+                <p name="customer-totalSpent">{order?.customer?.totalSpent.toFixed(2)} TND</p>
               </div>
             </div>
           </div>

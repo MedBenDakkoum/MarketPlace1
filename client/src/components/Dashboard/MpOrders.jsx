@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from 'react'
-import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
 import {getSellersOrders} from '../../services/adminService';
@@ -68,6 +67,7 @@ function MpOrders() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
     

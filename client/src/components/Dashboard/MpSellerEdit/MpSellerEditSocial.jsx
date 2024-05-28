@@ -1,10 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
+import { CForm,CCol,CFormInput,CButton} from '@coreui/react';
 import {updateSeller,getSellerById} from '../../../services/adminService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
 
 
 function MpSellerEditSocial() {

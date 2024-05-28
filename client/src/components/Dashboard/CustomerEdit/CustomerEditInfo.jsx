@@ -1,6 +1,6 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
+import { CForm,CCol,CFormInput,CFormSelect,CButton} from '@coreui/react';
 import {updateCustomer,getCustomerById} from '../../../services/adminService'
 import Switch from "react-switch";
 import Swal from 'sweetalert2';

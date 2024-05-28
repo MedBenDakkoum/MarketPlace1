@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import i18n from '../i18n';
-import Flag from 'react-world-flags'
 
 const LanguageSelector = () => {
     

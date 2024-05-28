@@ -2,8 +2,7 @@ import { useState, useContext } from 'react';
 import { Context } from '../ContextStore';
 import { loginUser } from '../services/userData'
 import { Form, Button, Spinner, Alert } from 'react-bootstrap';
-import { Link, Navigate } from 'react-router-dom';
-import SimpleSider from '../components/Siders/SimpleSider';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 function Login({navigate}) {

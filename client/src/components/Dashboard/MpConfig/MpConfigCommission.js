@@ -1,5 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
+import { CForm,CCol,CFormInput,CFormSelect,CButton} from '@coreui/react';
 import {getSettings,updateSettings} from '../../../services/settingsService.js'
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';

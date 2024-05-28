@@ -1,12 +1,8 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow} from '@coreui/react';
-import { BsCardList, BsCart, BsCartCheckFill, BsCartFill, BsCloudMoon, BsColumns, BsImageFill, BsImages, BsInfoSquareFill, BsList, BsListColumns, BsOption, BsStar, BsStarFill } from "react-icons/bs";
 import SDProductAttributes from "./SDProduct/SDProductAttributes";
 import SDProductImages from "./SDProduct/SDProductImages";
 import SDProductInfo from "./SDProduct/SDProductInfo";
-import SDProductOptions from "./SDProduct/SDProductOptions";
 import SDProductSEO from "./SDProduct/SDProductSEO";
 import SDProductPrice from "./SDProduct/SDProductPrice";
 
@@ -19,7 +15,6 @@ function SDSingleProduct() {
         images:"single-sd-section",
         attributes:"single-sd-section",
         SEO:"single-sd-section",
-        options:"single-sd-section"
     });
     useEffect(function(e){
         
@@ -33,7 +28,6 @@ function SDSingleProduct() {
             images:"single-sd-section",
             attributes:"single-sd-section",
             SEO:"single-sd-section",
-            options:"single-sd-section",
             [e.target.getAttribute("name")]:"single-sd-section active"
         });
     }
@@ -60,9 +54,6 @@ function SDSingleProduct() {
                 <div name="SEO" onClick={handleChangeInter} className={classes.SEO}>
                     SEO
                 </div>
-                <div name="options" onClick={handleChangeInter} className={classes.options}>
-                    Options
-                </div>
             </div>
             {
                 inter=="info"?
@@ -75,8 +66,6 @@ function SDSingleProduct() {
                     <SDProductAttributes/>
                 : inter=="SEO"?
                     <SDProductSEO/>
-                : inter=="options"?
-                    <SDProductOptions/>
                 : <h1>Error 404</h1>
             }
           </div>

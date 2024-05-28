@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from 'react';
+import React, {useState} from 'react';
 import {CustomerEditInfo} from './CustomerEditInfo';
 import {CustomerEditAddress} from './CustomerEditAddress';
 import {CustomerEditImages} from './CustomerEditImages';

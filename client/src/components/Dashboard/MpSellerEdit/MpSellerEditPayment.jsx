@@ -1,10 +1,7 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
+import { CForm,CCol,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
 import {updateSeller,getSellerById} from '../../../services/adminService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
 import {getSettings} from "../../../services/settingsService"
 
 function MpSellerEditPayment() {

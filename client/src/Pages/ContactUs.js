@@ -10,7 +10,7 @@ const ContactUs = () => {
         init()
     },[])
   return (
-    <div className='contactForm' style={{display:"flex",gap:"10px",margin:"20px 8%"}}>
+    <div className='contactForm'>
         <div style={{flexGrow:1,flexBasis:0,display:"flex",flexDirection:"column",alignItems:"center",gap:"20px",borderRadius:"15px",border:"1px solid #DEE2E7",backgroundColor:"white",padding:"20px"}} className='single-contact-field'>
           <img style={{maxWidth:"100px",border:"1px solid #0D6EFD",borderRadius:"50px",padding:"20px"}} src="https://icons.veryicon.com/png/o/miscellaneous/monochrome-linear-icon-library/address-90.png"/>
           <h4>Our Address</h4>

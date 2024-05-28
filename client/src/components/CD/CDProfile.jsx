@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from "react";
-import { useNavigate } from "react-router-dom";
 import { CForm,CCol,CFormInput,CButton,CRow,CFormSelect} from '@coreui/react';
 import {uploadImage}  from '../../services/dashboardService';
 import {getUserProfile,editUserProfile} from '../../services/userData'

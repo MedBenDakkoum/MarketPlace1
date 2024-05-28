@@ -1,10 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea, CRow} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller,getSellerById} from '../../../services/adminService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
+import { CForm,CCol,CFormSelect,CRow} from '@coreui/react';
 import {LineChart,PieChart} from '@mui/x-charts';
 
 

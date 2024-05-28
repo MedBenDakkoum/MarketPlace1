@@ -1,5 +1,5 @@
 import React,{useState,useEffect} from "react";
-import { useParams,useNavigate, useNavigationType } from "react-router-dom";
+import { useParams,useNavigate } from "react-router-dom";
 import {getStoreByLink} from "../services/storeData"
 const Store = () => {
   const lang = localStorage.getItem("lang");

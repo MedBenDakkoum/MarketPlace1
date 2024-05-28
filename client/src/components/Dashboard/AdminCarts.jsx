@@ -1,5 +1,4 @@
 import React,{useState,useEffect} from 'react'
-import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
 import { MDBDataTable } from 'mdbreact';
 import {getCarts} from '../../services/adminService';
@@ -79,6 +78,7 @@ function AdminCarts() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
   )

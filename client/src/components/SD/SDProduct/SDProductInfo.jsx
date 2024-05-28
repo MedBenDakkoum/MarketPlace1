@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate,useParams } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow,CFormInput,CButton, CFormTextarea} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import { CForm,CCol,CRow,CFormInput, CFormTextarea} from '@coreui/react';
 import {getInitialProdData} from "../../../services/dashboardService"
 
 function SDProductInfo() {

@@ -38,3 +38,34 @@ body{
     margin: 0;
     padding: 0;
 }
+.contactForm{
+    display:flex;
+    gap:10px;
+    margin:20px 8%
+}
+@media only screen and (max-width: 920px) {
+    .home-recommended-items-container{
+      margin: 0;
+      padding: 5px;
+      width: 100%;
+    }
+}
+@media only screen and (max-width: 770px) {
+    .home-recommended-items{
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 15px;
+    }
+}
+@media only screen and (max-width: 550px) {
+    .home-recommended-items{
+        width: 100%;
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+    .contactForm{
+        flex-direction: column;
+    }
+}

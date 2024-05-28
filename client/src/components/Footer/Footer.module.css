@@ -87,3 +87,32 @@ footer {
     color: #1C1C1C;
     opacity: 0.5;
 }
+@media only screen and (max-width: 770px) {
+    .footer-top{
+        width: 100%;
+        margin: 0;
+        padding: 10px;
+        gap: 10px;
+    }
+}
+@media only screen and (max-width: 600px) {
+    .footer-top{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    .footer-links{
+        justify-content: center;
+        align-items: center;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .footer-links h1{
+        font-size: 16px;
+    }
+    .footer-links li ul{
+        font-size: 14px;
+    }
+}

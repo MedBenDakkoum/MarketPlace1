@@ -6,7 +6,6 @@ import { Outlet,useNavigate } from 'react-router-dom';
 import EDHeader from '../components/ED/EDHeader';
 import EDSidebar from '../components/ED/EDSidebar';
 import { getEmployee } from '../services/userData';
-import Error404 from '../Pages/Error404';
 import { Spinner } from 'react-bootstrap';
 
 const EDRootLayout = () => {

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 import Switch from "react-switch";
 import { MDBDataTable } from 'mdbreact';
 import { useNavigate } from "react-router-dom";
@@ -60,6 +59,7 @@ function MpProductSingles() {
         noBottomColumns={true}
         style={{color:"white"}}
         data={data}
+        className='mdbdatatableclass'
         />
   )
 }

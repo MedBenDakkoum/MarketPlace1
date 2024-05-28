@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate } from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill, BsEnvelope, BsFillTelephoneFill, BsMailbox, BsPhone, BsXCircleFill } from "react-icons/bs";
+import { BsEnvelope, BsFillTelephoneFill,BsXCircleFill } from "react-icons/bs";
 import {getUserById} from '../../services/userData';
 
 function SDClientCard({active,handleCloseClientCard, setActive, clientId}) {

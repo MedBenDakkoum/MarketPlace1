@@ -1,7 +1,6 @@
 import React,{useState,useEffect} from 'react'
 import {CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody,CForm,CCol,CFormSelect,CFormInput} from '@coreui/react';
 import "react-datepicker/dist/react-datepicker.css";
-import DatePicker from "react-datepicker";
 import { CButton } from '@coreui/react';
 import Switch from 'react-switch';
 import { useParams } from 'react-router-dom';

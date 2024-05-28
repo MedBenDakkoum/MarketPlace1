@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import Switch from "react-switch";
+import { CForm,CCol,CRow,CFormInput,CButton} from '@coreui/react';
 import {getAllLayouts} from '../../../services/publicData'
 import {uploadImage,updateTopBannerImages} from '../../../services/adminService'
 import { ThreeDots } from 'react-loader-spinner'

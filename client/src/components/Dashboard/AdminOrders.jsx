@@ -69,6 +69,7 @@ function AdminOrders() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
             />
     </main>
   )

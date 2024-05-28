@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
+import {CButton} from '@coreui/react';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
@@ -7,7 +7,7 @@ import { updateSeller,getSellers ,removeSeller} from '../../services/adminServic
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
 import { MDBDataTable } from 'mdbreact';
-import { BsEyeFill, BsPencilFill,BsTrashFill} from "react-icons/bs";
+import {  BsPencilFill,BsTrashFill} from "react-icons/bs";
 
 function MpSellers() {
     const navigate = useNavigate();
@@ -172,7 +172,6 @@ function MpSellers() {
               <div className="prods-actions">
                 <BsPencilFill onClick={(e)=>{navigate('/admin/mp/sellers/'+element._id)}}/>
                 <BsTrashFill id={element._id} onClick={handleDeleteSeller}/>
-                <BsEyeFill onClick={(e)=>{navigate('/seller/'+element._id)}}/>
               </div>
             )
             i++;
@@ -200,6 +199,7 @@ function MpSellers() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
   )

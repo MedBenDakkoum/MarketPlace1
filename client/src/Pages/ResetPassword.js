@@ -1,10 +1,7 @@
 import { useState, useContext } from 'react';
 import { Context } from '../ContextStore';
 import { doPasswordReset } from '../services/userData'
-import { CForm,CCol,CFormInput,CFormLabel,CFormText,CFormSelect, CRow, CButton} from '@coreui/react';
-import { Link, Navigate } from 'react-router-dom';
-import SimpleSider from '../components/Siders/SimpleSider';
-import { ThreeDots } from 'react-loader-spinner'
+import { CForm,CCol,CFormInput,CFormLabel,CRow, CButton} from '@coreui/react';
 import Swal from 'sweetalert2';
 import {useParams} from 'react-router-dom';
 import { useNavigate} from "react-router-dom";

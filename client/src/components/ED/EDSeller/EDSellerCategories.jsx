@@ -1,11 +1,10 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
-import {updateSeller,getCategories,getSellerById} from '../../../services/employeeService'
+import { CForm,CCol} from '@coreui/react';
+import {getCategories,getSellerById} from '../../../services/employeeService'
 import CheckboxTree from 'react-checkbox-tree';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import 'react-checkbox-tree/lib/react-checkbox-tree.css';
-import {BsCheckSquare, BsChevronDown, BsChevronRight, BsFileEarmark, BsFileEarmarkFill, BsFillFileMinusFill, BsFillFolderFill, BsFillPlusSquareFill, BsFolder, BsFolder2Open, BsFolderFill, BsSquare} from 'react-icons/bs';
+import {BsCheckSquare, BsChevronDown, BsChevronRight, BsFileEarmarkFill, BsFillFileMinusFill, BsFillPlusSquareFill, BsFolder2Open, BsFolderFill, BsSquare} from 'react-icons/bs';
 
 function EDSellerCategories() {
     const lang = localStorage.getItem("lang");

@@ -184,45 +184,8 @@ const Store = () => {
       setAlert({msg:"Please select a payment method!",type:"fail",refresh:!alert.refresh})
     }
   }
-  const handleChangePaymentMethod = (e)=>{
-    e.target.checked=true;
-    setPaymentMethod(e.target.value);
-  }
+
   useEffect(function(){
-  //   let newRows =[...data]
-  //       newRows.map(async (item)=>{
-  //           let pInfo = item.info;
-  //           item.item = (
-  //               <div className="item-cart-info">
-  //                   <img src={pInfo.img} className="cart-item-img"/>
-  //                   <div className="item-info">
-  //                       <h3>
-  //                         {pInfo.name[lang]}
-  //                       </h3>
-  //                       <ul>
-  //                         {
-  //                           item.attributes!==undefined?
-  //                           Object.keys(item.attributes).map((e)=>(
-  //                             <li key={e}>{e} : {item.attributes[e]}</li>
-  //                           ))
-  //                           : ""
-  //                         }
-  //                       </ul>
-  //                   </div>
-  //               </div>
-  //           )
-  //           let prodPrice = pInfo.price;
-  //           item.price = (
-  //               prodPrice+" TND"
-  //           )
-  //           item.total = (
-  //               prodPrice*item.quantity+" TND"
-  //           )
-  //           item.delete = (
-  //               <BsTrash onClick={handleDeleteFromCart} id={item.itemId} style={{fontSize:"25px",cursor:"pointer"}}/>
-  //           )
-  //       })
-  //     setDataRows([...newRows])
       getTotal().then((total)=>{
         setSubTotalPrice(parseFloat(total).toFixed(2));
         setTotalPrice((parseFloat(total)+7).toFixed(2))
@@ -236,7 +199,6 @@ const Store = () => {
                 {confirmOrder?
           <div className={styles["confirm-order-container"]}>
             <div className={styles["confirm-order"]}>
-            {/* <div className="cart-total-data-container"> */}
             <div className={styles["cart-total-data"]}>
                 <div className={styles["exit-check-out"]}>
                   <BsXSquareFill onClick={handleExitChekout} style={{color:"#FA3434",fontSize:"24px",cursor:"pointer"}}/>
@@ -252,7 +214,6 @@ const Store = () => {
                     <a onClick={(e)=>{navigate("/cd")}} style={{color:"#007bff",cursor:"pointer"}}>Change address</a>
                 </div>
                 <CButton type="button" onClick={handleBuyNow}>Buy Now</CButton>
-            {/* </div> */}
                </div>
             </div>
           </div> 
@@ -281,7 +242,7 @@ const Store = () => {
                   </div>
                 </div>
                 <div className={styles["item-price-quantity"]}>
-                    <h5>{item?.info?.price} TND</h5>
+                    <h5>{item?.info?.price.toFixed(2)} TND</h5>
                     <p><span>Quantity</span> <span>{item.quantity}</span></p>
                 </div>
               </div>

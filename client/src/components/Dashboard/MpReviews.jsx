@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
-import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
-import Switch from "react-switch"
 import { getReviewsProducts } from '../../services/adminService';
 import { ThreeDots } from 'react-loader-spinner'
-import Swal from 'sweetalert2';
 import { MDBDataTable } from 'mdbreact';
 
 function MpReviews() {
@@ -72,6 +68,7 @@ function MpReviews() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
   )

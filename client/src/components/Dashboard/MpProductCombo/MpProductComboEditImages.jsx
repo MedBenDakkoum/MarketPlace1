@@ -1,10 +1,6 @@
 import React, {useEffect,useState} from 'react';
-import {useParams} from 'react-router-dom';
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody,CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller,getSellerById} from '../../../services/adminService'
 import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
 
 const images = [
     {

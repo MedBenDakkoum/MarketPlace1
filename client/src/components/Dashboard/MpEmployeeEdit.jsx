@@ -1,9 +1,6 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import { Multiselect } from "multiselect-react-dropdown";
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
+import { CForm,CCol,CFormInput,CButton} from '@coreui/react';
 import { getEmployeeById,updateEmployee } from '../../services/adminService';
 import Swal from 'sweetalert2';
 

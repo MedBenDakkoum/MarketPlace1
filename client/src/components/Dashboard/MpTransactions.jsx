@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
-import moment from 'moment';
+import {CButton} from '@coreui/react';
 import { useNavigate } from 'react-router-dom';
-import Switch from "react-switch"
 import { getTransactions,confirmWithdrawl } from '../../services/adminService';
 import { ThreeDots } from 'react-loader-spinner'
 import Swal from 'sweetalert2';
@@ -205,6 +203,7 @@ function MpTransactions() {
                   noBottomColumns={true}
                   style={{color:"black"}}
                   data={data2}
+                  className='mdbdatatableclass'
                 />
             </div>
           </div>
@@ -219,6 +218,7 @@ function MpTransactions() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
   )

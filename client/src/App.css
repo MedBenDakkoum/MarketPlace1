@@ -26,3 +26,6 @@ a:hover {
     justify-content: center;
     padding: 40px;
 }
+.mdbdatatableclass{
+    overflow-x: scroll;
+}

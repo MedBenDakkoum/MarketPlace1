@@ -267,3 +267,21 @@
     opacity: 0.6;
     text-align: center;
 }
+@media only screen and (max-width: 900px) {
+    .cart-container{
+        flex-direction: column;
+    }
+    .single-cart-item img{
+        width: 80px;
+        object-fit: cover;
+    }
+}
+@media only screen and (max-width: 510px) {
+    .cart-container{
+        margin: 5px;
+        gap: 0;
+    }
+    .item-price-quantity p{
+        min-width: 100px;
+    }
+}

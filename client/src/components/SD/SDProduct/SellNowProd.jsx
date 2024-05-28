@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import { CForm,CCol,CFormSelect,CFormInput,CButton,CRow} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
 import {getInitProductById} from '../../../services/productData'
 import {addProduct} from '../../../services/dashboardService'
 import { ThreeDots } from 'react-loader-spinner'

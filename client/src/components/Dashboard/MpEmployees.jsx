@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import {CButton, CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
+import {CButton} from '@coreui/react';
 import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import Switch from "react-switch"
@@ -158,6 +158,7 @@ function MpEmployees() {
             noBottomColumns={true}
             style={{color:"white"}}
             data={data}
+            className='mdbdatatableclass'
         />
     </main>
   )

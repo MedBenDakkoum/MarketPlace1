@@ -1,8 +1,6 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate ,useParams} from "react-router-dom";
-import { CForm,CCol,CFormSelect,CRow,CFormInput,CButton, CFormTextarea} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill } from "react-icons/bs";
+import { CForm,CCol,CFormSelect,CRow,CFormInput,CButton} from '@coreui/react';
 import {getProductPrice,changeProductPrice} from "../../../services/dashboardService";
 import { Spinner } from 'react-bootstrap';
 import Alert from '../../Alert/Alert';

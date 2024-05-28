@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import { useNavigate } from "react-router-dom";
-import { CForm,CCol,CFormInput,CButton,CRow,CFormSelect} from '@coreui/react';
-import {getSellerProfile,uploadImage,updateProfile}  from '../../services/dashboardService';
+import { CForm,CCol,CFormInput,CButton,CRow} from '@coreui/react';
+import {getSellerProfile,updateProfile}  from '../../services/dashboardService';
 import { Spinner } from 'react-bootstrap';
 import Swal from 'sweetalert2';
 

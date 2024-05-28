@@ -77,6 +77,7 @@ async function registerUser(userData) {
                 "supplierUsername":userData.supplierUsername,
                 "supplierPassword":userData.supplierPassword,
                 "supplierSecretKey":userData.supplierSecretKey,
+                "subscription":{"isSubscribed":false},
                 "address":{
                     "line1": line1,
                     "line2": line2,

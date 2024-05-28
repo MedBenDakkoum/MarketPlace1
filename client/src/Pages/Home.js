@@ -6,9 +6,6 @@ import {getAllLayouts} from "../services/publicData"
 import { useNavigate } from 'react-router-dom';
 
 function Home({ match }) {
-  const lang = localStorage.getItem("lang");
-  const [products, setProduct] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [topBannerImages,setTopBannerImages] = useState([])
   const [sections, setSections] = useState([]);
   const [recommendedItems,setRecommendedItems] = useState([]);

@@ -1,10 +1,9 @@
 import React,{useState,useEffect} from "react";
-import {LineChart,PieChart} from '@mui/x-charts';
 import { useNavigate ,useParams} from "react-router-dom";
-import { CForm,CCol,CFormInput,CRow, CButton} from '@coreui/react';
-import { BsCart, BsCartCheckFill, BsCartFill, BsEye, BsImage, BsEyeFill, BsPencilFill, BsTrash, BsTrashFill, BsViewList, BsXSquare, BsXSquareFill } from "react-icons/bs";
+import { CForm,CCol,CRow, CButton} from '@coreui/react';
+import { BsEyeFill, BsXSquareFill } from "react-icons/bs";
 import { MDBDataTable } from 'mdbreact';
-import {getProductImages,uploadImage,updateProductImages} from "../../../services/dashboardService"
+import {getProductImages,updateProductImages} from "../../../services/dashboardService"
 import { Spinner } from 'react-bootstrap';
 import Switch from "react-switch";
 import Alert from '../../Alert/Alert';

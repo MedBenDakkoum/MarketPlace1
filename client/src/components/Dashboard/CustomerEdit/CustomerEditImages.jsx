@@ -1,6 +1,6 @@
 import React, {useEffect,useState} from 'react';
 import {useParams} from 'react-router-dom';
-import { CForm,CCol,CRow,CFormInput,CFormSelect,CButton,CFormSwitch} from '@coreui/react';
+import { CForm,CCol,CRow,CFormInput,CButton} from '@coreui/react';
 import {updateCustomer,getCustomerById,uploadImage} from '../../../services/adminService'
 import Swal from 'sweetalert2';
 import { ThreeDots } from 'react-loader-spinner'

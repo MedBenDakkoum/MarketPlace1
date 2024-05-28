@@ -1,5 +1,4 @@
 import styles from './Footer.module.css';
-import { AiFillInstagram, AiFillLinkedin } from 'react-icons/ai'; 
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter, BsYoutube } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 

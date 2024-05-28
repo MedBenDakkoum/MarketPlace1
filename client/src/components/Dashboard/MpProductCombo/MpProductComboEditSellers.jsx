@@ -1,11 +1,5 @@
 import React, {useEffect,useState} from 'react';
-import {useParams} from 'react-router-dom';
-import { CForm,CCol,CFormInput,CFormSelect,CButton,CFormTextarea} from '@coreui/react';
-import {getSellerById} from '../../../services/sellerData';
-import { Multiselect } from "multiselect-react-dropdown";
-import {updateSeller} from '../../../services/adminService'
-import Switch from "react-switch";
-import { Spinner, Alert } from 'react-bootstrap';
+import { CForm,CCol,CButton} from '@coreui/react';
 import { CTable,CTableRow,CTableHeaderCell,CTableDataCell,CTableHead ,CTableBody} from '@coreui/react';
 
 const seller = [

@@ -180,7 +180,7 @@ function SingleProduct() {
                             <p>Store: <span onClick={function(e){navigate("/s/"+data?.store?.link)}} style={{cursor:"pointer"}}>{data?.store?.title}</span></p>
                         </div>
                         <div className={styles["product-price"]}>
-                            <span>Price:</span><p>{data?.product?.newPrice} TND</p>
+                            <span>Price:</span><p>{data?.product?.newPrice.toFixed(2)} TND</p>
                         </div>
                         <div className={styles["product-attributes"]}>
                             {Object.keys(attributes)?.map((e)=>(
@@ -211,7 +211,7 @@ function SingleProduct() {
                 </div>
                 <CForm className={styles["single-product-add-to-cart"]} onSubmit={handleAddToCart}>
                         <div className={styles["add-to-cart-product-price"]}>
-                                <p>{data?.product?.newPrice} TND</p>
+                                <p>{data?.product?.newPrice.toFixed(2)} TND</p>
                         </div>
                         <div className={styles["add-to-cart-product-attributes"]}>
                             {Object.keys(selectedAttributes)?.map((e)=>{
@@ -238,7 +238,7 @@ function SingleProduct() {
                         }
                         <div className={styles["add-to-cart-total-price"]}>
                             <p>Total Price:</p>
-                            <h3>{cart.totalPrice} TND</h3>
+                            <h3>{cart.totalPrice.toFixed(2)} TND</h3>
                         </div>
                         <div className={styles["add-to-cart-button"]}>
                             <CButton type='submit' style={{width:"100%",margin:"20px 0"}}>
