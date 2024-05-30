@@ -11,7 +11,7 @@ export const ContextStore = ({ children }) => {
         //if (cookies.USER_SESSION) {
             fetch(`/auth/getUser`).then(res => res.json())
                 .then(res => {
-                    return setUserData(res.user)
+                    return setUserData(res.user);
                 })
         //}
     }, [])

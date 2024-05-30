@@ -12,12 +12,13 @@ import styles from "./Search.module.css"
 import { CForm,CFormCheck,CFormInput,CButton,CRow,CFormSelect} from '@coreui/react';
 import ReactStars from "react-rating-stars-component";
 import { BsChevronDown, BsChevronLeft, BsChevronRight } from 'react-icons/bs';  
-  
+import { useTranslation } from 'react-i18next';
+
 function Search() {
     const lang = localStorage.getItem("lang");
     const navigate = useNavigate();
     const hasPageBeenRendered = useRef(false);
-
+    const { t } = useTranslation();
     const [priceRange, setPriceRange] = useState([1,999]); 
     const [loading,setLoading] = useState(false);
     const [queryParameters,setQueryParameters] = useSearchParams()
@@ -258,7 +259,7 @@ function Search() {
                 <div className={styles["search-results-sider"]}>
                     <div className={styles["sider-section"]}>
                         <h1 className={styles["sider-title"]}>
-                            Categories
+                            {t("Categories")}
                         </h1>
                         <ul className={styles["sider-rslt"]}>
                             {Object.keys(allCats).map((cat)=>
@@ -271,18 +272,18 @@ function Search() {
                     </div>
                     <div className={styles["sider-section"]}>
                         <h1 className={styles["sider-title"]}>
-                            Features
+                            {t("Features")}
                         </h1>
                         <ul className={styles["sider-rslt"]}>
                             {allFeatures.map((f,i)=>(
                                 <li key={i}><CFormCheck className={styles['form-check-rslt']} onChange={handleChangeFeatures} id="featurecheck" value={f} label={f} checked={queryParameters?.get("features")?.includes(f)}/></li>
                             ))}
                         </ul>
-                        <p>See all</p>
+                        <p>{t("See all")}</p>
                     </div>
                     <div className={styles["sider-section"]}>
                         <h1 className={styles["sider-title"]}>
-                            Price range
+                            {t("Price range")}
                         </h1>
                         <div>
                         <Box>
@@ -298,18 +299,18 @@ function Search() {
                         </Box>
                         <div className={styles["prices-min-max"]}>
                             <div className={styles["prices-min-max-input"]}>
-                                <CFormInput value={priceRange[0]} onChange={handleChangePriceRange} name="minPrice" type="text" id="priceRange" label="Min" />
+                                <CFormInput value={priceRange[0]} onChange={handleChangePriceRange} name="minPrice" type="text" id="priceRange" label={t("Min")} />
                             </div>
                             <div className={styles["prices-min-max-input"]}>
-                                <CFormInput value={priceRange[1]} onChange={handleChangePriceRange} name="maxPrice" type="text" id="priceRange" label="Max" />
+                                <CFormInput value={priceRange[1]} onChange={handleChangePriceRange} name="maxPrice" type="text" id="priceRange" label={t("Min")} />
                             </div>
                         </div>
-                        <CButton onClick={handleApplyPriceRange}>Apply</CButton>
+                        <CButton onClick={handleApplyPriceRange}>{t("Apply")}</CButton>
                         </div>
                     </div>
                     <div className={styles["sider-section"]}>
                         <h1 className={styles["sider-title"]}>
-                            Ratings
+                            {t("Ratings")}
                         </h1>
                         <ul className={styles["sider-rslt"]}>
                             <div className={styles["ratings-input"]}>
@@ -358,13 +359,13 @@ function Search() {
                 </div>
                 <div className={styles["search-results-prods-container"]}>
                     <div className={styles["search-result-info"]}>
-                        <p>{allProds?.length} results for <span>"{queryParameters.get("q")}"</span></p>
+                        <p>{allProds?.length} {t("results for")} <span>"{queryParameters.get("q")}"</span></p>
                         <div className={styles["info-sort-by"]}>
                             <p style={{cursor:"pointer",position:"relative"}}onClick={handleSortByDropDown}><span>Sort by</span> <BsChevronDown /></p>
                             <div style={{display:sortByDorpDown}} className={styles["sort-by-dropdown"]}>
-                                <p name="pricelh" onClick={handleChangeSortByOption}>Price low to high</p>
-                                <p name="pricehl" onClick={handleChangeSortByOption}>Price high to low</p>
-                                <p name="name" onClick={handleChangeSortByOption}>Name</p>
+                                <p name="pricelh" onClick={handleChangeSortByOption}>{t("Price low to high")}</p>
+                                <p name="pricehl" onClick={handleChangeSortByOption}>{t("Price high to low")}</p>
+                                <p name="name" onClick={handleChangeSortByOption}>{t("Name")}</p>
                             </div>
                         </div>
                     </div>
@@ -385,28 +386,28 @@ function Search() {
                                         activeColor="#FF9017"
                                     />
                                     <span id={styles["point"]}>•</span>
-                                    <p style={{opacity:"0.5"}}>{prod?.verifiedOrders} orders</p>
+                                    <p style={{opacity:"0.5"}}>{prod?.verifiedOrders} {t("orders")}</p>
                                     <span id={styles["point"]}>•</span>
                                     {prod?.initData?.isAvailable?
                                     <p style={{color:"#00B517",opacity:1}}>
-                                        In Stock
+                                        {t("In Stock")}
                                     </p>
                                     : 
                                     <p style={{color:"red",opacity:1}}>
-                                        Out of Stock
+                                        {t("Out of Stock")}
                                     </p>
                                 }
                                 </div>
                                 <p>
                                     {prod?.initData?.description[lang]}
                                 </p>
-                                <a className='whatever' onClick={()=>{navigate("/products/"+prod?._id)}}>View details</a>
+                                <a className='whatever' onClick={()=>{navigate("/products/"+prod?._id)}}>{t("View details")}</a>
                             </div>
                         </div>
                         ))
-                        : "No matching products"}
+                        : t("No matching products")}
                         <div className={styles["prods-pagination"]}>
-                            <p>Show {searchProds.length}</p>
+                            <p>{t("Show")} {searchProds.length}</p>
                             <div className={styles["paginator"]}>
                                 {paginationLevel-1>0? 
                                 <div onClick={(e)=>{if((paginationLevel-1)>0){setPaginationLevel(paginationLevel-1)}}} className={styles["chevron-paginate"]} style={{borderRight:"none",borderTopLeftRadius:"10px",borderBottomLeftRadius:"10px"}}>
@@ -430,5 +431,4 @@ function Search() {
         </section>
     )
 }
-
 export default Search;

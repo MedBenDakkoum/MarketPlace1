@@ -402,75 +402,125 @@ async function generateInvoice(orderId,lang){
     }
 }
 
-async function makeOrder(userId,paymentMethod,lang){
-    try{
-        return new Promise(async (resolve,reject) =>{
-            let today = moment().format('L');
-            let cart = await cartService.getCart(userId);
-            let diviseProds = new Promise(async (resolve1,reject)=>{
-                let i=0
-                let prods = []
-                cart.forEach(async function(prod){
-                    let se = await Product.findById(prod.id,{"seller":1});
-                    let st = await User.findById(se.seller,{"idStore":1})
-                    prods.push(
-                        {
-                            productId:prod.id,
-                            storeId:st.idStore,
-                            attributes:prod.attributes,
-                            quantity:prod.quantity
-                        }
-                    )
-                    if(i==cart.length-1){
-                        resolve1(prods)
-                    }
-                    i++;
-                })
-            })
-            diviseProds.then(async (prods)=>{
-                getSellerEarnings(prods).then(async (earnings)=>{
-                    let cartTotal = await getTotal(cart);
-                    let newOrder = new Order(
-                        {
-                            date:today,
-                            status:"PENDING",
-                            totalProductsPrice:cartTotal,
-                            totalShippingPrice: 7,
-                            totalDiscount:0,
-                            totalPrice:cartTotal+7,
-                            products:prods,
-                            clientId:userId,
-                            paymentMethod:paymentMethod,
-                            sellerEarnings:earnings
-                        }
-                    );
-                    await newOrder.save().then(async (e)=>{
-                        let emptyCart = await Cart.findOne({user:userId});
-                        emptyCart.products=[]
-                        emptyCart.save();
-                        await generateInvoice(newOrder._id,lang)
-                        .then(async function(rslt){
-                            await newOrder.update({invoiceId:rslt})
-                            .then(async function(rrr){
+// async function makeOrder(userId,paymentMethod,lang){
+//     try{
+//         return new Promise(async (resolve,reject) =>{
+//             let today = moment().format('L');
+//             let cart = await cartService.getCart(userId);
+//             let diviseProds = new Promise(async (resolve1,reject)=>{
+//                 let i=0
+//                 let prods = []
+//                 cart.forEach(async function(prod){
+//                     let se = await Product.findById(prod.id,{"seller":1});
+//                     let st = await User.findById(se.seller,{"idStore":1})
+//                     prods.push(
+//                         {
+//                             productId:prod.id,
+//                             storeId:st.idStore,
+//                             attributes:prod.attributes,
+//                             quantity:prod.quantity
+//                         }
+//                     )
+//                     if(i==cart.length-1){
+//                         resolve1(prods)
+//                     }
+//                     i++;
+//                 })
+//             })
+//             diviseProds.then(async (prods)=>{
+//                 getSellerEarnings(prods).then(async (earnings)=>{
+//                     let cartTotal = await getTotal(cart);
+//                     let newOrder = new Order(
+//                         {
+//                             date:today,
+//                             status:"PENDING",
+//                             totalProductsPrice:cartTotal,
+//                             totalShippingPrice: 7,
+//                             totalDiscount:0,
+//                             totalPrice:cartTotal+7,
+//                             products:prods,
+//                             clientId:userId,
+//                             paymentMethod:paymentMethod,
+//                             sellerEarnings:earnings
+//                         }
+//                     );
+//                     await newOrder.save().then(async (e)=>{
+//                         let emptyCart = await Cart.findOne({user:userId});
+//                         emptyCart.products=[]
+//                         emptyCart.save();
+//                         await generateInvoice(newOrder._id,lang)
+//                         .then(async function(rslt){
+//                             await newOrder.update({invoiceId:rslt})
+//                             .then(async function(rrr){
 
-                                await employeeService.getEmployees()
-                                .then(async (employees)=>{
-                                    let listOfEmployeesIds = employees.map(employee=>employee._id);
-                                    await notificationService.sendMultipleNotifications(listOfEmployeesIds,"Employee","A new order has been placed !")
-                                    .then((rsltNots)=>{
-                                        resolve({message:"Order Placed"})
-                                    })
-                                })
-                            })
-                        })
-                    }).catch(function(e){
-                        reject({message:"Error making new Order"});
-                    }); 
-                })
-            })
-        })
-    }catch(err){
-        throw err;
+//                                 await employeeService.getEmployees()
+//                                 .then(async (employees)=>{
+//                                     let listOfEmployeesIds = employees.map(employee=>employee._id);
+//                                     await notificationService.sendMultipleNotifications(listOfEmployeesIds,"Employee","A new order has been placed !")
+//                                     .then((rsltNots)=>{
+//                                         resolve({message:"Order Placed"})
+//                                     })
+//                                 })
+//                             })
+//                         })
+//                     }).catch(function(e){
+//                         reject({message:"Error making new Order"});
+//                     }); 
+//                 })
+//             })
+//         })
+//     }catch(err){
+//         throw err;
+//     }
+// }
+async function makeOrder(userId, paymentMethod, lang) {
+    try {
+        const today = moment().format('L');
+        const cart = await cartService.getCart(userId);
+        
+        const prods = await Promise.all(cart.map(async (prod) => {
+            const se = await Product.findById(prod.id, { "seller": 1 });
+            const st = await User.findById(se.seller, { "idStore": 1 });
+            return {
+                productId: prod.id,
+                storeId: st.idStore,
+                attributes: prod.attributes,
+                quantity: prod.quantity
+            };
+        }));
+
+        const earnings = await getSellerEarnings(prods);
+        const cartTotal = await getTotal(cart);
+
+        const newOrder = new Order({
+            date: today,
+            status: "PENDING",
+            totalProductsPrice: cartTotal,
+            totalShippingPrice: 7,
+            totalDiscount: 0,
+            totalPrice: cartTotal + 7,
+            products: prods,
+            clientId: userId,
+            paymentMethod: paymentMethod,
+            sellerEarnings: earnings
+        });
+
+        await newOrder.save();
+
+        const emptyCart = await Cart.findOne({ user: userId });
+        emptyCart.products = [];
+        await emptyCart.save();
+
+        const invoiceId = await generateInvoice(newOrder._id, lang);
+        await newOrder.updateOne({ invoiceId });
+
+        const employees = await employeeService.getEmployees();
+        const listOfEmployeesIds = employees.map(employee => employee._id);
+        await notificationService.sendMultipleNotifications(listOfEmployeesIds, "Employee", "A new order has been placed!");
+
+        return { message: "Order Placed" };
+    } catch (err) {
+        throw { message: "Error making new Order", error: err };
     }
 }
 

@@ -1,9 +1,11 @@
 import styles from './Footer.module.css';
 import { BsFacebook, BsInstagram, BsLinkedin, BsTwitter, BsYoutube } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function Footer() {
     const navigate = useNavigate();
+    const { t } = useTranslation();
     return (
         <footer className={styles["footer-container"]}>
             <div className={styles["footer-top"]}>
@@ -20,44 +22,44 @@ function Footer() {
                 </div>
                 <div className={styles["footer-links"]}>
                     <div className={styles["single-footer-links"]}>
-                        <h1>About</h1>
+                        <h1>{t("About")}</h1>
                         <li>
                             <ul onClick={(e)=>{navigate('/about-us')}}>
-                                About Us
+                                {t("About us")}
                             </ul>
                             <ul onClick={(e)=>{navigate('/find-store')}}>
-                                Find Store
+                                {t("Find store")}
                             </ul>
                             <ul onClick={(e)=>{navigate('/categories')}}>
-                                Categories
+                                {("Categories")}
                             </ul>
                         </li>
                     </div>
                     <div className={styles["single-footer-links"]}>
-                        <h1>Information</h1>
+                        <h1>{t("Information")}</h1>
                         <li>
                             <ul onClick={(e)=>{navigate('/privacy-policy')}}>
-                                Privacy Policy
+                                {t("Privacy Policy")}
                             </ul>
                             <ul onClick={(e)=>{navigate('/terms-conditions')}}>
-                                Terms & Conditions
+                                {t("Terms & Conditions")}
                             </ul>
                             <ul onClick={(e)=>{navigate('/contact-us')}}>
-                                Contact Us
+                                {t("Contact Us")}
                             </ul>
                         </li>
                     </div>
                     <div className={styles["single-footer-links"]}>
-                        <h1>For users</h1>
+                        <h1>{t("For users")}</h1>
                         <li>
                             <ul onClick={(e)=>{navigate('/auth/login')}}>
-                                Login
+                                {t('Login')}
                             </ul>
                             <ul onClick={(e)=>{navigate('/auth/register')}}>
-                                Register
+                                {t('Register')}
                             </ul>
                             <ul onClick={(e)=>{navigate('/cart')}}>
-                                Cart
+                                {t('Cart')}
                             </ul>
                         </li>
                     </div>

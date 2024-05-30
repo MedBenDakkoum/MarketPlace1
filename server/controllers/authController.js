@@ -107,11 +107,15 @@ router.get('/getUser', async (req, res) => {
                         }})
                     }else{
                         res.status(200).json({user: 
-                            {_id: user._id, name: user.name, email: user.email, 
-                            phoneNumber: user.phoneNumber, isSeller:user.isSeller,
-                            avatar: user.avatar,
-                            balance: user.balance,
-                            }})
+                            {
+                                _id: user._id,
+                                name: user.name,
+                                email: user.email, 
+                                phoneNumber: user.phoneNumber, 
+                                isSeller:user.isSeller,
+                                avatar: user.avatar,
+                                balance: user.balance,
+                        }})
                     }
                 }
         } else {

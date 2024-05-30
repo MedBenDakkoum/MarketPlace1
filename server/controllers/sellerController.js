@@ -121,13 +121,13 @@ router.put('/store', async (req, res) => {
 })
 router.get('/dashboard', async (req, res) => {
     try {
-        if(req.user._id==undefined){
+        if(req?.user?._id==undefined){
             res.status(401).json({message:"Not Authenticated"});
+        }else{
+            let user = await sellerService.getDashboardHome(req.user._id);
+            res.status(200).json(user);
         }
-        let user = await sellerService.getDashboardHome(req.user._id);
-        res.status(200).json(user);
     } catch (error) {
-        console.log(error)
         res.status(500).json({ error : "Error"});
     }
 })

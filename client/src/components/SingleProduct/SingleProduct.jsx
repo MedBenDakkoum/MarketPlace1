@@ -16,11 +16,13 @@ import { Context } from "../../ContextStore";
 import ReactStars from "react-rating-stars-component";
 import {BsFillStarFill, BsXSquareFill} from "react-icons/bs";
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 function SingleProduct() {
     const lang = localStorage.getItem("lang");
     const params = useParams();
     const navigate= useNavigate();
+    const { t } = useTranslation();
     const [loading, setLoading] = useState(true);
     const [data,setData] = useState({});
     const [attributes,setAttributes] = useState({});
@@ -84,7 +86,7 @@ function SingleProduct() {
         .then(function(rslt){
             Swal.fire({
                 icon: "success",
-                title: "Added to cart !",
+                title: t("Added"),
                 showConfirmButton: false,
                 timer: 1000
             });
@@ -93,7 +95,7 @@ function SingleProduct() {
             Swal.fire({
                 icon: "error",
                 title: "Oops !",
-                text: "Error while adding to cart!",
+                text: t("AddedErr"),
             });
             setLoading(false);
         });
@@ -136,16 +138,16 @@ function SingleProduct() {
             id = e.target.parentNode.getAttribute("id");
         }
         Swal.fire({
-            title: "Do you want to remove your review?",
+            title: t("Do you want to remove your review?"),
             showCancelButton: true,
-            confirmButtonText: "Remove",
+            confirmButtonText: t("Remove"),
           }).then(async (result) => {
             if (result.isConfirmed) {
                 await removeReview(id)
                 .then(function(e){
                     Swal.fire({
                         icon: "success",
-                        title: "Review Removed !",
+                        title: t("ReviewRemovedMsg"),
                         showConfirmButton: false,
                         timer: 1000
                     });
@@ -154,7 +156,7 @@ function SingleProduct() {
                     Swal.fire({
                         icon: "error",
                         title: "Oops !",
-                        text: "Error while removing your review!",
+                        text: t("reviewRemoveErrorMsg"),
                     });
                     setLoading(false);
                     });
@@ -177,14 +179,14 @@ function SingleProduct() {
                             <h2>{data?.initialProduct?.name[lang]}</h2>
                         </div>
                         <div className={styles["store-name"]}>
-                            <p>Store: <span onClick={function(e){navigate("/s/"+data?.store?.link)}} style={{cursor:"pointer"}}>{data?.store?.title}</span></p>
+                            <p>{t("Store")}: <span onClick={function(e){navigate("/s/"+data?.store?.link)}} style={{cursor:"pointer"}}>{data?.store?.title}</span></p>
                         </div>
                         <div className={styles["product-price"]}>
-                            <span>Price:</span><p>{data?.product?.newPrice.toFixed(2)} TND</p>
+                            <span>{t("Price")}:</span><p>{data?.product?.newPrice.toFixed(2)} TND</p>
                         </div>
                         <div className={styles["product-attributes"]}>
-                            {Object.keys(attributes)?.map((e)=>(
-                                <div className={styles["single-product-attribute"]}>
+                            {Object.keys(attributes)?.map((e,indexAttr)=>(
+                                <div key={indexAttr} className={styles["single-product-attribute"]}>
                                     <FormControl fullWidth>
                                         <InputLabel id="demo-simple-select-label">{e}</InputLabel>
                                         <Select
@@ -195,8 +197,8 @@ function SingleProduct() {
                                         label={e}
                                         onChange={handleChangeAttributes}
                                         >
-                                            {attributes[e]?.map((a)=>(
-                                                <MenuItem value={a}>{a}</MenuItem>
+                                            {attributes[e]?.map((a,indexMenu)=>(
+                                                <MenuItem key={indexMenu} value={a}>{a}</MenuItem>
                                             ))}
                                         </Select>
                                     </FormControl>
@@ -204,7 +206,7 @@ function SingleProduct() {
                             ))}
                         </div>
                         <div className={styles["product-info"]}>
-                            <h5>Description:</h5>
+                            <h5>{t("Description")}:</h5>
                             <p className={styles['product-desc']}>{data?.initialProduct?.description[lang]}</p>
                         </div>
                     </div>
@@ -214,35 +216,35 @@ function SingleProduct() {
                                 <p>{data?.product?.newPrice.toFixed(2)} TND</p>
                         </div>
                         <div className={styles["add-to-cart-product-attributes"]}>
-                            {Object.keys(selectedAttributes)?.map((e)=>{
+                            {Object.keys(selectedAttributes)?.map((e,indexSAtrr)=>{
                                 return(
-                                    <h4>
+                                    <h4 key={indexSAtrr}>
                                         {e}: {selectedAttributes[e]}
                                     </h4>
                             )})}
                         </div>
                         <div className={styles["add-to-cart-product-stock"]}>
                             {data?.initialProduct?.quantity>0?
-                                <p style={{color:"rgb(0, 184, 0)"}}>In Stock</p>
+                                <p style={{color:"rgb(0, 184, 0)"}}>{t("In Stock")}</p>
                             :
-                                <p style={{color:"red"}}>Out Of Stock</p>
+                                <p style={{color:"red"}}>{t("Out of Stock")}</p>
                                 }
                         </div>
                         {data?.initialProduct?.quantity>0?
                             <div className={styles["add-to-cart-order-quantity"]}>
-                                    <label>Quantity:</label>
+                                    <label>{t("Quantity")}:</label>
                                     <CFormInput type='text' value={cart.quantity} name='quantity' onChange={handleChangeCart} style={{width:"50px"}}/>
                             </div>
                             :
                             ""
                         }
                         <div className={styles["add-to-cart-total-price"]}>
-                            <p>Total Price:</p>
+                            <p>{t("Total Price")}:</p>
                             <h3>{cart.totalPrice.toFixed(2)} TND</h3>
                         </div>
                         <div className={styles["add-to-cart-button"]}>
                             <CButton type='submit' style={{width:"100%",margin:"20px 0"}}>
-                                Add To Cart
+                                {t("Add To Cart")}
                             </CButton>
                         </div>
                     </CForm>
@@ -265,7 +267,7 @@ function SingleProduct() {
                         <div className={styles["add-review-text"]}>
                             <CFormTextarea
                                 id="reviewText"
-                                label="Add review text:"
+                                label={t("Add review text:")}
                                 onChange={handleChangeReviewText}
                                 rows={3}
                                 name="content"
@@ -274,7 +276,7 @@ function SingleProduct() {
                         </div>
                         <div className={styles["add-review-button"]}>
                             <CButton type='submit' style={{width:"100%",margin:"20px 0"}}>
-                                Add Review
+                                {t("Add Review")}
                             </CButton>
                         </div>
                     </CForm>
@@ -282,14 +284,14 @@ function SingleProduct() {
                     ""
                 }
                 <div className={styles["reviews-list"]}>
-                    {reviews?.map((review)=>(
-                    <div className={styles["single-review"]}>
+                    {reviews?.map((review,indexRev)=>(
+                    <div key={indexRev} className={styles["single-review"]}>
                         <div className={styles["single-product-add-review"]}>
                             <div className={styles["add-review-info"]}>
                                     <img src={review.userId.avatar} alt="" />
                                     <p>
                                         <span>{review.userId.name}</span>
-                                        <span>{review.userId.nbrReviews} reviews</span>
+                                        <span>{review.userId.nbrReviews} {t("reviews")}</span>
                                     </p>
                             </div>
                             {review.userId._id==userData?._id?

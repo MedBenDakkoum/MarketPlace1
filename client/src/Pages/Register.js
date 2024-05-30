@@ -12,8 +12,10 @@ import Select from 'react-select'
 import Alert from '../components/Alert/Alert';
 import { getSettings } from '../services/settingsService';
 import Swal from 'sweetalert2';
+import { useTranslation } from 'react-i18next';
 
 function Register({ navigate }) {
+    const { t } = useTranslation();
     const lang = localStorage.getItem("lang");
     const selectCityRef =useRef();
     const [termsAccepted,setTermsAccepted] = useState(false);
@@ -35,6 +37,7 @@ function Register({ navigate }) {
     const { userData } = useContext(Context);
     const [categoriesList,setCategories]= useState([]);
     const [selectedCategories,setSelectedCategories]= useState([]);
+    
     const handleAcceptTerms = (e)=>{
         setTermsAccepted(!termsAccepted);
     }
@@ -407,14 +410,14 @@ function Register({ navigate }) {
         {!userData? <>            
             <div className="container auth-form">
                 <Alert msg={alert.msg} type={alert.type} refresh={alert.refresh}/>
-                <h1 className="auth-heading">Sign Up</h1>
+                <h1 className="auth-heading">{t('SignUp')}</h1>
                 <div className="toggle-button">
                     <Button variant="primary" size="lg" onClick={changeToClientForm}>
-                        Client
+                        {t('Client')}
                     </Button>
                     {settings?.AllowNewSellers?
                     <Button variant="primary" size="lg" onClick={changeToSellerForm}>
-                        Seller
+                        {t('Seller')}
                     </Button>
                     : ""}
                 </div>
@@ -422,10 +425,10 @@ function Register({ navigate }) {
                 <Form className="col-lg-8" onSubmit={handleSellerSubmit}>
                     <Form.Row>
                         <Form.Group controlId="forName" className="col-lg-12">
-                            <Form.Label>Account Type: *</Form.Label>
+                            <Form.Label>{t('AccountType')} *</Form.Label>
                             <Form.Control as="select" name="sellerType" onChange={handleSellerChange}>
-                                <option value="personal" selected>Personal</option>
-                                <option value="business">Business</option>
+                                <option value="personal" selected>{t('Personal')}</option>
+                                <option value="business">{t('Business')}</option>
                             </Form.Control>
                         </Form.Group>
                     </Form.Row>
@@ -433,34 +436,34 @@ function Register({ navigate }) {
                     <>
                     <Form.Row>
                         <Form.Group controlId="forName" className="col-lg-6">
-                            <Form.Label>RNE: *</Form.Label>
-                            <Form.Control type="text" name="RNE" value={sellerFormData.RNE} placeholder="Registre National des Entreprises..." onChange={handleSellerChange} required />
+                            <Form.Label>{t('RNE')} *</Form.Label>
+                            <Form.Control type="text" name="RNE" value={sellerFormData.RNE} placeholder={t('EnterRNE')} onChange={handleSellerChange} required />
                         </Form.Group>
                         <Form.Group controlId="forName" className="col-lg-6">
-                            <Form.Label>Matricule Fiscale *</Form.Label>
-                            <Form.Control type="text" name="matriculeFiscale" value={sellerFormData.matriculeFiscale} placeholder="Matricule Fiscale..." onChange={handleSellerChange} required />
+                            <Form.Label>{t('TaxNumber')} *</Form.Label>
+                            <Form.Control type="text" name="matriculeFiscale" value={sellerFormData.matriculeFiscale} placeholder={t('EnterTaxNumber')} onChange={handleSellerChange} required />
                         </Form.Group>
                         </Form.Row>
                             <Form.Row>
                             <Form.Group controlId="forName" className="col-lg-12">
-                                <Form.Label>Business Name *</Form.Label>
+                                <Form.Label>{t('BusinessName')} *</Form.Label>
                                 <Form.Control type="text" name="name" value={sellerFormData.name} placeholder="Ivan Ivanov" onChange={handleSellerChange} required />
                             </Form.Group>
                         </Form.Row>
                     </>
                     : <Form.Row>
                     <Form.Group controlId="forName" className="col-lg-8">
-                        <Form.Label>Name *</Form.Label>
+                        <Form.Label>{t('Name')} *</Form.Label>
                         <Form.Control type="text" name="name" value={sellerFormData.name} placeholder="Ivan Ivanov" onChange={handleSellerChange} required />
                         <Form.Text muted>
-                            The name can be your real one or a username.
+                            {t('NameCanBeRealOrUsername')}
                         </Form.Text>
                     </Form.Group>
                     <Form.Group as={Col} controlId="formGridGender" className="col-lg-4">
-                        <Form.Label>Gender *</Form.Label>
+                        <Form.Label>{t('Gender')} *</Form.Label>
                         <Form.Control as="select" name="gender" onChange={handleSellerChange}>
-                            <option selected>male</option>
-                            <option>female</option>
+                            <option selected>{t('Male')}</option>
+                            <option>{t('Female')}</option>
                         </Form.Control>
                     </Form.Group>
                 </Form.Row>
@@ -468,7 +471,7 @@ function Register({ navigate }) {
                     
                     <Form.Row>
                         <Form.Group className="col-lg-12">
-                            <Form.Label>Phone Number *</Form.Label>
+                            <Form.Label>{t('PhoneNumber')} *</Form.Label>
                             <InputGroup>
                                 <InputGroup.Text>
                                     +216
@@ -481,20 +484,20 @@ function Register({ navigate }) {
                                 ))}
                             </Form.Text>
                             <Form.Text muted>
-                                Phone Number should be a valid TN number.
+                                {t('PhoneNumberShouldBeValid')}
                             </Form.Text>
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-8">
-                            <Form.Label>Store name *</Form.Label>
+                            <Form.Label>{t('StoreName')} *</Form.Label>
                             <Form.Control type="text" name="storeName" value={sellerFormData.storeName} placeholder="Adidas" onChange={handleSellerChange} required />
                             <Form.Text muted>
-                                Store name must be unique.
+                                {t('StoreNameMustBeUnique')}
                             </Form.Text>
                         </Form.Group>
                         <Form.Group as={Col} controlId="formGridGender" className="col-lg-4">
-                            <Form.Label>Categories *</Form.Label>
+                            <Form.Label>{t('Categories')} *</Form.Label>
                             <MultiSelect
                                 key="example_id"
                                 options={categoriesList}
@@ -507,58 +510,56 @@ function Register({ navigate }) {
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>Ettajer Username *</Form.Label>
-                            <Form.Control type="text" name="supplierUsername" placeholder="Ettajer Username" value={sellerFormData.supplierUsername} onChange={handleSellerChange} required />
+                            <Form.Label>{t('EttajerUsername')} *</Form.Label>
+                            <Form.Control type="text" name="supplierUsername" placeholder={t('EttajerUsername')} value={sellerFormData.supplierUsername} onChange={handleSellerChange} required />
                         </Form.Group>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>Ettajer Password *</Form.Label>
-                            <Form.Control type="text" name="supplierPassword" placeholder="Ettajer Password" value={sellerFormData.supplierPassword} onChange={handleSellerChange} required />
+                            <Form.Label>{t('EttajerPassword')} *</Form.Label>
+                            <Form.Control type="text" name="supplierPassword" placeholder={t('EttajerPassword')} value={sellerFormData.supplierPassword} onChange={handleSellerChange} required />
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-12">
-                            <Form.Label>Ettajer Secret Key *</Form.Label>
-                            <Form.Control type="text" name="supplierSecretKey" placeholder="Ettajer Secret Key" value={sellerFormData.supplierSecretKey} onChange={handleSellerChange} required />
+                            <Form.Label>{t('EttajerSecretKey')} *</Form.Label>
+                            <Form.Control type="text" name="supplierSecretKey" placeholder={t('EttajerSecretKey')} value={sellerFormData.supplierSecretKey} onChange={handleSellerChange} required />
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-12">
-                            <Form.Label>Address Line 1 *</Form.Label>
-                            <Form.Control type="text" name="line1" placeholder="Line 1" value={sellerFormData.line1} onChange={handleSellerChange} required />
+                            <Form.Label>{t('AddressLine1')} *</Form.Label>
+                            <Form.Control type="text" name="line1" placeholder={t('AddressLine1')} value={sellerFormData.line1} onChange={handleSellerChange} required />
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-12">
-                            <Form.Label>Address Line 2</Form.Label>
-                            <Form.Control type="text" name="line2" placeholder="Line 2" value={sellerFormData.line2} onChange={handleSellerChange} />
+                            <Form.Label>{t('AddressLine2')}</Form.Label>
+                            <Form.Control type="text" name="line2" placeholder={t('AddressLine2')} value={sellerFormData.line2} onChange={handleSellerChange} />
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>Country *</Form.Label>
-                            <Form.Control type="text" name="country" placeholder="Country" value={locationCountry} required disabled/>
+                            <Form.Label>{t('Country')} *</Form.Label>
+                            <Form.Control type="text" name="country" placeholder={t('Country')} value={locationCountry} required disabled/>
                         </Form.Group>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>State *</Form.Label>
-                            {/* <Form.Control type="text" name="state" placeholder="State" value={sellerFormData.state} onChange={handleSellerChange} required /> */}
+                            <Form.Label>{t('State')} *</Form.Label>
                             <Select options={locationStates} name="state" onChange={handleChangeState}/>
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>City *</Form.Label>
-                            {/* <Form.Control type="text" name="city" placeholder="City" value={sellerFormData.city} onChange={handleSellerChange} required /> */}
+                            <Form.Label>{t('City')} *</Form.Label>
                             <Select ref={selectCityRef} options={locationCities} name="city" onChange={handleChangeCity}/>
                         </Form.Group>
                         <Form.Group className="col-lg-6">
-                            <Form.Label>Zip Code *</Form.Label>
-                            <Form.Control type="text" name="zipcode" placeholder="Zip Code" value={locationZipCode} required disabled/>
+                            <Form.Label>{t('ZipCode')} *</Form.Label>
+                            <Form.Control type="text" name="zipcode" placeholder={t('ZipCode')} value={locationZipCode} required disabled/>
                         </Form.Group>
                     </Form.Row>
                     <Form.Row>
                         <Form.Group controlId="formBasicEmail" className="col-lg-12">
-                            <Form.Label>Email address *</Form.Label>
-                            <Form.Control type="email" name="email" placeholder="name@email.com" value={sellerFormData.email} onChange={handleSellerChange} required />
+                            <Form.Label>{t('EmailAddress')} *</Form.Label>
+                            <Form.Control type="email" name="email" placeholder="ivan@email.com" value={sellerFormData.email} onChange={handleSellerChange} required />
                             <Form.Text className='field-errors'>
                                 {errors?.email?.map((e)=>(
                                     <p style={{color:"red"}}>* {e}</p>
@@ -568,8 +569,8 @@ function Register({ navigate }) {
                     </Form.Row>
                     <Form.Row>
                         <Form.Group controlId="formBasicPassword" className="col-lg-12">
-                            <Form.Label>Password *</Form.Label>
-                            <Form.Control type="password" name="password" placeholder="Password" value={sellerFormData.password} onChange={handleSellerChange} required />
+                            <Form.Label>{t('Password')} *</Form.Label>
+                            <Form.Control type="password" name="password" placeholder={t('Password')} value={sellerFormData.password} onChange={handleSellerChange} required />
                             <Form.Text className='field-errors'>
                                 {errors?.password?.map((e)=>(
                                     <p style={{color:"red"}}>* {e}</p>
@@ -577,8 +578,8 @@ function Register({ navigate }) {
                             </Form.Text>
                         </Form.Group>
                         <Form.Group className="col-lg-12">
-                            <Form.Label>Repeat Password *</Form.Label>
-                            <Form.Control type="password" name="repeatPassword" placeholder="Repeat password" value={sellerFormData.repeatPassword} onChange={handleSellerChange} required />
+                            <Form.Label>{t('RepeatPassword')} *</Form.Label>
+                            <Form.Control type="password" name="repeatPassword" placeholder={t('RepeatPassword')} value={sellerFormData.repeatPassword} onChange={handleSellerChange} required />
                         </Form.Group>
                         <Form.Text className='field-errors'>
                                 {errors?.repeatPassword?.map((e)=>(
@@ -592,151 +593,150 @@ function Register({ navigate }) {
                             type="checkbox"
                             checked={termsAccepted}
                             onChange={handleAcceptTerms}
-                            label="I agree to the terms and conditions as set out by the user agreement."
+                            label={t('I agree to the terms and conditions as set out by the user agreement.')}
                         />
                         </Form.Group>
                     </Form.Row>
                     {loading ?
                         <Button className="col-lg-12 btnAuth" variant="dark" disabled >
-                            Please wait... <Spinner animation="border" />
+                            {t('PleaseWait')} <Spinner animation="border" />
                         </Button>
                         :
-                        <Button variant="dark" className="col-lg-12 btnAuth" type="submit">Sign Up</Button>
+                        <Button variant="dark" className="col-lg-12 btnAuth" type="submit">{t('SignUp')}</Button>
                     }
-
-                    <p className="bottom-msg-paragraph">Already have an account? <Link to="/auth/login">Sign In</Link>!</p>
+    
+                    <p className="bottom-msg-paragraph">{t('Already have an account?')} <Link to="/auth/login">{t('SignIn')}</Link>!</p>
                 </Form>
                 :
                 <Form className="col-lg-8" onSubmit={handleClientSubmit}>
-                    <Form.Row>
-                        <Form.Group controlId="forName" className="col-lg-8">
-                            <Form.Label>Name *</Form.Label>
-                            <Form.Control type="text" name="name" value={clientFormData.name} placeholder="Ivan Ivanov" onChange={handleClientChange} required />
-                            <Form.Text muted>
-                                The name can be your real one or a username.
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group as={Col} controlId="formGridGender" className="col-lg-4">
-                            <Form.Label>Gender *</Form.Label>
-                            <Form.Control as="select" name="gender" value={clientFormData.gender} onChange={handleClientChange} required>
-                                <option>male</option>
-                                <option>female</option>
-                            </Form.Control>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group className="col-lg-12">
-                            <Form.Label>Phone Number *</Form.Label>
-                            <InputGroup>
-                                <InputGroup.Text>
-                                    +216
-                                </InputGroup.Text>
-                                <Form.Control type="text" name="phoneNumber"  value={clientFormData.phoneNumber} placeholder="26456789" onChange={handleClientChange} required />
-                            </InputGroup>
-                            <Form.Text className='field-errors'>
-                                {errors?.phoneNumber?.map((e)=>(
-                                    <p style={{color:"red"}}>* {e}</p>
-                                ))}
-                            </Form.Text>
-                            <Form.Text muted>
-                                Phone Number should be a valid TN number.
-                            </Form.Text>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group className="col-lg-12">
-                            <Form.Label>Address Line 1 *</Form.Label>
-                            <Form.Control type="text" name="line1" placeholder="Line 1" value={clientFormData.line1} onChange={handleClientChange} required />
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group className="col-lg-12">
-                            <Form.Label>Address Line 2</Form.Label>
-                            <Form.Control type="text" name="line2" placeholder="Line 2" value={clientFormData.line2} onChange={handleClientChange} />
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group className="col-lg-6">
-                            <Form.Label>Country *</Form.Label>
-                            <Form.Control type="text" name="country" placeholder="Country" value={locationCountry} required disabled/>
-                        </Form.Group>
-                        <Form.Group className="col-lg-6">
-                            <Form.Label>State *</Form.Label>
-                            {/* <Form.Control type="text" name="state" placeholder="State" value={sellerFormData.state} onChange={handleSellerChange} required /> */}
-                            <Select options={locationStates} name="state" onChange={handleChangeState}/>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group className="col-lg-6">
-                            <Form.Label>City *</Form.Label>
-                            {/* <Form.Control type="text" name="city" placeholder="City" value={clientFormData.city} onChange={handleClientChange} required /> */}
-                            <Select ref={selectCityRef} options={locationCities} name="state" onChange={handleChangeCity}/>
-                        </Form.Group>
-                        <Form.Group className="col-lg-6">
-                            <Form.Label>Zip Code *</Form.Label>
-                            <Form.Control type="text" name="zipcode" placeholder="Zip Code" value={locationZipCode} onChange={handleClientChange} required />
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId="formBasicEmail" className="col-lg-12">
-                            <Form.Label>Email address *</Form.Label>
-                            <Form.Control type="email" name="email" value={clientFormData.email} placeholder="name@email.com" onChange={handleClientChange} required />
-                            <Form.Text className='field-errors'>
-                                {errors?.email?.map((e)=>(
-                                    <p style={{color:"red"}}>* {e}</p>
-                                ))}
-                            </Form.Text>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group controlId="formBasicPassword" className="col-lg-6">
-                            <Form.Label>Password *</Form.Label>
-                            <Form.Control type="password" name="password" value={clientFormData.password} placeholder="Password" onChange={handleClientChange} required />
-                            <Form.Text muted>
-                                Your password must be 8-20 characters long
-                            </Form.Text>
-                            <Form.Text className='field-errors'>
-                                {errors?.password?.map((e)=>(
-                                    <p style={{color:"red"}}>* {e}</p>
-                                ))}
-                            </Form.Text>
-                        </Form.Group>
-                        <Form.Group className="col-lg-6">
-                            <Form.Label>Reepeat Password *</Form.Label>
-                            <Form.Control type="password" name="repeatPassword" value={clientFormData.repeatPassword} placeholder="Repeat password" onChange={handleClientChange} required />
-                            <Form.Text className='field-errors'>
-                                {errors?.repeatPassword?.map((e)=>(
-                                    <p style={{color:"red"}}>* {e}</p>
-                                ))}
-                            </Form.Text>
-                        </Form.Group>
-                    </Form.Row>
-                    <Form.Row>
-                        <Form.Group>
-                        <Form.Check 
-                            type="checkbox"
-                            checked={termsAccepted}
-                            onChange={handleAcceptTerms}
-                            label="I agree to the terms and conditions as set out by the user agreement."
-                        />
-                        </Form.Group>
-                    </Form.Row>
+                <Form.Row>
+                    <Form.Group controlId="forName" className="col-lg-8">
+                        <Form.Label>{t("Name")} *</Form.Label>
+                        <Form.Control type="text" name="name" value={clientFormData.name} placeholder="Ivan Ivanov" onChange={handleClientChange} required />
+                        <Form.Text muted>
+                            {t("NameCanBeRealOrUsername")}
+                        </Form.Text>
+                    </Form.Group>
+                    <Form.Group as={Col} controlId="formGridGender" className="col-lg-4">
+                        <Form.Label>{t('Gender')} *</Form.Label>
+                        <Form.Control as="select" name="gender" value={clientFormData.gender} onChange={handleClientChange} required>
+                            <option>{t('Male')}</option>
+                            <option>{t('Female')}</option>
+                        </Form.Control>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group className="col-lg-12">
+                        <Form.Label>{t('PhoneNumber')} *</Form.Label>
+                        <InputGroup>
+                            <InputGroup.Text>
+                                +216
+                            </InputGroup.Text>
+                            <Form.Control type="text" name="phoneNumber"  value={clientFormData.phoneNumber} placeholder="26456789" onChange={handleClientChange} required />
+                        </InputGroup>
+                        <Form.Text className='field-errors'>
+                            {errors?.phoneNumber?.map((e)=>(
+                                <p style={{color:"red"}}>* {e}</p>
+                            ))}
+                        </Form.Text>
+                        <Form.Text muted>
+                            {t('PhoneNumberShouldBeValid')}
+                        </Form.Text>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group className="col-lg-12">
+                        <Form.Label>{t('AddressLine1')} *</Form.Label>
+                        <Form.Control type="text" name="line1" placeholder={t('AddressLine1')} value={clientFormData.line1} onChange={handleClientChange} required />
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group className="col-lg-12">
+                        <Form.Label>{t('AddressLine2')}</Form.Label>
+                        <Form.Control type="text" name="line2" placeholder={t('AddressLine2')} value={clientFormData.line2} onChange={handleClientChange} />
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group className="col-lg-6">
+                        <Form.Label>{t('Country')} *</Form.Label>
+                        <Form.Control type="text" name="country" placeholder={t('Country')} value={locationCountry} required disabled/>
+                    </Form.Group>
+                    <Form.Group className="col-lg-6">
+                        <Form.Label>{t('State')} *</Form.Label>
+                        {/* <Form.Control type="text" name="state" placeholder="State" value={sellerFormData.state} onChange={handleSellerChange} required /> */}
+                        <Select options={locationStates} name="state" onChange={handleChangeState}/>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group className="col-lg-6">
+                        <Form.Label>{t('City')} *</Form.Label>
+                        {/* <Form.Control type="text" name="city" placeholder="City" value={clientFormData.city} onChange={handleClientChange} required /> */}
+                        <Select ref={selectCityRef} options={locationCities} name="state" onChange={handleChangeCity}/>
+                    </Form.Group>
+                    <Form.Group className="col-lg-6">
+                        <Form.Label>{t('ZipCode')} *</Form.Label>
+                        <Form.Control type="text" name="zipcode" placeholder="Zip Code" value={locationZipCode} onChange={handleClientChange} required />
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group controlId="formBasicEmail" className="col-lg-12">
+                        <Form.Label>{t('EmailAddress')} *</Form.Label>
+                        <Form.Control type="email" name="email" value={clientFormData.email} placeholder="ivan@email.com" onChange={handleClientChange} required />
+                        <Form.Text className='field-errors'>
+                            {errors?.email?.map((e)=>(
+                                <p style={{color:"red"}}>* {e}</p>
+                            ))}
+                        </Form.Text>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group controlId="formBasicPassword" className="col-lg-6">
+                        <Form.Label>{t('Password')} *</Form.Label>
+                        <Form.Control type="password" name="password" value={clientFormData.password} placeholder={t('Password')} onChange={handleClientChange} required />
+                        <Form.Text muted>
+                            Your password must be 8-20 characters long
+                        </Form.Text>
+                        <Form.Text className='field-errors'>
+                            {errors?.password?.map((e)=>(
+                                <p style={{color:"red"}}>* {e}</p>
+                            ))}
+                        </Form.Text>
+                    </Form.Group>
+                    <Form.Group className="col-lg-6">
+                        <Form.Label>{t('RepeatPassword')} *</Form.Label>
+                        <Form.Control type="password" name="repeatPassword" value={clientFormData.repeatPassword} placeholder={t('RepeatPassword')} onChange={handleClientChange} required />
+                        <Form.Text className='field-errors'>
+                            {errors?.repeatPassword?.map((e)=>(
+                                <p style={{color:"red"}}>* {e}</p>
+                            ))}
+                        </Form.Text>
+                    </Form.Group>
+                </Form.Row>
+                <Form.Row>
+                    <Form.Group>
+                    <Form.Check 
+                        type="checkbox"
+                        checked={termsAccepted}
+                        onChange={handleAcceptTerms}
+                        label={t('I agree to the terms and conditions as set out by the user agreement.')}
+                    />
+                    </Form.Group>
+                </Form.Row>
 
-                    {loading ?
-                        <Button className="col-lg-12 btnAuth" variant="dark" disabled >
-                            Please wait... <Spinner animation="border" />
-                        </Button>
-                        :
-                        <Button variant="dark" className="col-lg-12 btnAuth" type="submit">Sign Up</Button>
-                    }
+                {loading ?
+                    <Button className="col-lg-12 btnAuth" variant="dark" disabled >
+                        {t('PleaseWait')} <Spinner animation="border" />
+                    </Button>
+                    :
+                    <Button variant="dark" className="col-lg-12 btnAuth" type="submit">{t('SignUp')}</Button>
+                }
 
-                    <p className="bottom-msg-paragraph">Already have an account? <Link to="/auth/login">Sign In</Link>!</p>
-                </Form>
+                <p className="bottom-msg-paragraph">{t('Already have an account?')} <Link to="/auth/login">{t('SignIn')}</Link>!</p>
+            </Form>
                 }
             </div>
-            </> : <h1>Already Logged In</h1>}
+            </> : <h1>{t('Already Logged In')}</h1>}
         </>
     )
-}
-
+}    
 export default Register;

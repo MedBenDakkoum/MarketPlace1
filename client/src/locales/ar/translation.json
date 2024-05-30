@@ -10,5 +10,17 @@
         "Payment":"تسديد الديون",
         "Subscription":"الاشتراك",
         "Social":"وسائل التواصل الاجتماعي"
-    }
+    },
+    "Search...": "بحث...",
+    "Search": "بحث",
+    "Dashboard": "لوحة القيادة",
+    "Profile": "حساب",
+    "Orders": "طلبات",
+    "Sign in": "تسجيل الدخول",
+    "My cart": "سلة",
+    "Log out": "تسجيل الخروج",
+    "All Categories": "جميع الفئات",
+    "Contact us": "اتصل بنا",
+    "Most sold product": "المنتج الأكثر مبيعا",
+    "Retour":"رجوع"
 }

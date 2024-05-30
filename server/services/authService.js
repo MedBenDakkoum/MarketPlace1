@@ -130,7 +130,27 @@ async function loginUser({ email, password }) {
         if(user.isSuspended){
            return "suspended" 
         }else{
-            let token=  jwt.sign({ _id: user._id, email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller, isSubscribed:user.subscription.isSubscribed}, SECRET);
+            // if(user.isSeller){
+            //     res.status(200).json({user: 
+            //         {_id: user._id, name: user.name, email: user.email, 
+            //         phoneNumber: user.phoneNumber, isSeller:user.isSeller,
+            //         avatar: user.avatar,
+            //         balance: user.balance,
+            //         isSubscribed: user.subscription.isSubscribed
+            //         }})
+            //     }else{
+            //         res.status(200).json({user: 
+            //             {
+            //                 _id: user._id,
+            //                 name: user.name,
+            //                 email: user.email, 
+            //                 phoneNumber: user.phoneNumber, 
+            //                 isSeller:user.isSeller,
+            //                 avatar: user.avatar,
+            //                 balance: user.balance,
+            //         }})
+            //     }
+            let token=  jwt.sign({ _id: user._id,name:user.name, balance: user.balance ,email: user.email, phoneNumber: user.phoneNumber, avatar: user.avatar ,isSeller:user.isSeller, isSubscribed:user.subscription.isSubscribed}, SECRET);
             return token;
         }
     }else{

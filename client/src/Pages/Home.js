@@ -4,11 +4,13 @@ import CategoriePriceFromSection from "../components/Home/CategoriePriceFromSect
 import './Home.css';
 import {getAllLayouts} from "../services/publicData"
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 function Home({ match }) {
   const [topBannerImages,setTopBannerImages] = useState([])
   const [sections, setSections] = useState([]);
   const [recommendedItems,setRecommendedItems] = useState([]);
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const getLayoutByRef = (ref,layouts)=>{
     let aa = [...layouts]
@@ -31,16 +33,16 @@ function Home({ match }) {
           return <img onClick={()=>{navigate(image.link)}} key={index} src={image.imgURL} alt={image.imgAlt} />;
         })}
       </CustomSlider>
-      {sections?.map((section)=>(
-        <CategoriePriceFromSection img={section.img} title={section.title} prods={section.prods}/>
+      {sections?.map((section,indexcpfs)=>(
+        <CategoriePriceFromSection key={indexcpfs} img={section.img} title={section.title} prods={section.prods}/>
       ))}
       <h1 className="home-section-title" style={{color:"#1c1c1c"}}>
-        Recommended items
+      {t('Recommended items')}
       </h1>
       <section className="home-recommended-items-container">
         <div className="home-recommended-items">
-          {recommendedItems.map((item)=>(
-            <div className="hri-item" onClick={(e)=>{navigate(item.link)}}>
+          {recommendedItems.map((item,indd)=>(
+            <div key={indd} className="hri-item" onClick={(e)=>{navigate(item.link)}}>
               <img src={item.img} />
               <div className="hri-item-info">
                 <p>{item.price} TND</p>

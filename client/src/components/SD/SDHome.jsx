@@ -11,6 +11,7 @@ import
  from 'react-icons/bs';
 
 function SDHome() {
+
     const navigate= useNavigate();
     const [loading, setLoading] = useState(false);
     const { userData, setUserData } = useContext(Context);
@@ -76,7 +77,7 @@ function SDHome() {
             setLoading(false)
         }
         initData();
-    },[]);
+    },[Context]);
     const closeOpenMenus = (e)=>{
         if(notiDropHeight.height!=="0" && !notDropMenu.current?.contains(e.target)){
           setNotiDropHeight({height:"0",marginTop:"35px"});

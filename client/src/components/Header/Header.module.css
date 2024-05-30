@@ -55,7 +55,8 @@
 .search-button{
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
-    width: 80px;
+    width: fit-content;
+    text-align: start;
 }
 .cart-login{
     display: flex;
@@ -170,6 +171,9 @@
     }
     .nav-bar-container{
         padding: 2px;
+    }
+    .cart-login{
+        max-width: 100%;
     }
 }
 @media only screen and (max-width: 470px) {
