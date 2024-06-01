@@ -36,18 +36,28 @@ async function getReviewsByUserId(userId) {
       throw err.message;
     }
 }
-async function calculateProductReviews(productId){
+
+async function calculateProductReviews(productIdParam){
     return new Promise(async(resolve,reject)=>{
-        await Review.find({productId:productId})
+        await Review.find({productId:productIdParam})
         .then((reviews)=>{
             let reviewSum = 0;
-            reviews.map((review)=>{
-                reviewSum+=review.stars;
-            })
-            resolve((reviewSum/reviews.length).toFixed(2))
+            let i =0;
+            if(reviews.length>0){
+                reviews.forEach((review)=>{
+                    reviewSum+=review.stars;
+                    if(i==reviews.length-1){
+                        resolve((reviewSum/reviews.length).toFixed(2))
+                    }
+                    i++;
+                })
+            }else{
+                resolve(0);
+            }
         })
     })
 }
+
 async function addReview(userId,productId,review) {
     try {
         return new Promise(async(resolve,reject)=>{
@@ -85,15 +95,20 @@ async function removeReviewById(reviewId) {
                 let user = await User.findById(rslt.userId);
                 await User.findOneAndUpdate({_id:rslt.userId},{nbrReviews:user.nbrReviews-1})
                 .then(async (rslt2)=>{
-                    await Product.findOneAndUpdate({_id:rslt.productId},{review:await calculateProductReviews(rslt.productId)})
+                    let newReviewsNum = await calculateProductReviews(rslt.productId);
+                    console.log("newReviewsNum: ",newReviewsNum);
+                    await Product.findOneAndUpdate({_id:rslt.productId},{review:newReviewsNum})
                     .then((rslt3)=>{
+                        console.log("rslt3",rslt3);
                         resolve(rslt);
                     })
                     .catch((err)=>{
+                        console.log(err);
                         reject(err.message);
                     })
                 })
             }).catch((err)=>{
+                console.log(err);
                 reject(err.message);
             })
         })
@@ -116,9 +131,10 @@ async function getAllProdsReviews() {
                     }
                 ],
                 function(err,results) {
-                    if (err) throw err;
+                    if (err) reject(err.message);
                     let i = 0;
                     let newResult = [];
+                    console.log(results);
                     if(results.length>0){
                         results.forEach(async (prod)=>{
                             let prod1 = await productService.getFullProd(prod.productId);
@@ -126,11 +142,11 @@ async function getAllProdsReviews() {
                             if(i==results.length-1){
                                 resolve(newResult);
                             }
+                            i++;
                         })
                     }else{
                         resolve(newResult)
                     }
-                    // resolve(results)
                 }
             )
         })

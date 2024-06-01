@@ -243,7 +243,7 @@ export async function removeReview(pId){
         });
         return response.data;
     } catch (error) {
-        console.error('Error sending reset pass link:', error);
+        console.error('Error removing review:', error);
         throw error;
     }
 }

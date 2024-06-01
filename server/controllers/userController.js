@@ -200,12 +200,14 @@ router.post('/reviews/:pId', async (req, res) => {
 router.delete('/reviews/:pId', async (req, res) => {
     try {
         await Review.find({userId:req.user._id,_id:req.params.pId}).then(async (rslt)=>{
-            await reviewService.removeReviewById(req.params.pId).then((rslt)=>{
-                res.status(200).json(rslt);
+            await reviewService.removeReviewById(req.params.pId).then((rslt1)=>{
+                res.status(200).json(rslt1);
             }).catch((err)=>{
+                console.log(err);
                 res.status(400).json(err.message);
             })
         }).catch((err)=>{
+            console.log(err);
             res.status(400).json({msg:"You can't delete this review !"})
         })
     } catch (error) {

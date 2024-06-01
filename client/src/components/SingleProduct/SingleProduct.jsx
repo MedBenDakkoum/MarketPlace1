@@ -30,7 +30,8 @@ function SingleProduct() {
     const [review,setReview] = useState({
         stars:0,
         text:""
-    })
+    });
+    const [refreshReviews,setRefreshReviews] = useState(false);
     const [reviews,setReviews]= useState([]);
     const [cart,setCart] = useState({
         quantity:1,
@@ -64,12 +65,17 @@ function SingleProduct() {
                 });
                 setSelectedAttributes({...sA})
             });
+        }
+        init();
+    },[]);
+    useEffect(function(){
+        async function init(){
             await getReviews(params.id).then(function(rslt){
                 setReviews(rslt);
             })
         }
         init();
-    },[]);
+    },[refreshReviews,setRefreshReviews])
     const handleChangeCart = (e)=>{
         e.preventDefault();
         if(e.target.value==""){
@@ -111,23 +117,25 @@ function SingleProduct() {
         setReview({...review,text:e.target.value});    
     }
     const handleAddReview = async (e)=>{
+        setLoading(true);
         e.preventDefault();
         await addReview(params.id,review)
         .then(function(rslt){
+            setLoading(false);
             Swal.fire({
                 icon: "success",
                 title: "Added Review !",
                 showConfirmButton: false,
                 timer: 1000
             });
-            setLoading(false);
+            setRefreshReviews(!refreshReviews);
         }).catch(function(err){
+            setLoading(false);
             Swal.fire({
                 icon: "error",
                 title: "Oops !",
                 text: "Error while adding a new review!",
-            });
-            setLoading(false);
+            }); 
         });
     }
     const handleRemoveReview = async (e)=>{
@@ -143,8 +151,10 @@ function SingleProduct() {
             confirmButtonText: t("Remove"),
           }).then(async (result) => {
             if (result.isConfirmed) {
+                setLoading(true);
                 await removeReview(id)
                 .then(function(e){
+                    setRefreshReviews(!refreshReviews);
                     Swal.fire({
                         icon: "success",
                         title: t("ReviewRemovedMsg"),
